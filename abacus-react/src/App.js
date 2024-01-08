@@ -1,4 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { simpleUnderFive } from './grade_ten_functions';
+import { simpleUnderTen } from './grade_ten_functions';
+import { friendsPlus } from './grade_ten_functions';
+import { friends } from './grade_ten_functions';
+import { relativesPlus } from './grade_ten_functions';
+import { relative } from './grade_ten_functions';
+import { mixedPlus } from './grade_ten_functions';
+import { mixed } from './grade_ten_functions';
 
 function App() {
   const [formData, setFormData] = useState({
@@ -10,337 +18,29 @@ function App() {
   });
 
   const [generatedProblems, setGeneratedProblems] = useState([]);
+  const [userAnswers, setUserAnswers] = useState(Array(formData.numQuestions).fill(''));
 
-  const simpleUnderFive = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-
-    for (let i = 1; i < numOfRows + 2; i++) {
-      let number;
-
-      if (i === 1) {
-        number = Math.floor(Math.random() * 4) + 1;
-      } else {
-        if (sumSoFar === 4) {
-          number = Math.floor(Math.random() * Math.min(sumSoFar, 4)) + 1;
-          sumSoFar -= number;
-          problemSet.push(-number);
-        } else {
-          if (sumSoFar > 0 && Math.random() < 0.5) {
-            number = Math.floor(Math.random() * Math.min(sumSoFar, 4)) + 1;
-            sumSoFar -= number;
-            problemSet.push(-number);
-          } else {
-            if (sumSoFar === 1) {
-              number = Math.floor(Math.random() * 3) + 1;
-            } else if (sumSoFar === 2) {
-              number = Math.floor(Math.random() * 2) + 1;
-            } else if (sumSoFar === 3) {
-              number = 1;
-            } else {
-              number = Math.floor(Math.random() * 3) + 1;
-            }
-            sumSoFar += number;
-            problemSet.push(number);
-          }
-        }
-      }
-    }
-
-    return problemSet;
-  };
-  const simpleUnderTen = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-
-    for (let i = 1; i <= numOfRows; i++) {
-      let number;
-
-      if (i === 1) {
-        number = Math.floor(Math.random() * 9) + 1;
-      } else {
-        if (sumSoFar === 9) {
-          number = -Math.floor(Math.random() * 9) + 1;
-        } else if (sumSoFar === 8) {
-          number = [1, -Math.floor(Math.random() * 3) + 1, -Math.floor(Math.random() * 4) + 5][Math.floor(Math.random() * 3)];
-        } else if (sumSoFar === 7) {
-          number = [1, 2, -1, -2, -Math.floor(Math.random() * 3) + 5][Math.floor(Math.random() * 5)];
-        } else if (sumSoFar > 0 && [true, false][Math.floor(Math.random() * 2)]) {
-          const maxSubtraction = Math.min(sumSoFar, 9);
-          number = -Math.floor(Math.random() * maxSubtraction) + 1;
-        } else {
-          if (sumSoFar === 1) {
-            number = [1, 2, 3, 5, 6, 7, 8][Math.floor(Math.random() * 7)];
-          } else if (sumSoFar === 2) {
-            number = [1, 2, 5, 6, 7][Math.floor(Math.random() * 5)];
-          } else if (sumSoFar === 3) {
-            number = [1, 5, 6][Math.floor(Math.random() * 3)];
-          } else if (sumSoFar === 4) {
-            number = 5;
-          } else if (sumSoFar === 5) {
-            number = 4;
-          } else if (sumSoFar === 6) {
-            number = [1, 2, 3][Math.floor(Math.random() * 3)];
-          } else {
-            number = [1, 2, 3, 4][Math.floor(Math.random() * 4)];
-          }
-        }
-      }
-
-      sumSoFar += number;
-      problemSet.push(number);
-    }
-
-    return problemSet;
-  };
-  const friendsPlus = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-
-    for (let i = 1; i <= numOfRows; i++) {
-      let number;
-
-      if (i === 1) {
-        number = Math.floor(Math.random() * 9) + 1;
-      } else {
-        if (sumSoFar === 9) {
-          number = -randomChoice([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        } else if (sumSoFar === 8) {
-          number = randomChoice([1, -2, -3, -5, -6, -7, -8]);
-        } else if (sumSoFar === 7) {
-          number = randomChoice([1, 2, -5, -6, -7]);
-        } else if (sumSoFar === 6) {
-          number = randomChoice([1, 2, 3, -5, -6]);
-        } else if (sumSoFar < 10) {
-          const possibleAdditions = [];
-          for (let j = 1; j <= 9 - sumSoFar; j++) {
-            possibleAdditions.push(j);
-          }
-          number = randomChoice(possibleAdditions);
-        } else {
-          const maxSubtraction = Math.min(Math.abs(sumSoFar), 9);
-          number = -Math.floor(Math.random() * maxSubtraction) - 1;
-        }
-      }
-
-      if (Math.abs(sumSoFar + number) <= 10) {
-        sumSoFar += number;
-        problemSet.push(number);
-      }
-    }
-
-    return problemSet;
-  };
-
-  const randomChoice = (choices) => {
-    const index = Math.floor(Math.random() * choices.length);
-    return choices[index];
-  };
-  const friends = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-
-    for (let i = 1; i <= numOfRows; i++) {
-      let number;
-
-      if (i === 1) {
-        number = Math.floor(Math.random() * 9) + 1;
-      } else {
-        if (Math.abs(sumSoFar) === 9) {
-          const friendsOptions = [];
-          for (let j = 1; j <= 8; j++) {
-            friendsOptions.push(-j);
-          }
-          number = friendsOptions[Math.floor(Math.random() * friendsOptions.length)];
-        } else if (Math.abs(sumSoFar) < 10) {
-          const possibleAdditions = [];
-          for (let k = 1; k <= 10 - Math.abs(sumSoFar); k++) {
-            possibleAdditions.push(k);
-          }
-          number = possibleAdditions[Math.floor(Math.random() * possibleAdditions.length)];
-        } else {
-          const maxSubtraction = Math.min(Math.abs(sumSoFar), 9);
-          number = -Math.floor(Math.random() * maxSubtraction) - 1;
-        }
-      }
-
-      if (Math.abs(sumSoFar + number) <= 10) {
-        sumSoFar += number;
-        problemSet.push(number);
-      }
-    }
-
-    return problemSet;
-  };
-  const relativesPlus = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
+  useEffect(() => {
+    setUserAnswers(Array(formData.numQuestions).fill(''));
+  }, [formData.numQuestions]);
   
-    for (let i = 1; i <= numOfRows; i++) {
-      let number;
-  
-      if (i === 1) {
-        number = Math.floor(Math.random() * 9) + 1;
-      } else {
-        const remainder = sumSoFar % 10;
-  
-        if (remainder === 9) {
-          const options = [-1, -2, -3, -4, -5, -6, -7, -8, -9, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 8) {
-          const options = [1, 2, 3, 4, 5, 7, 8, 9, -1, -2, -3, -4, -5, -6, -7, -8];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 7) {
-          const options = [1, 2, 3, 4, 5, 8, 9, -1, -2, -3, -4, -5, -6, -7];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 6) {
-          const options = [1, 2, 3, 4, 5, 9, -1, -2, -3, -4, -5, -6];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 5) {
-          const options = [1, 2, 3, 4, 5, 9, -1, -2, -3, -4, -5];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 4) {
-          const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -2, -3, -4];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 3) {
-          const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -2, -3];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 2) {
-          const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -2];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 1) {
-          const options = [1, 2, 3, 4, 5, 6, 7, 8, 9, -1];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else if (remainder === 0) {
-          const options = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-          number = options[Math.floor(Math.random() * options.length)];
-        } else {
-          const possibleOperations = [];
-          for (let j = -9; j <= 9; j++) {
-            if (1 <= j + sumSoFar && j + sumSoFar <= 10 && j + sumSoFar >= -10) {
-              possibleOperations.push(j);
-            }
-          }
-          number = possibleOperations[Math.floor(Math.random() * possibleOperations.length)];
-        }
-      }
-  
-      sumSoFar += number;
-      problemSet.push(number);
-    }
-  
-    return problemSet;
-  };
-  const relative = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-  
-    for (let i = 0; i < numOfRows; i++) {
-      let number;
-  
-      if (i === 0) {
-        number = Math.floor(Math.random() * 9) + 1;
-      } else {
-        const digitSum = sumSoFar % 10;
-  
-        if (digitSum === 0 || digitSum === 5) {
-          number = Math.floor(Math.random() * 9) + 1;
-        } else {
-          const friendsPlusMinus = [];
-          for (let j = -9; j <= 9; j++) {
-            if (1 <= j + sumSoFar && j + sumSoFar <= 10 && j + sumSoFar >= -10) {
-              friendsPlusMinus.push(j);
-            }
-          }
-  
-          number = friendsPlusMinus[Math.floor(Math.random() * friendsPlusMinus.length)];
-  
-          while (digitSum > 0 && sumSoFar + number < 1) {
-            number = friendsPlusMinus[Math.floor(Math.random() * friendsPlusMinus.length)];
-          }
-        }
-      }
-  
-      sumSoFar += number;
-      problemSet.push(number);
-    }
-  
-    return problemSet;
-  };
-  const mixedPlus = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-  
-    for (let i = 0; i < numOfRows; i++) {
-      let number;
-  
-      if (i === 0) {
-        number = Math.floor(Math.random() * 9) + 1;
-      } else {
-        const digitSum = sumSoFar % 10;
-  
-        if (digitSum === 0 || digitSum === 5) {
-          number = Math.floor(Math.random() * 9) + 1;
-        } else if (digitSum === 1 || digitSum === 6) {
-          const mixedPlusOptions = [];
-          for (let j = 1; j < 10; j++) {
-            if (j + sumSoFar <= 10) {
-              mixedPlusOptions.push(j);
-            }
-          }
-          number = mixedPlusOptions[Math.floor(Math.random() * mixedPlusOptions.length)];
-        } else {
-          const friendsPlusMinus = [];
-          for (let k = -9; k < 10; k++) {
-            if (1 <= k + sumSoFar && k + sumSoFar <= 10 && k + sumSoFar >= -10) {
-              friendsPlusMinus.push(k);
-            }
-          }
-  
-          number = friendsPlusMinus[Math.floor(Math.random() * friendsPlusMinus.length)];
-  
-          while (digitSum > 0 && sumSoFar + number < 1) {
-            number = friendsPlusMinus[Math.floor(Math.random() * friendsPlusMinus.length)];
-          }
-        }
-      }
-  
-      sumSoFar += number;
-      problemSet.push(number);
-    }
-  
-    return problemSet;
-  };
-  const mixed = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-    for(let i = 0; i < numOfRows; i++){
-      let number = Math.floor(Math.random() * 19) - 9;
-      while (!(number + sumSoFar >= 1)) {
-        number = Math.floor(Math.random() * 19) - 9;
-      }
-      sumSoFar += number;
-      problemSet.push(number);
-    }
-    return problemSet;
-    
-  }
-
-
+  //problems formatting
   const generateProblems = () => {
     // Extract grade and lesson from formData
+    clearResultMessages();
     const { grade, lesson, numQuestions, numNumbers, operation } = formData;
 
     // Call the appropriate function based on grade and lesson
     let problems = [];
 
     for (let i = 0; i < numQuestions; i++) {
+      let currentProblems = [];
       switch (grade + lesson) {
         case '101':
           // Grade 10, Lesson 1
           switch (operation) {
             case 'addition':
-              problems = problems.concat(simpleUnderFive(numNumbers));
+              currentProblems = simpleUnderFive(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -352,7 +52,7 @@ function App() {
           // Grade 10, Lesson 2
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...simpleUnderTen(numNumbers)];
+              currentProblems = simpleUnderTen(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -363,7 +63,7 @@ function App() {
           // Grade 10, Lesson 3
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...friendsPlus(numNumbers)];
+              currentProblems = friendsPlus(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -379,7 +79,7 @@ function App() {
           // Grade 10, Lesson 4 to 9
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...friends(numNumbers)];
+              currentProblems = friends(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -390,7 +90,7 @@ function App() {
           // Grade 10, Lesson 10
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...relativesPlus(numNumbers)];
+              currentProblems = relativesPlus(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -405,7 +105,7 @@ function App() {
           // Grade 10, Lesson 11 to Lesson 14
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...relative(numNumbers)];
+              currentProblems = relative(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -417,7 +117,7 @@ function App() {
           // Grade 10, Lesson 15
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...mixedPlus(numNumbers)];
+              currentProblems = mixedPlus(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -433,7 +133,7 @@ function App() {
           // Grade 10, Lesson 16 to Lesson 20
           switch (operation) {
             case 'addition':
-              problems = [...problems, ...mixed(numNumbers)];
+              currentProblems = mixed(numNumbers);
               break;
             // Add cases for other operations as needed
             default:
@@ -444,8 +144,15 @@ function App() {
         default:
           break;
       }
-    }
-
+      const formattedProblems = currentProblems.map((number, index) => {
+        return `${index === 0 ? ' ' : ''}${number >= 0 ? '+' : ''}${number}`;
+      });
+      
+      problems.push({
+        numbers: currentProblems, // Array of numbers
+        formatted: formattedProblems, // Array of formatted strings
+      });
+    } 
     setGeneratedProblems(problems);
   };
 
@@ -456,6 +163,47 @@ function App() {
       [name]: value,
     });
   };
+  const handleUserAnswerChange = (e, index) => {
+    const newAnswers = [...userAnswers];
+    newAnswers[index] = e.target.value;
+    setUserAnswers(newAnswers);
+  };
+  
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Enter') {
+      checkAnswer(index);
+    }
+  };
+  const checkAnswer = (index) => {
+    const userAnswer = parseFloat(userAnswers[index]);
+    const correctAnswer = generatedProblems[index].numbers.reduce((sum, num) => sum + num, 0);
+  
+    const resultMessage = !isNaN(userAnswer) && userAnswer === correctAnswer
+      ? 'Correct!'
+      : 'Incorrect. Try again!';
+  
+    // Display the result as text on the UI instead of using alert
+    const resultDisplay = document.getElementById(`result-${index}`);
+    if (resultDisplay) {
+      resultDisplay.textContent = resultMessage;
+    }
+  };
+  const clearResultMessages = () => {
+    const resultDisplays = document.querySelectorAll('[id^="result-"]');
+    resultDisplays.forEach((resultDisplay) => {
+      resultDisplay.textContent = '';
+    });
+  };
+  const resetProblems = () => {
+    // Clear generated problems and result messages
+    setGeneratedProblems([]);
+    clearResultMessages();
+  };
+  
+  
+  
+  
+  
 
   return (
     <div className="app-container">
@@ -466,7 +214,15 @@ function App() {
             Grade:
             <select name="grade" value={formData.grade} onChange={handleInputChange}>
               <option value="10">Grade 10</option>
-              {/* Add options for other grades */}
+              <option value="10">Grade 9</option>
+              <option value="10">Grade 8</option>
+              <option value="10">Grade 7</option>
+              <option value="10">Grade 6</option>
+              <option value="10">Grade 5</option>
+              <option value="10">Grade 4</option>
+              <option value="10">Grade 3</option>
+              <option value="10">Grade 2</option>
+              <option value="10">Grade 1</option>
             </select>
           </label>
           <br />
@@ -510,7 +266,7 @@ function App() {
           <br />
 
           <label>
-            Number of Numbers in the Problem:
+            Team of Numbers:
             <input
               type="number"
               name="numNumbers"
@@ -530,19 +286,50 @@ function App() {
           </label>
           <br />
 
-          <button type="button" onClick={generateProblems}>
-            Generate Problems
-          </button>
+          {/* Buttons */}
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <button type="button" onClick={generateProblems}>
+              Generate Problems
+            </button>
+            <button type="button" onClick={resetProblems}>
+              Reset
+            </button>
+          </div>
         </form>
 
-        {/* Display generated problems side by side in columns */}
-        <div>
-          <h2>Generated Problems:</h2>
-          <div style={{ display: 'flex' }}>
-            {generatedProblems.map((number, index) => (
-              <div key={index} style={{ marginRight: '20px' }}>
-                <h3>Number {index + 1}</h3>
-                <div>{number}</div>
+        {/* Display generated problems vertically with solution box underneath */}
+        <div style={{ textAlign: 'center' }}>
+          <h1>Generated Problems:</h1>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {generatedProblems.map((problem, index) => (
+              <div key={index} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ccc', borderRadius: '8px', maxWidth: '400px', margin: '0 10px' }}>
+                <h2>Problem {index + 1}</h2>
+
+                {/* Display problem vertically with aligned numbers and operators */}
+                <div style={{ fontFamily: 'Courier New',fontSize:'18pt', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  {problem.formatted.map((part, partIndex) => (
+                    <div key={partIndex}>{part}</div>
+                  ))}
+                </div>
+
+                {/* Answer input */}
+                <label>
+                  Your Answer:
+                  <input
+                    type="text"
+                    value={userAnswers[index]}
+                    onChange={(e) => handleUserAnswerChange(e, index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                  />
+                </label>
+
+                {/* Check Answer button */}
+                <button type="button" onClick={() => checkAnswer(index)}>
+                  Check Answer
+                </button>
+
+                {/* Result display */}
+                <div id={`result-${index}`} style={{ marginTop: '10px' }}></div>
               </div>
             ))}
           </div>
