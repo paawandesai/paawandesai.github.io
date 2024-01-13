@@ -1,33 +1,35 @@
 //simple under five
 const simpleUnderFive = (numOfRows) => {
-    const problemSet = [];
-    let sumSoFar = 0;
-    for (let i = 0; i < numOfRows; i++) {
-      let number;  
-      if (sumSoFar === 4) {
-        // Ensure the generated number is either -1, -2, -3, or -4
-        number = -Math.floor(Math.random() * 4) - 1;
-      } else {
-        if (sumSoFar > 0 && Math.random() < 0.5) {
-          // Ensure the generated number is either -1, -2, -3, or -4
-          number = -Math.floor(Math.random() * 4) - 1;
-        } else {
-          // Ensure the generated number is either +1, +2, +3, or +4
-          number = Math.floor(Math.random() * 4) + 1;
-        }
-      }
-      if (sumSoFar + number <= 4 && sumSoFar + number >= 0) {
-        // Ensure the digit sum is always positive
-        sumSoFar += number;
-        problemSet.push(number);
-      } else {
-        // If adding the number exceeds the digit sum limit, try again
-        i--;
+  const problemSet = [];
+  let sumSoFar = 0;
+
+  for (let i = 0; i < numOfRows; i++) {
+    let number;
+
+    if (i === 0) {
+      // For the first iteration, generate a random number between 1 and 4
+      number = Math.floor(Math.random() * 4) + 1;
+    } else {
+      // For subsequent iterations, apply the algorithm
+      if (sumSoFar === 1) {
+        number = [1, 2, 3][Math.floor(Math.random() * 2)];
+      } else if (sumSoFar === 2) {
+        number = [1, 2, -1][Math.floor(Math.random() * 2)];
+      } else if (sumSoFar === 3) {
+        number = [1, -1, -2][Math.floor(Math.random() * 2)];
+      } else if (sumSoFar === 4) {
+        number = [-1, -2, -3][Math.floor(Math.random() * 3)];
       }
     }
-  
-    return problemSet;
-  };
+
+    sumSoFar += number;
+    problemSet.push(number);
+  }
+
+  return problemSet;
+};
+
+
   //console.log("simple under five(4): ", simpleUnderFive(4));
   //simple under ten
   const simpleUnderTen = (numOfRows) => {
