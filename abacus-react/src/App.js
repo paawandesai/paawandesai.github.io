@@ -44,6 +44,7 @@ function App() {
   const [solutionBoxVisible, setSolutionBoxVisible] = useState(false);
   const [solutionBoxDuration, setSolutionBoxDuration] = useState(5000);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState([]);
 
   useEffect(() => {
     setUserAnswers(Array(formData.numQuestions).fill(''));
@@ -57,6 +58,7 @@ function App() {
 
     // Call the appropriate function based on grade and lesson
     let problems = [];
+    let answers = [];
 
     for (let i = 0; i < numQuestions; i++) {
       let currentProblems = [];
@@ -383,19 +385,29 @@ function App() {
       }
       
       const formattedProblems = currentProblems.map((number, index) => {
-        return `${index === 0 ? ' ' : ''}${number >= 0 ? '+' : ''}${number}`;
+        //return `${index === 0 ? ' ' : ''}${number >= 0 ? '+' : ''}${number}`;
+        return `${index !== 0 ? (number >= 0 ? '+' : '') : ''}${number}`;
       });
       
       problems.push({
         numbers: currentProblems, // Array of numbers
         formatted: formattedProblems, // Array of formatted strings
       });
+      // Calculate and store the correct answer
+      const correctAnswer = currentProblems.reduce((sum, num) => sum + num, 0);
+      console.log("socalled correct answer: ", correctAnswer);
+      answers.push(correctAnswer);
+
+      
     } 
     setGeneratedProblems(problems);
+    setCorrectAnswers(answers);
+    console.log("array of gen probs: ", generatedProblems[0], generatedProblems[1])
+    console.log("array of gen answers: ", answers[0], answers[1])
+    setCurrentIndex(0);
     if (selectedMode === 'Listening') {
-      setCurrentIndex(0);
       readNumbersOutLoud();
-    }
+    } 
   };
 
   const handleInputChange = (e) => {
@@ -413,29 +425,44 @@ function App() {
   
   const handleKeyDown = (e, index) => {
     if (e.key === 'Enter') {
-      checkAnswer(index);
+      setCurrentIndex(index);
 
-      if (selectedMode === 'Listening') {
-        if (currentIndex < generatedProblems.length - 1) {
-          setCurrentIndex(currentIndex + 1);
-          readNumbersOutLoud();
-        }
-      }
+      // if (selectedMode === 'Listening') {
+      //   if (currentIndex < generatedProblems.length - 1) {
+      //     setCurrentIndex((prevIndex) => prevIndex - 1);
+      //   }
+      // }
+      checkAnswer(currentIndex);
     }
   };
   const checkAnswer = (index) => {
     const userAnswer = parseFloat(userAnswers[index]);
-    const correctAnswer = generatedProblems[index].numbers.reduce((sum, num) => sum + num, 0);
   
-    const resultMessage = !isNaN(userAnswer) && userAnswer === correctAnswer
-      ? 'Correct!'
-      : 'Incorrect. Try again!';
+    if (!isNaN(userAnswer)) {
+      const correctAnswer = parseFloat(correctAnswers[index]);
   
-    const resultDisplay = document.getElementById(`result-${index}`);
-    if (resultDisplay) {
-      resultDisplay.textContent = resultMessage;
+      console.log("user answer: ", userAnswer);
+      console.log("correct answer: ", correctAnswer);
+  
+      const resultMessage = userAnswer === correctAnswer
+        ? 'Correct!'
+        : 'Incorrect. Try again!';
+  
+      const resultDisplay = document.getElementById(`result-${index}`);
+      if (resultDisplay) {
+        resultDisplay.textContent = resultMessage;
+      }
+    } else {
+      // Handle non-numeric input
+      const resultDisplay = document.getElementById(`result-${index}`);
+      if (resultDisplay) {
+        resultDisplay.textContent = 'Please enter a valid number.';
+      }
     }
   };
+  
+  
+  
 
   const clearResultMessages = () => {
     const resultDisplays = document.querySelectorAll('[id^="result-"]');
@@ -448,47 +475,39 @@ function App() {
     setGeneratedProblems([]);
     clearResultMessages();
   };
-  const readNumbersOutLoud = () => {
-  if (selectedMode === 'Listening') {
-    let currentIndex = 0;
 
-    const readNextProblem = () => {
-      if (currentIndex < generatedProblems.length) {
-        const { numbers } = generatedProblems[currentIndex] || {};
-
+  const readNumbersOutLoud = async () => {
+    if (selectedMode === 'Listening') {
+      for (let i = 0; i < generatedProblems.length; i++) {
+        const { numbers } = generatedProblems[i] || {};
+        console.log("numbers: ", numbers);
+  
         if (numbers) {
+          // Read out the problem
           const utterance = new SpeechSynthesisUtterance(numbers.join(' '));
           utterance.rate = speechRate;
           speechSynthesis.speak(utterance);
-
+  
+          // Set the solution box visible
           setSolutionBoxVisible(true);
-
-          setTimeout(() => {
-            setSolutionBoxVisible(false);
-            currentIndex++;
-            readNextProblem(); // Read the next problem after a delay
-          }, solutionBoxDuration);
+  
+          // Wait for the solution box duration
+          await new Promise((resolve) => setTimeout(resolve, solutionBoxDuration));
+  
+          // Hide the solution box
+          setSolutionBoxVisible(false);
         }
       }
-    };
-
-    readNextProblem();
-  }
-};
-
-
-  const handleSpeechRateChange = (e) => {
-    setSpeechRate(parseFloat(e.target.value));
-  };
-
-  const readNextProblem = () => {
-    // Assuming you have a function to generate the next set of problems
-    generateProblems();
-    if (selectedMode === 'Listening') {
-      readNumbersOutLoud();
     }
   };
   
+  
+  
+const handleSpeechRateChange = (e) => {
+  setSpeechRate(parseFloat(e.target.value));
+};
+
+
   
   
   
@@ -500,7 +519,7 @@ function App() {
     <html>
       <table>
         <tr>
-          <td colSpan={2}>
+          <td>
             {/* cell 1 - Abacus component */}
             <AbacusComponent />
           </td>
@@ -510,7 +529,7 @@ function App() {
             <div className="app-container" style={{ marginLeft: '20px' }}>
               <div className="form-container">
                 <h1>Problem Generator</h1>
-                <form>
+                <form >
                   <label>
                     Grade:
                     <select name="grade" value={formData.grade} onChange={handleInputChange}>
