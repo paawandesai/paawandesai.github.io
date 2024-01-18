@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function UIElement(x, y, width, height, type, ref, subref, slotType) {
   this.x = x;
@@ -91,18 +91,17 @@ function AbacusCtrl(type) {
 
 function AbacusComponent() {
   useEffect(() => {
-    const parentDivId = 'myAb';
     const type = 0; // Set your desired abacus type
     const abacusCtrl = new AbacusCtrl(type);
     const canvas = document.createElement('canvas');
-    var divId = parentDivId;
+    canvas.setAttribute("id", "abacus");
+    const parentDivId = 'myAb';
     var beadColor = "rgba(255, 255, 153, 1.0)";
     var hooveredBeadColor = "rgba(153, 102, 255, 1.0)";
     var hooveredElement = -1;
     var hooveredBead = -1;
     var uiElements = new Array();
     const that = this;
-
     const initAbacus = () => {
       abacusCtrl.init();
       canvas.width = 40 + abacusCtrl.beadLines * abacusCtrl.beadSpacing;
@@ -161,9 +160,6 @@ function AbacusComponent() {
     AbacusCtrl.prototype.getBeadPositionY = function (nodeId) {
       return this.nodes[nodeId].position[1];
     };
-    
-    
-    
 
     const updateAbacus = () => {
       const ctx = canvas.getContext('2d');
@@ -346,12 +342,16 @@ function AbacusComponent() {
     };
 
     initAbacus();
-  }, []);
+    return () => {
+      const parent = document.getElementById("abacus");
+      parent.remove();
+    };
 
+  }, []);
+  
   return (
     <>
       <div id="myAb"></div>
-      <a href="" onClick={() => { return false; }}><b>Reset</b></a>
     </>
   );  
 }
