@@ -1,31 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import AbacusComponent from './AbacusComponent';
-import { simpleUnderFive } from './grade_ten_functions';
-import { simpleUnderTen } from './grade_ten_functions';
-import { friendsPlus } from './grade_ten_functions';
-import { friends } from './grade_ten_functions';
-import { relativesPlus } from './grade_ten_functions';
-import { relative } from './grade_ten_functions';
-import { mixedPlus } from './grade_ten_functions';
-import { mixed } from './grade_ten_functions';
-import { two_digit_simple } from './grade_nine_functions';
-import { advance_fifty_first } from './grade_nine_functions';
-import { advance_fifty_sec } from './grade_nine_functions';
-import { fifty_back_first } from './grade_nine_functions';
-import { fifty_back_sec } from './grade_nine_functions';
-import { advance_hundred_first } from './grade_nine_functions';
-import { advance_hundred_sec } from './grade_nine_functions';
-import { hundred_back_first } from './grade_nine_functions';
-import { hundred_back_sec } from './grade_nine_functions';
-import { two_hundred_back } from './grade_nine_functions';
-import { mixed_plus_ones } from './grade_nine_functions';
-import { mixed_plus_tens } from './grade_nine_functions';
-import { nine_mixed_plus } from './grade_nine_functions';
-import { mixed_minus_ones } from './grade_nine_functions';
-import { mixed_minus_tens } from './grade_nine_functions';
-import { nine_mixed_minus } from './grade_nine_functions';
-import { nine_mixed } from './grade_nine_functions';
-import { grade_nine_mult } from './grade_nine_functions';
+import AbacusComponent from './components/AbacusComponent';
+import { 
+  simpleUnderFive, simpleUnderTen, friendsPlus, friends,
+  relativesPlus, relative, mixedPlus, mixed 
+} from './functions/grade_ten_functions';
+import {
+  two_digit_simple, advance_fifty_first, advance_fifty_sec,
+  fifty_back_first, fifty_back_sec, advance_hundred_first,
+  advance_hundred_sec, hundred_back_first, hundred_back_sec,
+  two_hundred_back, mixed_plus_ones, mixed_plus_tens,
+  nine_mixed_plus, mixed_minus_ones, mixed_minus_tens,
+  nine_mixed_minus, nine_mixed, grade_nine_mult
+} from './functions/grade_nine_functions';
+
+// Rest of your App.js code remains the same
 
 
 function App() {
