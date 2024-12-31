@@ -2,7 +2,7 @@
 title: "Handwriting Recognition with CRNN"
 excerpt: "A machine learning project leveraging CRNN and attention mechanisms to recognize handwritten text."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 
 [View on Kaggle](https://www.kaggle.com/code/josephbhuiyakhair/handwriting-recognition-final-project?scriptVersionId=212780027)

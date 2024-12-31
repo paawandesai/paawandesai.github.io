@@ -2,7 +2,7 @@
 title: "Urban Insights Initiative"
 excerpt: "Geospatial tools for sustainable urban planning using computer vision and mapping frameworks."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 [View on Github](https://github.com/paawandesai/site_analysis_python_code)
 

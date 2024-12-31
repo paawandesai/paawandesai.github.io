@@ -2,7 +2,7 @@
 title: "Adaptable/Deployable Structures for Seismic Mitigation"
 excerpt: "Research conducted at the Human Centered Robotics Laboratory to improve seismic resistance of structural systems."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 
 [Learn more about the Human Centered Robotics Laboratory](https://sites.utexas.edu/hcrl/)

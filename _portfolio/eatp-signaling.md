@@ -2,7 +2,7 @@
 title: "eATP Signaling Pathways Research"
 excerpt: "Exploring plant cell signaling mechanisms through advanced data analysis and experimental validation."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 
 ### Overview

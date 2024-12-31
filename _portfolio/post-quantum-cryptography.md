@@ -2,7 +2,7 @@
 title: "Hardware Accelerator for Post-Quantum Cryptography"
 excerpt: "Senior design project focusing on a Verilog-based accelerator for cryptographic operations."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 
 ### Overview

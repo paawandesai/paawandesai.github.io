@@ -2,7 +2,7 @@
 title: "NASDAQ Data Analysis"
 excerpt: "Using time-series forecasting models to analyze market trends and correlations."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 
 [View on GitHub - to put up]

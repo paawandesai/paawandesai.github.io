@@ -2,7 +2,7 @@
 title: "Abacus Creator Business"
 excerpt: "An educational platform featuring an interactive digital abacus and dynamic problem sets."
 collection: portfolio
-layout: portfolio
+layout: single
 ---
 
 [Try the Abacus Demo](/portfolio/abacus/abacus_demo/)
