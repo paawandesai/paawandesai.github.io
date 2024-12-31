@@ -15,26 +15,6 @@ Education
   * Minor: Entrepreneurship  
   * Scholarship: Recipient of the **Bostick Francis Scholarship for Electrical Engineers**  
 
-Work Experience
-======
-* **Co-Founder & Engineer**, Fundare Finance (May 2024 – Present)  
-  * Spearheading the development of a Python and SQL-powered revenue growth management dashboard to streamline financial forecasting for small businesses.  
-  * Leading a cross-functional team in designing a scalable SaaS product using Tableau, with iterative client feedback to improve usability.  
-
-* **Tutor (Mathematics, Creative Writing, Spanish)**, Varsity Tutors (March 2024 – Present)  
-  * Created tailored lesson plans for advanced mathematics and creative writing, resulting in measurable improvements in student performance.  
-
-* **Team Associate**, Walmart Auto Care Center (Summer 2023)  
-  * Collaborated with a team of associates to optimize workflows, improving service time and customer satisfaction.  
-
-* **Student Technician**, Instructional Technology Services, UT Austin (Jan 2022 – Aug 2022)  
-  * Analyzed large datasets with Tableau and Excel to streamline workflows and generate actionable reports.  
-  * Resolved 50+ technical issues while coordinating with cross-functional teams using Agile methodologies.  
-
-* **Mathematics Teacher**, Abacus Brain Gym (Jan 2017 – Aug 2021)  
-  * Designed gamified learning techniques and adaptive curricula, increasing student engagement by 25%.  
-  * Partnered with educators to revamp curricula, improving test scores by 15%.  
-
 Projects and Research
 ======
 * **Hardware Accelerator for Post-Quantum Cryptography (ML-DSA)** (Sep 2024 – Present)  
@@ -56,6 +36,26 @@ Projects and Research
 * **eATP Signaling Pathways Research** (Jan 2018 – Aug 2021)  
   * Investigated the role of pgp4-1 in extracellular ATP-induced stomatal closure, contributing to advancements in plant cell signaling.  
 
+Work Experience
+======
+* **Co-Founder & Engineer**, Fundare Finance (May 2024 – Present)  
+  * Developing a Python and SQL-powered revenue growth management dashboard to streamline financial forecasting for small businesses.  
+  * Leading a cross-functional team in designing a scalable SaaS product using Tableau, with iterative client feedback to improve usability.  
+
+* **Tutor (Mathematics, Creative Writing, Spanish)**, Varsity Tutors (March 2024 – Present)  
+  * Created tailored lesson plans for advanced mathematics and creative writing, resulting in measurable improvements in student performance.  
+
+* **Team Associate**, Walmart Auto Care Center (Summer 2023)  
+  * Collaborated with a team of associates to optimize workflows, improving service time and customer satisfaction.  
+
+* **Student Technician**, Instructional Technology Services, UT Austin (Jan 2022 – Aug 2022)  
+  * Analyzed large datasets with Tableau and Excel to streamline workflows and generate actionable reports.  
+  * Resolved 50+ technical issues while coordinating with cross-functional teams using Agile methodologies.  
+
+* **Mathematics Teacher**, Abacus Brain Gym (Jan 2017 – Aug 2021)  
+  * Designed gamified learning techniques and adaptive curricula, increasing student engagement by 25%.  
+  * Partnered with educators to revamp curricula, improving test scores by 15%.  
+
 Skills
 ======
 * **Programming Languages:** Java, Python, C, C++, SQL  
@@ -63,21 +63,25 @@ Skills
 * **Machine Learning Tools:** TensorFlow, MATLAB, OpenCV  
 * **Hardware and Embedded Systems:** Verilog, ARM, PSpice  
 * **Other Tools:** Git, Tableau, Agile Methods  
-
-Teaching
+ 
+Honors and Leadership
 ======
-* **Tutor (Mathematics, Creative Writing, Spanish),** Varsity Tutors (March 2024 – Present)  
-  * Designed customized lesson plans for advanced topics, improving student comprehension through innovative teaching methods.  
-* **Mathematics Teacher**, Abacus Brain Gym (Jan 2017 – Aug 2021)  
-  * Delivered engaging, interactive classes to students aged 6–70, focusing on problem-solving and concept clarity.  
 
-Service and Leadership
-======
-* **TEDxYouth@Austin Co-Organizer:**  
-  * Co-organized the world’s largest TEDxYouth event, engaging over 1,100 attendees and securing $30k in sponsorships.  
+* **American Mathematics Competitions (AMC):**  
+  * Achieved Top 2.5%; AIME Qualifier (9/15).
 
-* **Captain of Punjabbawockeez:**  
-  * Led a nationally competitive Bollywood fusion dance team, managing performances, finances, and community initiatives.  
+* **American Regional Mathematics League:**  
+  * Secured 3rd Place Nationally.
+
+* **Texas Alliance for Minorities in Engineering:**  
+  * Awarded 2nd Place.
 
 * **IEEE Robotathon:**  
-  * Designed and built an Arduino-powered robot, earning 2nd place in the Mechanical Design competition.  
+  * Designed and built an Arduino-powered robot, earning 2nd Place in the Mechanical Design competition.
+
+* **TEDxYouth@Austin Co-Organizer:**  
+  * Co-organized the world’s largest TEDxYouth event, securing $30k in sponsorships and hosting over 1,100 attendees.
+
+* **Captain of Punjabbawockeez:**  
+  * Led a nationally competitive Bollywood fusion dance team, managing performances, finances, and community service initiatives, including fundraising for cancer research through Texas Thon.
+

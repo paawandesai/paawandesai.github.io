@@ -5,8 +5,6 @@ collection: portfolio
 layout: single
 ---
 
-[View on GitHub - to put up]
-
 ### Overview
 This project builds time-series forecasting models to analyze 5+ years of NASDAQ and S&P 500 data. The analysis focuses on identifying cross-market correlations and predicting market trends using advanced statistical techniques.
 

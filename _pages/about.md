@@ -7,7 +7,7 @@ redirect_from:
   - /about.html
 ---
 
-Hi, I'm Paawan! I am currently pursuing a Bachelor of Science in Electrical and Computer Engineering at the [University of Texas at Austin](https://utexas.edu), specializing in Software Engineering and Design, with a minor in Entrepreneurship. I am also a proud recipient of the prestigious [**Bostick Francis Scholarship for Electrical Engineers**](https://www.statesman.com/obituaries/p0157680).
+Hi, I'm Paawan! I am currently pursuing a Bachelor of Science in Electrical and Computer Engineering at the [University of Texas at Austin](https://utexas.edu), specializing in Software Engineering and Design, with a minor in Entrepreneurship. I am also a proud recipient of the  [Bostick Francis Scholarship for Electrical Engineers**](https://www.statesman.com/obituaries/p0157680).
 
 With a strong foundation in programming, data analysis, and software design, my passion lies at the intersection of technology and innovation. I have led impactful projects, from developing machine learning models for handwriting recognition to designing geospatial tools for sustainable urban planning. My ongoing senior design project focuses on building a Verilog-based accelerator for post-quantum cryptography, reflecting my interest in cutting-edge technologies.
 

@@ -5,13 +5,10 @@ collection: portfolio
 layout: single
 ---
 
-[Learn more about the Human Centered Robotics Laboratory](https://sites.utexas.edu/hcrl/)
-
 ### Overview
-This research project, conducted at the **Human Centered Robotics Laboratory** at UT Austin, focused on designing and testing deployable structural prototypes to enhance seismic resistance. The project aimed to transform a truss-frame system into a vertical-link eccentrically braced frame for improved performance under earthquake-induced forces.
+This research project, conducted at the [Human Centered Robotics Laboratory](https://sites.utexas.edu/hcrl/) at UT Austin, focused on designing and testing deployable structural prototypes to enhance seismic resistance. The project aimed to transform a truss-frame system into a vertical-link eccentrically braced frame for improved performance under earthquake-induced forces.
 
 ### Key Contributions
-- Designed a deployable structural prototype using advanced engineering tools.
 - Simulated structural behavior under seismic and gravitational loads with MATLAB.
 - Validated deployment mechanisms using LabVIEW for real-world applications.
 

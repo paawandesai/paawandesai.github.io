@@ -4,7 +4,7 @@ excerpt: "Geospatial tools for sustainable urban planning using computer vision 
 collection: portfolio
 layout: single
 ---
-[View on Github](https://github.com/paawandesai/site_analysis_python_code)
+[View on Github](https://github.com/paawandesai/urban_insights_initiative)
 
 ### Overview
 Developed geospatial tools integrating computer vision and mapping frameworks to analyze urban areas. The project provided actionable insights for sustainable urban planning, including building footprints, green spaces, and traffic patterns.
