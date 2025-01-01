@@ -5,7 +5,7 @@ collection: portfolio
 layout: single
 ---
 
-[Try the Abacus Demo](/portfolio/abacus/abacus_demo/)
+[Try the Abacus Demo](/_drafts/abacus/abacus_demo/)
 
 ### Overview
 Built a React.js-based educational platform featuring a dynamic, interactive abacus. This platform supports customizable problem sets, making it adaptable to a variety of learning levels.
