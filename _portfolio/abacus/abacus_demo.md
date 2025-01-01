@@ -1,7 +1,7 @@
 ---
 title: "Abacus Demo"
 excerpt: "An interactive digital abacus and dynamic problem sets."
-collection: portfolio
+collection: hidden
 layout: single
 permalink: /portfolio/abacus/abacus_demo/
 ---
