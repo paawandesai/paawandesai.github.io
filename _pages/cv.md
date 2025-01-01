@@ -31,10 +31,10 @@ Projects and Research
   * Created geospatial tools with OpenCV and OSMnx, enabling urban planners to optimize site selection and improve sustainable development decisions.  
 
 * **Adaptable/Deployable Structures for Seismic Mitigation** (Summer 2022)  
-  * Designed a deployable structural prototype to enhance seismic resistance, validated with MATLAB simulations and LabVIEW deployment mechanisms.  
+  * Designed a deployable structural prototype to enhance seismic resistance, validated with MATLAB simulations and LabVIEW deployment mechanisms at the [Human Centered Robotics Laboratory](https://sites.utexas.edu/hcrl/).  
 
 * **eATP Signaling Pathways Research** (Jan 2018 – Aug 2021)  
-  * Investigated the role of pgp4-1 in extracellular ATP-induced stomatal closure, contributing to advancements in plant cell signaling.  
+  * Investigated the role of pgp4-1 in extracellular ATP-induced stomatal closure, contributing to advancements in plant cell signaling under [Dr. Gregory Clark](https://sites.cns.utexas.edu/roux/gregclark).  
 
 Work Experience
 ======
@@ -42,17 +42,17 @@ Work Experience
   * Developing a Python and SQL-powered revenue growth management dashboard to streamline financial forecasting for small businesses.  
   * Leading a cross-functional team in designing a scalable SaaS product using Tableau, with iterative client feedback to improve usability.  
 
-* **Tutor (Mathematics, Creative Writing, Spanish)**, Varsity Tutors (March 2024 – Present)  
+* **Tutor (Mathematics, Creative Writing, Spanish)**, [Varsity Tutors](https://www.varsitytutors.com) (March 2024 – Present)  
   * Created tailored lesson plans for advanced mathematics and creative writing, resulting in measurable improvements in student performance.  
 
 * **Team Associate**, Walmart Auto Care Center (Summer 2023)  
   * Collaborated with a team of associates to optimize workflows, improving service time and customer satisfaction.  
 
-* **Student Technician**, Instructional Technology Services, UT Austin (Jan 2022 – Aug 2022)  
+* **Student Technician**, [Instructional Technology Services](https://laits.utexas.edu/services/), UT Austin (Jan 2022 – Aug 2022)  
   * Analyzed large datasets with Tableau and Excel to streamline workflows and generate actionable reports.  
   * Resolved 50+ technical issues while coordinating with cross-functional teams using Agile methodologies.  
 
-* **Mathematics Teacher**, Abacus Brain Gym (Jan 2017 – Aug 2021)  
+* **Mathematics Teacher**, [Abacus Brain Gym](https://www.abacusbraingym.com/index.html) (Jan 2017 – Aug 2021)  
   * Designed gamified learning techniques and adaptive curricula, increasing student engagement by 25%.  
   * Partnered with educators to revamp curricula, improving test scores by 15%.  
 
@@ -82,6 +82,6 @@ Honors and Leadership
 * **TEDxYouth@Austin Co-Organizer:**  
   * Co-organized the world’s largest TEDxYouth event, securing $30k in sponsorships and hosting over 1,100 attendees.
 
-* **Captain of Punjabbawockeez:**  
+* **Captain of [Punjabbawockeez](https://punjabbawockeez.wixsite.com/punjabbawockeez):**  
   * Led a nationally competitive Bollywood fusion dance team, managing performances, finances, and community service initiatives, including fundraising for cancer research through Texas Thon.
 
