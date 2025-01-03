@@ -1,17 +1,17 @@
 ---
 title: "eATP Signaling Pathways Research"
-excerpt: "Exploring plant cell signaling mechanisms through advanced data analysis and experimental validation."
+excerpt: "Unveiling plant cell signaling mechanisms to advance agricultural productivity."
 collection: portfolio
 layout: single
 ---
 
 ### Overview
-As part of the Texas Institute for Discovery Education in Science under [Dr. Gregory Clark](https://sites.cns.utexas.edu/roux/gregclark), this research investigated the role of pgp4-1 in extracellular ATP-induced stomatal closure using Arabidopsis thaliana. The project focused on advancing the understanding of plant cell signaling pathways through rigorous experimentation and data analysis.
+As part of the Texas Institute for Discovery Education in Science under [Dr. Gregory Clark](https://sites.cns.utexas.edu/roux/gregclark), this research explored extracellular ATP-induced stomatal closure using Arabidopsis thaliana. The study provided critical insights into plant cellular signaling pathways.
 
 ### Key Contributions
-- Studied the impact of pgp4-1 knockout on extracellular ATP signaling pathways.  
-- Processed and analyzed data with ImageJ for image analysis and RStudio for statistical validation.  
-- Expanded understanding of cellular signaling mechanisms through precise experimental design and execution.
+- Analyzed the role of pgp4-1 knockout in extracellular ATP signaling.
+- Utilized ImageJ and RStudio for precise data analysis and statistical validation.
+- Advanced the scientific understanding of cellular signaling in plant biology.
 
 ### Tools Used
 - **Software:** ImageJ, RStudio

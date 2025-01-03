@@ -1,17 +1,17 @@
 ---
 title: "NASDAQ Data Analysis"
-excerpt: "Using time-series forecasting models to analyze market trends and correlations."
+excerpt: "Developing time-series forecasting models to identify market trends and correlations for actionable financial insights."
 collection: portfolio
 layout: single
 ---
 
 ### Overview
-This project builds time-series forecasting models to analyze 5+ years of NASDAQ and S&P 500 data. The analysis focuses on identifying cross-market correlations and predicting market trends using advanced statistical techniques.
+Constructed time-series forecasting models using advanced statistical techniques to analyze NASDAQ and S&P 500 market data. This project focuses on identifying cross-market correlations and predicting market dynamics.
 
 ### Key Features
-- **Bayesian Modeling:** Implemented kernel-based regression for trend identification.
-- **Volatility Prediction:** Leveraged Prophet for accurate market forecasts.
-- **Data Analysis:** Explored historical correlations across major indices.
+- **Bayesian Modeling:** Applied kernel-based regression to identify trends and correlations.  
+- **Volatility Prediction:** Leveraged Prophet for robust market forecasting.  
+- **Data Exploration:** Analyzed historical market trends across major indices for actionable insights.  
 
 ### Tools Used
 - **Programming Languages:** Python  
