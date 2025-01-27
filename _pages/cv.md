@@ -17,25 +17,37 @@ Education
 
 Projects and Research
 ======
+* **Energy A.I. Hackathon 2025 – First Place (Team: Data Comrades)** (January 2025)  
+  * Designed a predictive analytics pipeline to forecast energy consumption (Grid, Diesel, CNG) during hydraulic fracturing operations, integrating robust uncertainty modeling with 100 realizations per well.  
+  * Developed and optimized **XGBoost** and **Random Forest** models, achieving high predictive accuracy (**R²**: 0.9918 for Grid, 0.9766 for Diesel, 0.9692 for CNG).  
+  * Engineered advanced features using **CatBoost encoding**, performed missing data imputation, and created an **estimated time model** for feature extraction.  
+  * Leveraged custom libraries, including **ozbayrak_goodness** for model evaluation and **UTuning** for hyperparameter optimization.  
+  * Secured 1st place out of 25 teams based on MAPE, presentation, and code quality.  
+  * **Tools:** Python, Jupyter, scikit-learn, XGBoost, Pandas, CatBoost, ozbayrak_goodness, UTuning.  
+
 * **Hardware Accelerator for Post-Quantum Cryptography (ML-DSA)** (Sep 2024 – Present)  
   * Spearheading the development of a Verilog-based accelerator to enhance cryptographic operations for the Module-Lattice-Based Digital Signature Algorithm (ML-DSA).  
   * Engineering a C-based driver for seamless hardware-software interfacing, optimizing performance to ensure scalability for real-world applications.  
   * Collaborating with a multidisciplinary team to address challenges in post-quantum cryptography, ensuring robustness and security in cryptographic protocols.  
+  * **Tools:** Verilog, ModelSim, C, Python.
 
 * **Handwriting Recognition with CRNN and Attention Mechanisms** (December 2024)  
   * Designed a Convolutional Recurrent Neural Network (CRNN) model incorporating Connectionist Temporal Classification (CTC) loss for handwritten name recognition.  
   * Achieved 85% character accuracy on a dataset of over 400,000 samples, surpassing industry benchmarks and paving the way for practical handwriting recognition solutions.  
   * Implemented attention mechanisms to enhance model performance, focusing on accurately recognizing intricate handwritten patterns.  
+  * **Tools:** Python, TensorFlow, OpenCV, Kaggle
 
 * **NASDAQ Data Analysis** (August 2024 – Present)  
   * Constructing sophisticated time-series forecasting models using Bayesian techniques and kernel-based regression to analyze more than a decade's worth of market data.  
   * Developing predictive analytics tools to provide actionable insights for investors, aiding in the decision-making process.  
   * Continuously refining models to adapt to market dynamics, enhancing the accuracy and reliability of forecasts.  
+  * **Tools:** Python, Orbit, Prophet
 
 * **Urban Insights Initiative** (Jan 2024 – May 2024)  
   * Created advanced geospatial tools utilizing OpenCV and OSMnx, empowering urban planners to optimize site selection for sustainable development.  
   * Conducted comprehensive data analysis to inform planning decisions, focusing on environmental impact and resource efficiency.  
   * Facilitated workshops with urban planners and stakeholders to demonstrate the practical applications of the developed tools.  
+  * **Tools:** React.js, JavaScript, MongoDB
 
 * **Abacus Creator Business** (Dec 2022 – Aug 2023)  
   * Built a React.js-based educational platform featuring an interactive digital abacus for customizable problem sets.  
@@ -47,11 +59,13 @@ Projects and Research
   * Engineered a deployable structural prototype designed to enhance seismic resistance, validated through rigorous MATLAB simulations.  
   * Developed LabVIEW deployment mechanisms to ensure real-time responsiveness and adaptability during seismic events.  
   * Collaborated with the Human Centered Robotics Laboratory to test and refine the prototype, ensuring practicality and effectiveness in mitigating seismic risks.  
+  * **Tools:** MATLAB, LabVIEW, SolidWorks
 
 * **eATP Signaling Pathways Research** (Jan 2018 – Aug 2021)  
   * Investigated the role of pgp4-1 in extracellular ATP-induced stomatal closure under the guidance of Dr. Gregory Clark.  
   * Contributed to advancements in understanding plant cell signaling mechanisms, with implications for improving agricultural productivity.  
-  * Published findings in peer-reviewed journals, presenting research at national conferences to share insights with the scientific community.  
+  * Published findings in peer-reviewed journals, presenting research at national conferences to share insights with the scientific community.
+  * **Tools:** ImageJ, RStudio  
 
 Work Experience
 ======
