@@ -17,6 +17,13 @@ Education
 
 Projects and Research
 ======
+* **Social Impact BuildFest – EveryLibrary Advocacy Project** (Feb 2025)  
+  * Developed a Python-powered accessibility tool integrating **sentiment analysis, text-to-speech, and haptic feedback** to enhance digital advocacy.  
+  * Engineered a **hybrid NLP model** combining **rule-based approaches (NLTK lexicons, MWEs)** and **transformer-based emotion classification (Hugging Face)** to analyze emotions **sentence-by-sentence**.  
+  * Integrated **DataFeel SDK** to generate **haptic command JSON**, creating a multi-sensory experience for advocacy content.  
+  * Implemented **dyslexia-friendly UI enhancements**, including **adjustable contrast, font size, and OpenDyslexic/Atkinson Hyperlegible fonts**, improving accessibility for neurodivergent users.  
+  * Automated **batch text processing** and developed an **emotion timeline visualization** to help users track sentiment progression.  
+  * **Tools:** Python, PyQt6, NLTK, Hugging Face, Pyttsx3, Matplotlib, DataFeel SDK.  
 * **Energy A.I. Hackathon 2025 – First Place (Team: Data Comrades)** (January 2025)  
   * Designed a predictive analytics pipeline to forecast energy consumption (Grid, Diesel, CNG) during hydraulic fracturing operations, integrating robust uncertainty modeling with 100 realizations per well.  
   * Developed and optimized **XGBoost** and **Random Forest** models, achieving high predictive accuracy (**R²**: 0.9918 for Grid, 0.9766 for Diesel, 0.9692 for CNG).  
