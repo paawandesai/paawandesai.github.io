@@ -5,7 +5,7 @@ collection: portfolio
 layout: single
 ---
 
-[View on GitHub](https://github.com/paawandesai/social-impact-buildfest)  
+[View on GitHub](https://github.com/txibuildfest25/buildfest_website/tree/main)  
 
 ### Overview
 As part of the **Social Impact BuildFest**, I developed a Python GUI that enhances digital advocacy using **sentiment analysis and text-to-speech** to drive haptic feedback on **DataFeel devices**. The tool analyzes text **sentence-by-sentence**, classifying emotional intensity using **rule-based (NLTK, MWEs) and transformer-based (Hugging Face) models**.  
