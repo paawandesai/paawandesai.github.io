@@ -76,15 +76,20 @@ Projects and Research
 
 Work Experience
 ======
-* **Co-Founder & Engineer**, Fundare Finance (May 2024 – Present)  
-  * Leading the development of a Python and SQL-powered revenue growth management dashboard to streamline financial forecasting for small businesses.  
-  * Managing a cross-functional team in designing and implementing a scalable SaaS product using Tableau, incorporating iterative client feedback to enhance usability and functionality.  
-  * Conducting market research and user analysis to identify and address the pain points of small business owners, ensuring the product meets their needs effectively.  
+* **AI & Data Analyst**, SkyTerra Group (May 2025 - Present)
+  * Engineering biometric AI pipelines for a healthcare client, detecting atrial fibrillation and ~168 ECG rhythms from ECG/PPG with ML models.
+  * Designing HIPAA/GDPR-compliant edge-to-cloud data workflows to support secure, scalable health monitoring.
+  * Directed field integration of a microgrid for a client, deploying batteries, inverters, generators, and remote monitoring for off-grid power.
 
 * **Tutor (Mathematics, Creative Writing, Spanish)**, Varsity Tutors (March 2024 – Present)  
   * Developing and delivering tailored lesson plans for advanced mathematics and creative writing, resulting in measurable improvements in student performance and comprehension.  
   * Providing one-on-one and group tutoring sessions in Spanish, focusing on conversational fluency and grammatical accuracy.  
   * Utilizing a variety of teaching techniques and tools to engage students and foster a positive learning environment.  
+  
+* **Co-Founder & Engineer**, Fundare Finance (May 2024 – December 2024)  
+  * Leading the development of a Python and SQL-powered revenue growth management dashboard to streamline financial forecasting for small businesses.  
+  * Managing a cross-functional team in designing and implementing a scalable SaaS product using Tableau, incorporating iterative client feedback to enhance usability and functionality.  
+  * Conducting market research and user analysis to identify and address the pain points of small business owners, ensuring the product meets their needs effectively.  
 
 * **Team Associate**, Walmart Auto Care Center (Summer 2023)  
   * Collaborated with a team of associates to optimize workflow processes, improving service time and customer satisfaction.  
@@ -103,11 +108,14 @@ Work Experience
 
 Skills
 ======
-* **Programming Languages:** Java, Python, C, C++, SQL  
-* **Web Development:** HTML, CSS, JavaScript, React.js, MongoDB  
-* **Machine Learning Tools:** TensorFlow, MATLAB, OpenCV  
-* **Hardware and Embedded Systems:** Verilog, ARM, PSpice  
-* **Other Tools:** Git, Tableau, Agile Methods  
+* **Programming Languages:** Python, C, C++, Java, SQL
+* **Web Development:** HTML, CSS, JavaScript, React.js, MongoDB
+* **Machine Learning & AI:** TensorFlow, PyTorch, scikit-learn, XGBoost, CatBoost, Hugging Face, NLTK, CRNN/CNN/LSTM architectures, Attention Mechanisms, Time-Series Forecasting, Bayesian Modeling, Uncertainty Quantification
+* **Signal Processing & Healthcare AI:** ECG/PPG Signal Processing (168+ rhythms & morphologies), Temporal & Morphological Feature Engineering, Edge AI Deployment (ARM Cortex-M4F, quantized neural nets), Responsible AI (HIPAA, GDPR, PIPA compliance)
+* **Hardware & Embedded Systems:** Verilog, SystemVerilog, ARM Cortex-M, PSpice, Embedded Battery Management Systems, BLE Telemetry, IoT Protocols (MQTT, REST APIs)
+* **Data Engineering & Cloud Workflows:** ETL Pipelines, API Integration, Data Ingestion, Edge-to-Cloud Workflows, Metadata Cataloging, Encryption-at-Rest, Access Control Models, Jupyter, Pandas, NumPy, Matplotlib, Tableau, Streamlit
+* **Energy Systems & Microgrids:** Microgrid Design & Integration, Modbus Communications, Node-RED Controls, ESS Commissioning, Energy Modeling, VRM Remote Monitoring
+* **Other Tools:** Git, Agile Methods, Make.com, zapier.com, n8n.com, Notion
 
 Honors and Leadership
 ======
