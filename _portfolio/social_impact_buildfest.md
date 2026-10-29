@@ -3,6 +3,8 @@ title: "Social Impact BuildFest – EveryLibrary Advocacy Project"
 excerpt: "A Python-powered accessibility tool integrating sentiment analysis and text-to-speech to enhance advocacy through immersive haptic feedback."
 collection: portfolio
 layout: single
+group: earlier
+order: 3
 ---
 
 [View on GitHub](https://github.com/txibuildfest25/buildfest_website/tree/main)  

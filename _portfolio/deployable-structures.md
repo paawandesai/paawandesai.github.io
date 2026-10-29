@@ -3,6 +3,8 @@ title: "Adaptable/Deployable Structures for Seismic Mitigation"
 excerpt: "Innovative designs to improve seismic resistance of structural systems through advanced simulations and real-world validation."
 collection: portfolio
 layout: single
+group: earlier
+order: 5
 ---
 
 ### Overview

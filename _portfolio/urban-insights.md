@@ -3,6 +3,8 @@ title: "Urban Insights Initiative"
 excerpt: "Leveraging geospatial analysis and computer vision to support sustainable urban planning and decision-making."
 collection: portfolio
 layout: single
+group: earlier
+order: 4
 ---
 [View on Github](https://github.com/paawandesai/urban_insights_initiative)
 

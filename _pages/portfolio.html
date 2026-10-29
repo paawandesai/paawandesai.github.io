@@ -7,8 +7,23 @@ author_profile: true
 
 {% include base_path %}
 
-
-{% for post in site.portfolio %}
+<h2>Featured</h2>
+{% assign featured = site.portfolio | where: "group", "featured" | sort: "order" %}
+{% for post in featured %}
   {% include archive-single.html %}
 {% endfor %}
 
+<h2>Gauntlet AI builds</h2>
+<p>Built during Gauntlet AI Cohort 7 (Sep to Nov 2026), each one against a real brief and measured with its own evaluation.</p>
+{% assign gauntlet = site.portfolio | where: "group", "gauntlet" | sort: "order" %}
+{% for post in gauntlet %}
+  {% include archive-single.html %}
+{% endfor %}
+
+<p>Also built during the cohort: a fitness coach copilot, two AI-assisted onboarding flows (a community clinic and a credit-counseling agency), a lesson generation studio, <a href="https://github.com/paawandesai/vibecheck">VibeCheck</a> (a 60-second security scanner for vibe-coded apps), and an LLM social-insights platform.</p>
+
+<h2>Earlier work</h2>
+{% assign earlier = site.portfolio | where: "group", "earlier" | sort: "order" %}
+{% for post in earlier %}
+  {% include archive-single.html %}
+{% endfor %}
