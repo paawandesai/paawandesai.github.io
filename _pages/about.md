@@ -7,12 +7,14 @@ redirect_from:
   - /about.html
 ---
 
-Hi, I'm Paawan! I recently graduated with a Bachelor of Science in Electrical and Computer Engineering from the [University of Texas at Austin](https://utexas.edu), where I specialized in Software Engineering and Design and completed a minor in Entrepreneurship. I am also a proud recipient of the [Bostick Francis Scholarship for Electrical Engineers](https://www.statesman.com/obituaries/p0157680).
+I'm Paawan Desai, an engineer who builds AI agent systems and the evaluation and security tooling that keeps them honest.
 
-I now work as an AI & Data Analyst at SkyTerra Group, an AI, ML, and engineering-focused consulting group in the energy space. My work bridges biometric AI systems and renewable energy microgrids: from engineering edge-to-cloud pipelines for healthcare wearables, to directing field integration of off-grid hybrid power systems. This role lets me bring together my passions for machine learning, embedded systems, and sustainable technology to solve high-impact, real-world problems.
+Right now I'm building **[Company Agent Layer](/portfolio/company-agent-layer/)**, which warns the right teams, down to the field, before a pull request breaks a service that depends on it. I'm also finishing **Gauntlet AI Cohort 7** (Sep to Nov 2026), where I've shipped fifteen production-style builds against real briefs. They include a call center agent measured on held-out calls, a Solana order book, a quantum-seeded Monte Carlo pricer and a [4B model that writes bank payment files](/portfolio/nacha-slm/) nearly as well as Opus. Alongside that, I train and evaluate frontier models on contract for Handshake AI, Micro1 and Mercor, covering code generation, API behavior and electronic design automation.
 
-Throughout my academic and professional journey, I’ve built and led projects spanning biometric signal analysis, cryptographic accelerators, geospatial analytics, financial modeling, and energy systems design. My work has been recognized through hackathon wins, senior design leadership, and client-facing consulting projects.
+I care about measurement as much as building. Every recent project here ships with its own eval, and I run my work through a [team of AI agents](/how-i-build/) where no agent grades its own work.
 
-Beyond engineering, I co-founded Fundare Finance, where I developed a SaaS dashboard for small-business revenue tracking, and I’ve contributed to education as a mathematics tutor and teacher. I also led and performed with a nationally competitive Bollywood fusion dance team, balancing creativity, collaboration, and leadership.
+Before this I was an AI & Data Analyst at SkyTerra Group, where I built ECG-based cardiac detection pipelines for a healthcare client and led the field integration of an off-grid hybrid microgrid. I graduated from the University of Texas at Austin in May 2025 with a B.S. in Electrical and Computer Engineering and a minor in Entrepreneurship. My senior design project was a hardware accelerator for post-quantum signatures.
 
-When I’m not immersed in data pipelines, ML models, or microgrid systems, you’ll find me exploring entrepreneurial ventures, mentoring students, or diving into new design and technology challenges. Feel free to explore my work and connect with me on [LinkedIn](https://linkedin.com/in/paawan-desai) or [GitHub](https://github.com/paawandesai).
+Outside of engineering, I co-founded Fundare Finance, captained a nationally competitive Bollywood fusion dance team, and helped organize TEDxYouth@Austin.
+
+Take a look at the [portfolio](/portfolio/) or the [CV](/cv/), or reach me on [LinkedIn](https://linkedin.com/in/paawan-desai) or [GitHub](https://github.com/paawandesai).

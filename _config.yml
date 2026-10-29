@@ -8,10 +8,10 @@
 
 # Basic Site Settings
 locale                   : "en-US"
-title                    : "Paawan Desai's Webpage"
+title                    : "Paawan Desai"
 title_separator          : "-"
 name                     : &name "Paawan Desai"
-description              : &description "personal description"
+description              : &description "Paawan Desai builds AI agent systems and the evaluation and security tooling that keeps them honest."
 url                      : https://paawandesai.github.io # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "paawandesai/paawandesai.github.io"
@@ -24,9 +24,9 @@ author:
   avatar           : "profile.png"
   name             : "Paawan Desai"
   pronouns         : "he/him" 
-  bio              : "Computer Engineering at UT Austin"
+  bio              : "AI engineer: agent systems, evals and security tooling. Gauntlet AI Cohort 7. UT Austin ECE '25."
   location         : "Austin, Texas"
-  employer         : "AI & Data Analyst at SkyTerra Group"
+  employer         : "Company Agent Layer"
   uri              : # URL
   email            : "paawankdesai@gmail.com" 
 
