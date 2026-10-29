@@ -14,7 +14,7 @@ redirect_from:
 Experience
 ======
 * **Gauntlet AI**, Cohort 7 (Sep 2026 – Nov 2026)
-  * Shipped about twenty production-style AI systems against real briefs in ten weeks, each with its own evaluation. See the [portfolio]({{ base_path }}/portfolio/).
+  * Shipped fifteen production-style AI systems against real briefs in ten weeks, each with its own evaluation. See the [portfolio]({{ base_path }}/portfolio/).
   * Built [Company Agent Layer]({{ base_path }}/portfolio/company-agent-layer/) and trained a [4B model that writes exact bank payment files]({{ base_path }}/portfolio/nacha-slm/).
 * **Handshake AI**, Electrical and Software Engineer (Contract) (June 2026 – Present)
   * Developed and evaluated domain-specific engineering prompts to train LLMs on electronic design automation.
