@@ -12,7 +12,7 @@ title                    : "Paawan Desai"
 title_separator          : "-"
 name                     : &name "Paawan Desai"
 description              : &description "Paawan Desai builds AI agent systems and the evaluation and security tooling that keeps them honest."
-url                      : https://paawandesai.github.io # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io"
+url                      : https://paawankdesai.com # the custom domain in CNAME, so images and CSS load from the same host
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "paawandesai/paawandesai.github.io"
 
