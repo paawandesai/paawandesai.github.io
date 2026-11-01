@@ -643,3 +643,21 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
   .orb { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .hit.spot .f-t { animation: none; } }
+
+/* ---------- One screen, no scrolling (desktop and tablet) ---------- */
+@media (min-width: 701px) {
+  body { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+  main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .stage { flex: 1; min-height: 0; }
+  #campus { height: 100%; max-height: none; min-height: 0; }
+  .hint { position: absolute; left: 0; right: 0; bottom: 2px; z-index: 2; pointer-events: none; }
+  .bar { padding-top: 12px; }
+  .hud { padding-top: 6px; }
+  .games, .districts { flex-wrap: nowrap; padding-top: 6px; }
+  .foot { padding: 6px 16px 10px; }
+}
+.games, .districts { overflow-x: auto; scrollbar-width: none; }
+.games button { padding: 5px 12px; font-size: 0.86rem; white-space: nowrap; flex: 0 0 auto; }
+.games button small { font-size: 0.72rem; }
+.districts button { white-space: nowrap; flex: 0 0 auto; }
+@media (max-width: 700px) { .games, .districts { justify-content: flex-start; } }
