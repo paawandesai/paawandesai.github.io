@@ -49,6 +49,9 @@
     return self;
   }
 
+  var ICON_CHECK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var ICON_LOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" fill="currentColor"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+
   // ---------- Achievements ----------
   var ACH = [
     { id: "first", name: "First steps", desc: "Opened a building." },
@@ -111,7 +114,7 @@
     return '<p class="kicker">Achievements</p><h2>' + n + " of " + ACH.length + " unlocked</h2>" +
       "<p>Everything on this campus is clickable. These are saved in your browser only.</p><ul class=\"ach-list\">" +
       ACH.map(function (a) {
-        return '<li class="' + (got[a.id] ? "got" : "") + '"><span class="medal small">' + (got[a.id] ? "✓" : "?") + "</span><span><strong>" +
+        return '<li class="' + (got[a.id] ? "got" : "") + '"><span class="medal small">' + (got[a.id] ? ICON_CHECK : ICON_LOCK) + "</span><span><strong>" +
           esc(a.name) + "</strong><span>" + esc(got[a.id] ? a.desc : "Locked. " + a.desc) + "</span></span></li>";
       }).join("") + "</ul>";
   };
@@ -152,16 +155,19 @@
   };
   var agentLayer = el("g", { "class": "layer-agents" }, null);
   svg.insertBefore(agentLayer, K.layers.labels);
+  var bubbleLayer = el("g", { "class": "layer-bubbles" }, svg);
 
-  var walkers = [
-    { role: "Planner", path: [[1.2, 7.6], [2.9, 7.6]] },
-    { role: "Spec critic", path: [[3.3, 7.7], [4.9, 7.7]] },
-    { role: "Builder", path: [[5.3, 7.6], [6.9, 7.6]] },
-    { role: "Breaker", path: [[7.3, 7.7], [8.9, 7.7]] },
-    { role: "Scorer", path: [[9.3, 7.6], [11.2, 7.6]] },
-    { role: "Buyer panel", path: [[12.5, 8.4], [12.5, 17.5], [14.9, 17.5]] },
-    { role: "Buyer panel", path: [[12.4, 10.4], [12.4, 17.6], [14.9, 17.6]] },
-    { role: "Buyer panel", path: [[12.6, 12.4], [12.6, 17.4], [14.9, 17.4]] }
+  // Each factory agent stands at its own station. The buyer panel waits at the Front Office.
+  var STAND = 7.75, STEP = 7.3;
+  var crew = [
+    { role: "Planner", at: [K.stationX[0] + 0.5, STAND] },
+    { role: "Spec critic", at: [K.stationX[1] + 0.5, STAND] },
+    { role: "Builder", at: [K.stationX[2] + 0.5, STAND] },
+    { role: "Breaker", at: [K.stationX[3] + 0.5, STAND] },
+    { role: "Scorer", at: [K.stationX[4] + 0.5, STAND] },
+    { role: "Buyer panel", at: [13.5, 17.3] },
+    { role: "Buyer panel", at: [14.1, 17.75] },
+    { role: "Buyer panel", at: [14.7, 17.25] }
   ];
 
   var card = document.getElementById("agent-card");
@@ -186,76 +192,211 @@
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") card.hidden = true; });
 
-  walkers.forEach(function (w, i) {
+  crew.forEach(function (w) {
     var r = ROLES[w.role];
-    var g = el("g", { "class": "agent", tabindex: "0", role: "button", "aria-label": w.role + " agent" }, agentLayer);
-    el("ellipse", { cx: 0, cy: 0, rx: 7, ry: 3.5, "class": "agent-shadow" }, g);
-    el("rect", { x: -5, y: -17, width: 10, height: 15, rx: 5, fill: r.color, "class": "agent-body" }, g);
-    el("circle", { cx: 0, cy: -22, r: 5, fill: r.color, "class": "agent-body" }, g);
+    var g = el("g", { "class": "agent", tabindex: "0", role: "button", "aria-label": w.role + " agent: " + r.does }, agentLayer);
+    var fig = el("g", { "class": "fig" }, g);
+    el("ellipse", { cx: 0, cy: 0, rx: 7, ry: 3.5, "class": "agent-shadow" }, fig);
+    el("rect", { x: -5, y: -17, width: 10, height: 15, rx: 5, fill: r.color, "class": "agent-body" }, fig);
+    el("circle", { cx: 0, cy: -22, r: 5, fill: r.color, "class": "agent-body" }, fig);
     el("rect", { x: -12, y: -32, width: 24, height: 34, fill: "transparent" }, g);
+    w.g = g;
     w.m = mover(g, 0);
-    w.m.place(w.path[0]);
-    w.leg = 1;
-    w.dir = 1;
-    w.speed = 0.7 + (i % 3) * 0.15;
+    w.m.place(w.at);
+    w.bubble = el("g", { "class": "bubble-say" }, bubbleLayer);
+    w.bubbleRect = el("rect", { rx: 7 }, w.bubble);
+    w.bubbleTail = el("polygon", {}, w.bubble);
+    w.bubbleText = el("text", { "text-anchor": "middle" }, w.bubble);
     g.addEventListener("click", function (e) { e.stopPropagation(); showAgent(w); });
     g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showAgent(w); } });
   });
 
-  function walk(w) {
-    if (K.reduceMotion) return;
-    var next = w.path[w.leg];
-    w.m.travel([next], w.speed, function () {
-      if (w.leg === w.path.length - 1) w.dir = -1;
-      else if (w.leg === 0) w.dir = 1;
-      w.leg += w.dir;
-      setTimeout(function () { walk(w); }, 900 + Math.random() * 2200);
-    });
+  function say(w, text, cls) {
+    if (!text) { w.bubble.classList.remove("on"); return; }
+    var p = P(w.m.pos[0], w.m.pos[1], 0);
+    w.bubbleText.textContent = "";
+    var b1 = el("tspan", { "class": "who" }, w.bubbleText);
+    b1.textContent = w.role + " · ";
+    var b2 = el("tspan", {}, w.bubbleText);
+    b2.textContent = text;
+    w.bubbleText.setAttribute("x", p[0]);
+    w.bubbleText.setAttribute("y", p[1] - 44);
+    var bb = w.bubbleText.getBBox();
+    w.bubbleRect.setAttribute("x", bb.x - 8);
+    w.bubbleRect.setAttribute("y", bb.y - 5);
+    w.bubbleRect.setAttribute("width", bb.width + 16);
+    w.bubbleRect.setAttribute("height", bb.height + 10);
+    var ty = bb.y + bb.height + 5;
+    w.bubbleTail.setAttribute("points", (p[0] - 5) + "," + ty + " " + (p[0] + 5) + "," + ty + " " + p[0] + "," + (ty + 7));
+    w.bubble.setAttribute("class", "bubble-say on " + (cls || ""));
   }
-  walkers.forEach(function (w, i) { setTimeout(function () { walk(w); }, i * 400); });
 
-  // ---------- Living campus: PRs on the belt ----------
+  // Narration line at the top of the page.
+  var live = document.getElementById("live-text");
+  function narrate(text) { if (live) live.textContent = text; }
+
+  // ---------- Living campus: one PR at a time down the line ----------
   var flowLayer = el("g", { "class": "layer-flow" }, null);
   svg.insertBefore(flowLayer, agentLayer);
-  var flows = [0, 1, 2].map(function () {
-    var g = el("g", { "class": "flow" }, flowLayer);
-    el("polygon", { points: "0,-10 8,-3 0,4 -8,-3" }, g);
-    return { g: g, x: 0, lap: 0, hold: 0 };
-  });
-  var LAP = 24.5;
-  flows.forEach(function (f, i) { f.x = 0.6 + i * (LAP / 3); f.lap = i; });
-  var lastTs = null;
-  function flowFrame(ts) {
-    var dt = lastTs === null ? 0 : Math.min(0.05, (ts - lastTs) / 1000);
-    lastTs = ts;
-    var hidden = body.classList.contains("touring") || body.classList.contains("playing");
-    flowLayer.style.display = hidden ? "none" : "";
-    if (!hidden) {
-      var lit = -1;
-      flows.forEach(function (f) {
-        var flagged = f.lap % 4 === 3;
-        if (f.hold > 0) {
-          f.hold -= dt;
-          if (f.hold <= 0) { f.g.classList.remove("bad"); f.g.classList.add("good"); K.beam(false); }
-        } else {
-          var before = f.x;
-          f.x += dt * 1.4;
-          if (flagged && before < 12.5 && f.x >= 12.5) {
-            f.x = 12.5; f.hold = 1.6; f.g.classList.add("bad"); K.beam(true);
-          }
-          if (f.x > 23.6) { f.x = 0.4; f.lap++; f.g.classList.remove("bad", "good"); }
-        }
-        var s = P(f.x, BELT, 0.6);
-        f.g.setAttribute("transform", "translate(" + s[0].toFixed(1) + "," + s[1].toFixed(1) + ")");
-        f.g.style.opacity = f.x < 1 ? f.x : f.x > 22.6 ? Math.max(0, 23.6 - f.x) : 1;
-        K.stationX.forEach(function (sx, k) { if (Math.abs(f.x - (sx + 0.5)) < 0.45) lit = k; });
-      });
-      K.stations.forEach(function (s, k) { s.g.classList.toggle("pulse", k === lit); });
-    }
-    requestAnimationFrame(flowFrame);
+  var pr = el("g", { "class": "flow" }, flowLayer);
+  el("polygon", { points: "0,-11 9,-3 0,5 -9,-3" }, pr);
+  var prText = el("text", { x: 0, y: -2, "text-anchor": "middle", "dominant-baseline": "middle" }, pr);
+  prText.textContent = "PR";
+  var prM = mover(pr, 0.6);
+  var tower = { role: "Company Agent Layer", m: { pos: [12.55, 4.9] } };
+  (function () {
+    tower.bubble = el("g", { "class": "bubble-say" }, bubbleLayer);
+    tower.bubbleRect = el("rect", { rx: 7 }, tower.bubble);
+    tower.bubbleTail = el("polygon", {}, tower.bubble);
+    tower.bubbleText = el("text", { "text-anchor": "middle" }, tower.bubble);
+  })();
+  var buyers = crew.slice(5);
+
+  var WORK = [
+    { verb: "writing the spec", done: "spec and tests written" },
+    { verb: "is this the smallest version?", done: "spec approved" },
+    { verb: "tests first, then code", done: "code ready" },
+    { verb: "trying to break it", done: "couldn't break it" },
+    { verb: "replaying the scenarios", done: "all scenarios pass" }
+  ];
+  var NARRATE = [
+    "the Planner is writing a spec with acceptance tests",
+    "the Spec critic is checking it's the right, smallest change",
+    "the Builder is writing tests first, then code",
+    "the Breaker, in a fresh context, is trying to break it",
+    "the Scorer is replaying the scenario catalog"
+  ];
+
+  function paused() { return body.classList.contains("touring") || body.classList.contains("playing") || document.hidden; }
+  var Abort = {};
+  function wait(ms) {
+    return new Promise(function (res, rej) {
+      setTimeout(function () { if (paused()) rej(Abort); else res(); }, ms);
+    });
   }
-  if (!K.reduceMotion) requestAnimationFrame(flowFrame);
-  else flows.forEach(function (f) { var s = P(f.x, BELT, 0.6); f.g.setAttribute("transform", "translate(" + s[0] + "," + s[1] + ")"); });
+  function go(x, speed) {
+    return new Promise(function (res, rej) {
+      prM.travel([[x, BELT]], speed || 3.2, function () { if (paused()) rej(Abort); else res(); });
+    });
+  }
+  function light(i, on) { K.stations[i].g.classList.toggle("pulse", on); }
+  function clearAll() {
+    crew.forEach(function (w) { say(w, null); w.g.classList.remove("working"); w.m.place(w.at); });
+    say(tower, null);
+    narrate("Paused while you look around.");
+    K.stations.forEach(function (s, i) { light(i, false); });
+    pr.classList.remove("bad", "good");
+    pr.style.opacity = 0;
+  }
+
+  async function work(i, text, ms, cls) {
+    var w = crew[i];
+    light(i, true);
+    w.g.classList.add("working");
+    w.m.place([w.at[0], STEP]);
+    say(w, text, cls);
+    Sound.play("tick");
+    await wait(ms);
+  }
+  function rest(i) {
+    var w = crew[i];
+    light(i, false);
+    w.g.classList.remove("working");
+    w.m.place(w.at);
+    say(w, null);
+  }
+
+  var n = 212;
+  async function cycle() {
+    n++;
+    var id = "PR #" + n;
+    var bug = n % 3 === 1, contract = n % 4 === 2;
+    prM.place([0.4, BELT]);
+    pr.classList.remove("bad", "good");
+    pr.style.opacity = 1;
+    narrate(id + " starts as a backlog item.");
+    for (var i = 0; i < 5; i++) {
+      await go(crew[i].at[0]);
+      narrate(id + ": " + NARRATE[i] + ".");
+      await work(i, WORK[i].verb, 1700);
+      if (i === 3 && bug) {
+        say(crew[3], "found a bug!", "bad");
+        pr.classList.add("bad");
+        Sound.play("caught");
+        narrate(id + ": the Breaker found a bug, so it goes back to the Builder.");
+        await wait(1500);
+        rest(3);
+        await go(crew[2].at[0], 4);
+        await work(2, "fixing it", 1400);
+        rest(2);
+        pr.classList.remove("bad");
+        await go(crew[3].at[0], 4);
+        await work(3, "can't break it now", 1200);
+      } else {
+        say(crew[i], WORK[i].done, "ok");
+        await wait(700);
+      }
+      rest(i);
+    }
+    narrate(id + " heads to Company Agent Layer before it can merge.");
+    await go(12.55, 3.2);
+    K.beam(true);
+    narrate(id + ": Company Agent Layer checks every service that depends on this change.");
+    say(tower, "checking contracts");
+    await wait(1500);
+    if (contract) {
+      [2, 7].forEach(function (k) { K.services[k].g.classList.add("bad"); });
+      pr.classList.add("bad");
+      say(tower, "2 services read this field", "bad");
+      Sound.play("blocked");
+      narrate(id + ": it would break 2 services, so the affected teams get a PR comment and the Builder fixes it.");
+      await wait(2200);
+      [2, 7].forEach(function (k) { K.services[k].g.classList.remove("bad"); });
+      say(tower, null);
+      K.beam(false);
+      await go(crew[2].at[0], 4);
+      pr.classList.remove("bad");
+      await work(2, "updating the consumers", 1400);
+      rest(2);
+      await go(12.55, 4);
+      K.beam(true);
+    }
+    pr.classList.add("good");
+    say(tower, "no contracts broken", "ok");
+    narrate(id + ": no contracts broken. It ships.");
+    Sound.play("ok");
+    await wait(1100);
+    K.beam(false);
+    say(tower, null);
+    await go(23.4, 3.2);
+    pr.style.opacity = 0;
+    if (n % 2 === 0) {
+      var b = buyers[n % 3];
+      say(b, "scoring the new demo");
+      narrate("The buyer panel scores the shipped demo like a real customer would.");
+      await wait(2200);
+      say(b, null);
+    }
+    await wait(600);
+  }
+
+  async function line() {
+    for (;;) {
+      try {
+        if (paused()) { clearAll(); await new Promise(function (r) { setTimeout(r, 500); }); continue; }
+        await cycle();
+      } catch (e) {
+        if (e !== Abort) throw e;
+        prM.stop();
+        clearAll();
+        K.beam(false);
+        K.services.forEach(function (s) { if (!body.classList.contains("playing")) s.g.classList.remove("bad"); });
+      }
+    }
+  }
+  pr.style.opacity = 0;
+  if (K.reduceMotion) narrate("Each pull request goes Planner → Spec critic → Builder → Breaker → Scorer → Company Agent Layer.");
+  else line();
 
   // Building lights flicker at night.
   var wins = svg.querySelectorAll(".win");
@@ -543,4 +684,43 @@
       "<p>A browser game where real chemistry is the magic system: write a balanced equation, and a Rust simulation compiled to WebAssembly decides what happens.</p>" +
       '<a class="more" href="' + gh + '">Play it from the source on GitHub</a>';
   };
+
+  // ---------- Play markers on the map ----------
+  var markerLayer = el("g", { "class": "layer-markers" }, svg);
+  [
+    { key: "sneak", text: "Play: sneak a bad PR", at: [2.0, 1.4, 3.4] },
+    { key: "contract", text: "Play: break a contract", at: [21.6, 11.2, 0.6] },
+    { key: "security", text: "Play: jailbreak the guard", at: [23.2, 19.6, 0.4] },
+    { key: "alchemist", text: "Play: Alchemist's Trial", at: [4.6, 18.2, 0.3] }
+  ].forEach(function (m, i) {
+    var p = P(m.at[0], m.at[1], m.at[2]);
+    var g = el("g", { "class": "marker", tabindex: "0", role: "button", "aria-label": m.text, transform: "translate(" + p[0].toFixed(1) + "," + p[1].toFixed(1) + ")" }, markerLayer);
+    var inner = el("g", { "class": "marker-in", style: "animation-delay:" + (i * 0.35) + "s" }, g);
+    var t = el("text", { x: 14, y: 1, "dominant-baseline": "middle" }, inner);
+    t.textContent = m.text;
+    var b = t.getBBox();
+    var r = el("rect", { x: -10, y: b.y - 7, width: b.width + 34, height: b.height + 14, rx: (b.height + 14) / 2 }, inner);
+    inner.insertBefore(r, t);
+    el("polygon", { points: "-1,-6 9,0 -1,6", "class": "marker-play" }, inner);
+    g.addEventListener("click", function () { K.open(m.key); });
+    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); K.open(m.key); } });
+  });
+  var bb = svg.getBBox();
+  svg.setAttribute("viewBox", [bb.x - 12, bb.y - 12, bb.width + 24, bb.height + 24].map(Math.round).join(" "));
+
+  // ---------- Welcome card ----------
+  var welcome = document.getElementById("welcome");
+  function closeWelcome() {
+    welcome.hidden = true;
+    try { localStorage.setItem("campus-welcomed", "1"); } catch (e) { /* ignore */ }
+  }
+  function openWelcome() { welcome.hidden = false; document.getElementById("welcome-tour").focus(); }
+  document.getElementById("welcome-tour").addEventListener("click", function () { closeWelcome(); document.getElementById("tour-start").click(); });
+  document.getElementById("welcome-explore").addEventListener("click", closeWelcome);
+  welcome.addEventListener("click", function (e) { if (e.target === welcome) closeWelcome(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !welcome.hidden) closeWelcome(); });
+  document.getElementById("help-btn").addEventListener("click", openWelcome);
+  var seen = false;
+  try { seen = localStorage.getItem("campus-welcomed") === "1"; } catch (e) { seen = true; }
+  if (!seen) openWelcome();
 })();

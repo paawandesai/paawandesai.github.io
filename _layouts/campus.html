@@ -36,6 +36,8 @@
   <div class="hud">
     <button type="button" class="pill" id="ach-btn">Achievements <span id="ach-count">0</span><span class="meter" aria-hidden="true"><i id="ach-bar"></i></span></button>
     <button type="button" class="pill" id="sound-btn" aria-pressed="false">Sound off</button>
+    <button type="button" class="pill" id="help-btn">How this works</button>
+    <p class="live" aria-live="off"><span class="dot" aria-hidden="true"></span><b>Live</b> <span id="live-text">The build line is starting up.</span></p>
   </div>
 
   <main>
@@ -61,7 +63,16 @@
       <p class="tour-keys">Arrow keys move through the tour, Esc exits.</p>
     </section>
 
+    <nav class="games" aria-label="Games">
+      <span class="row-label">Play</span>
+      <button type="button" data-open="sneak">▶ Sneak a bad PR<small>Beat the factory · 30 s</small></button>
+      <button type="button" data-open="contract">▶ Break a contract<small>Try my agent · 20 s</small></button>
+      <button type="button" data-open="security">▶ Jailbreak the guard<small>Red-team an agent · 30 s</small></button>
+      <button type="button" data-open="alchemist">▶ Alchemist's Trial<small>Chemistry game</small></button>
+    </nav>
+
     <nav class="districts" aria-label="Sections of the campus">
+      <span class="row-label">Explore</span>
       <button type="button" data-open="office">Front Office<small>About, CV</small></button>
       <button type="button" data-open="lab">The Lab<small>Featured work</small></button>
       <button type="button" data-open="services">Service District<small>Gauntlet AI builds</small></button>
@@ -70,6 +81,23 @@
       <button type="button" data-open="security">Security<small>Jailbreak the guard</small></button>
     </nav>
   </main>
+
+  <div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+    <div class="welcome-card">
+      <p class="kicker">Welcome</p>
+      <h2 id="welcome-title">This is my work, built as a small company campus.</h2>
+      <ul>
+        <li><b>Buildings</b> hold my projects. Click one to look inside.</li>
+        <li><b>The people on the belt</b> are my AI build team. Watch a PR go from station to station, or click one to meet it.</li>
+        <li><b>▶ Play markers</b> are games: sneak a bad PR past the factory, break a contract, or jailbreak an agent.</li>
+      </ul>
+      <div class="welcome-actions">
+        <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
+        <button type="button" class="btn" id="welcome-explore">Explore on my own</button>
+        <a class="btn ghost" href="{{ base_path }}/about/">Plain view</a>
+      </div>
+    </div>
+  </div>
 
   <div class="agent-card" id="agent-card" role="dialog" aria-live="polite" hidden></div>
   <div class="toasts" id="toasts" aria-live="polite"></div>

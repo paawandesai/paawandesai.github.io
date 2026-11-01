@@ -252,11 +252,11 @@
     return el("line", { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], "class": "wire" }, layers.fx);
   });
 
-  label(6, 2.3, 4.4, "The Factory");
-  label(18.8, 2.4, 3.6, "Service District");
-  label(4.5, 15.3, 4.6, "The Lab");
-  label(5, 20.5, 2.9, "The Archive");
-  label(18, 17.25, 5.6, "Front Office");
+  label(6, 2.3, 4.4, "The Factory · how I build");
+  label(18.8, 2.4, 3.6, "Service District · Gauntlet builds");
+  label(4.5, 15.3, 4.6, "The Lab · featured work");
+  label(5, 20.5, 2.9, "The Archive · earlier work");
+  label(18, 17.25, 5.6, "Front Office · about and CV");
   label(22.35, 17, 4.9, "Security");
   label(12.55, 4.55, 6, "Company Agent Layer", true).classList.add("show");
 
