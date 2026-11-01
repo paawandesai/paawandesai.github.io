@@ -3,7 +3,7 @@
 :root {
   --bg: #f3efe4;
   --ink: #1f3a5f;
-  --muted: #5b6f8a;
+  --muted: #52647d;
   --line: rgba(31, 58, 95, 0.55);
   --grid: rgba(31, 58, 95, 0.09);
   --ground: #ebe5d5;
@@ -15,8 +15,8 @@
   --road: #ddd4c0;
   --belt: #c9bea5;
   --tree: #9fb08a;
-  --accent: #d9542b;
-  --ok: #2f8f6b;
+  --accent: #ad3f1b;
+  --ok: #23714f;
   --bad: #c2334d;
   --card: #fffdf7;
   --shadow: 0 10px 30px rgba(31, 58, 95, 0.14);
@@ -661,3 +661,42 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
 .games button small { font-size: 0.72rem; }
 .districts button { white-space: nowrap; flex: 0 0 auto; }
 @media (max-width: 700px) { .games, .districts { justify-content: flex-start; } }
+
+/* ---------- Aligned button rows: both rows share one 6-column grid ---------- */
+.games, .districts {
+  display: grid; grid-template-columns: 76px repeat(6, minmax(0, 1fr)); gap: 8px;
+  width: min(1300px, calc(100% - 32px)); margin: 0 auto; padding: 6px 0 0; box-sizing: border-box; overflow: visible;
+}
+.row-label { width: auto; align-self: center; }
+.games button, .districts button {
+  display: grid; grid-template-columns: 14px 1fr; column-gap: 8px; align-items: center; align-content: center;
+  min-width: 0; height: 100%; min-height: 48px; padding: 6px 12px; white-space: normal; line-height: 1.2; font-size: 0.86rem;
+}
+.games button small, .districts button small { grid-column: 2; margin-top: 2px; font-size: 0.72rem; }
+.games button::before, .districts button::before { content: ""; grid-row: 1 / span 2; justify-self: center; }
+.games button::before { width: 10px; height: 12px; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.districts button::before { width: 9px; height: 9px; border: 2px solid var(--accent); border-radius: 2px; }
+.hint { top: 8px; bottom: auto; left: auto; right: 28px; text-align: right; }
+.key-tag { display: inline-block; padding: 0 7px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; line-height: 1.6; }
+.key-tag.game { background: var(--accent); color: var(--bg); }
+.key-tag.work { background: var(--card); border: 1px solid var(--line); color: var(--ink); }
+@media (min-width: 701px) { .hint { position: absolute; } }
+@media (max-width: 700px) {
+  .games, .districts { grid-template-columns: repeat(2, minmax(0, 1fr)); width: calc(100% - 24px); }
+  .row-label { grid-column: 1 / -1; text-align: left; }
+  .hint { position: static; text-align: center; margin-top: 6px; }
+}
+/* Stronger lines and text for people who ask their system for more contrast. */
+@media (prefers-contrast: more) {
+  :root { --line: rgba(31, 58, 95, 0.95); --muted: #33445c; }
+  :root[data-theme="dark"] { --line: rgba(170, 195, 255, 0.9); --muted: #c3cdea; }
+  .ground-name { opacity: 0.3; }
+}
+/* Windows high contrast: let the system colours through. */
+@media (forced-colors: active) {
+  .games button, .districts button, .pill, .btn { border: 1px solid ButtonText; }
+  .sky, .orb { display: none; }
+}
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.games button small { opacity: 1; }
+@media (max-width: 700px) { .hint { display: none; } }

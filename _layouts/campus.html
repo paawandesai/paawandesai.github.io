@@ -11,15 +11,22 @@
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <script>
     (function () {
-      try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+      // A saved choice wins. Otherwise the campus follows the visitor's clock (dark from 7 pm to 7 am),
+      // and a system-wide dark-mode preference is always respected.
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") {
+        var h = new Date().getHours(), osDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+        t = osDark || h < 7 || h >= 19 ? "dark" : "light";
+      }
+      document.documentElement.setAttribute("data-theme", t);
     })();
   </script>
   <link rel="stylesheet" href="{{ base_path }}/assets/css/campus.css">
 </head>
 <body>
-  <a class="skip" href="{{ base_path }}/about/">Skip to plain view</a>
-
   <header class="bar">
+    <a class="skip" href="{{ base_path }}/about/">Skip to plain view</a>
     <div class="who">
       <h1>{{ site.author.name }}</h1>
       <p>{{ site.author.bio }}</p>
@@ -27,14 +34,14 @@
     <nav class="actions" aria-label="Site">
       <button type="button" class="btn" id="fast-path">Short on time?</button>
       <button type="button" class="btn primary" id="tour-start">Watch a PR ship</button>
-      <button type="button" class="btn" id="theme-toggle" aria-label="Switch between light and dark mode">
+      <button type="button" class="btn" id="theme-toggle" aria-label="Switch between light and dark mode" title="Light and dark follow your clock until you pick one">
         <span class="when-light">Dark mode</span><span class="when-dark">Light mode</span>
       </button>
       <a class="btn" href="{{ base_path }}/about/">Plain view</a>
     </nav>
   </header>
 
-  <div class="hud">
+  <div class="hud" role="region" aria-label="Status and settings">
     <button type="button" class="pill daily" id="daily-btn">★ Daily</button>
     <button type="button" class="pill" id="ach-btn">Achievements <span id="ach-count">0</span><span class="meter" aria-hidden="true"><i id="ach-bar"></i></span></button>
     <button type="button" class="pill" id="sound-btn" aria-pressed="false">Sound off</button>
@@ -46,13 +53,13 @@
     <div class="stage">
       <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
       <p class="clock" aria-live="off"><span class="clock-dot" aria-hidden="true"></span><span id="clock-text"></span></p>
-      <p class="hint" id="hint">Click a building to look inside.</p>
+      <p class="hint" id="hint"><span class="key-tag game">▶ Play tags</span> are games · <span class="key-tag work">White tags</span> open my work</p>
     </div>
 
-    <aside class="panel" id="panel" aria-live="polite" hidden>
+    <div class="panel" id="panel" aria-live="polite" hidden>
       <button type="button" class="close" id="panel-close" aria-label="Close">×</button>
       <div id="panel-body"></div>
-    </aside>
+    </div>
 
     <section class="tour" id="tour" aria-live="polite" hidden>
       <p class="tour-step" id="tour-count"></p>
@@ -68,12 +75,12 @@
 
     <nav class="games" aria-label="Games">
       <span class="row-label">Play</span>
-      <button type="button" data-open="breaker">▶ Be the Breaker<small>Catch the bug</small></button>
-      <button type="button" data-open="blast">▶ Blast Radius<small>Who does it break?</small></button>
-      <button type="button" data-open="guard">▶ Talk Past the Guard<small>Jailbreak an agent</small></button>
-      <button type="button" data-open="shipday">▶ Ship Day<small>Story mode</small></button>
-      <button type="button" data-open="evallab">▶ Eval Lab<small>Tune a model</small></button>
-      <button type="button" data-open="alchemist">▶ Alchemist's Trial<small>Chemistry</small></button>
+      <button type="button" data-open="breaker">Be the Breaker<small>Catch the bug</small></button>
+      <button type="button" data-open="blast">Blast Radius<small>Who does it break?</small></button>
+      <button type="button" data-open="guard">Talk Past the Guard<small>Jailbreak an agent</small></button>
+      <button type="button" data-open="shipday">Ship Day<small>Story mode</small></button>
+      <button type="button" data-open="evallab">Eval Lab<small>Tune a model</small></button>
+      <button type="button" data-open="alchemist">Alchemist's Trial<small>Chemistry</small></button>
     </nav>
 
     <nav class="districts" aria-label="Sections of the campus">
