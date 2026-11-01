@@ -311,7 +311,8 @@
     services: function () {
       return '<p class="kicker">Service District</p><h2>Gauntlet AI builds</h2>' +
         "<p>Built during Gauntlet AI Cohort 7 (Sep to Nov 2026), each one against a real brief and measured with its own evaluation.</p>" +
-        '<button type="button" class="btn primary play" data-open="contract">Try it: break a contract</button>' +
+        '<button type="button" class="btn primary play" data-open="blast">▶ Play Blast Radius</button>' +
+        '<button type="button" class="btn play" data-open="contract">Watch the demo: break a contract</button>' +
         list(data.gauntlet) + '<a class="more" href="' + B + '/portfolio/">All projects</a>';
     },
     factory: function () {
@@ -324,7 +325,8 @@
       return '<p class="kicker">The Factory</p><h2>How I build</h2>' +
         "<p>A team of AI agents with fixed roles, so nothing grades its own work.</p><table>" +
         rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; }).join("") +
-        '</table><button type="button" class="btn primary play" data-open="sneak">Play: sneak a bad PR past the factory</button>' +
+        '</table><button type="button" class="btn primary play" data-open="breaker">▶ Play Be the Breaker</button>' +
+        '<button type="button" class="btn play" data-open="sneak">Watch the demo: sneak a bad PR past the factory</button>' +
         '<a class="more" href="' + B + '/how-i-build/">The full workflow and verification ladder</a>';
     },
     archive: function () {
