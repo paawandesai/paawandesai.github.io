@@ -375,19 +375,23 @@
     btn.addEventListener("click", function () { lastFocus = btn; open(btn.getAttribute("data-open")); });
   });
 
-  // Theme toggle.
+  // Theme: follows the sun by default (see campus-sun.js), or a fixed light or dark.
   var root = document.documentElement;
-  function isDark() {
-    var t = root.getAttribute("data-theme");
-    if (t === "dark") return true;
-    if (t === "light") return false;
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var themeBtn = document.getElementById("theme-toggle"), themeLabel = document.getElementById("theme-label");
+  var NEXT = { auto: "light", light: "dark", dark: "auto" };
+  var NAMES = { auto: "sun", light: "light", dark: "dark" };
+  function renderTheme() {
+    var m = (window.CampusSun && window.CampusSun.state().mode) || "auto";
+    themeLabel.textContent = "Theme: " + NAMES[m];
+    themeBtn.setAttribute("aria-label", "Theme: " + (m === "auto" ? "follows the sun where you are" : m) + ". Switch to " + (NEXT[m] === "auto" ? "following the sun" : NEXT[m]) + ".");
   }
-  document.getElementById("theme-toggle").addEventListener("click", function () {
-    var next = isDark() ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    try { localStorage.setItem("theme", next); } catch (e) { /* storage can be blocked */ }
+  themeBtn.addEventListener("click", function () {
+    if (!window.CampusSun) return;
+    window.CampusSun.setMode(NEXT[window.CampusSun.state().mode || "auto"]);
+    renderTheme();
+    document.dispatchEvent(new CustomEvent("campus:theme"));
   });
+  renderTheme();
 
   // The tour.
   var belt = 6.5;

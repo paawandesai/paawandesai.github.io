@@ -438,7 +438,7 @@
   var CMDS = {
     help: function () {
       print(["<b>ls</b> [projects|games]  list things", "<b>open</b> &lt;name&gt;  open a building, project, resume or about", "<b>play</b> &lt;game&gt;  breaker, blast, guard, shipday, daily, evallab",
-        "<b>whoami</b>  <b>date</b>  <b>history</b>  <b>clear</b>  <b>exit</b>", "<b>theme</b> light|dark|auto   <b>sound</b> on|off", "There are a few more. Engineers usually find them."].join("<br>"));
+        "<b>whoami</b>  <b>date</b>  <b>history</b>  <b>clear</b>  <b>exit</b>", "<b>theme</b> sun|light|dark   <b>sound</b> on|off", "There are a few more. Engineers usually find them."].join("<br>"));
     },
     ls: function (a) {
       if (a[0] === "projects") print([].concat(K.data.featured, K.data.gauntlet).map(function (p) { return esc(slug(p)); }).join("  "));
@@ -473,11 +473,12 @@
     exit: closeTerm,
     echo: function (a) { print(esc(a.join(" "))); },
     theme: function (a) {
-      var want = a[0], dark = root.getAttribute("data-theme") === "dark" || (root.getAttribute("data-theme") !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
-      if (want === "auto") { try { localStorage.removeItem("theme"); } catch (e) { /* ignore */ } tick(); print("Theme follows your clock again."); return; }
-      if (want !== "light" && want !== "dark") { print("theme: light, dark or auto"); return; }
-      if ((want === "dark") !== dark) document.getElementById("theme-toggle").click();
-      print("Theme set to " + want + ".");
+      var want = a[0] === "sun" ? "auto" : a[0];
+      if (want !== "light" && want !== "dark" && want !== "auto") { print("theme: sun, light or dark"); return; }
+      window.CampusSun.setMode(want);
+      document.dispatchEvent(new CustomEvent("campus:theme"));
+      var lbl = document.getElementById("theme-label"); if (lbl) lbl.textContent = "Theme: " + (want === "auto" ? "sun" : want);
+      print(want === "auto" ? "Theme follows the sun where you are." : "Theme set to " + want + ".");
     },
     sound: function (a) {
       var b = document.getElementById("sound-btn"), on = b.getAttribute("aria-pressed") === "true";
@@ -539,26 +540,44 @@
   sky.innerHTML = '<span class="orb"></span>';
   stage.insertBefore(sky, stage.firstChild);
   var orb = sky.querySelector(".orb"), clock = document.getElementById("clock-text");
+  var Sun = window.CampusSun;
+  function fmt(d) { return d ? d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "—"; }
   function tick() {
-    var d = new Date(), h = d.getHours() + d.getMinutes() / 60;
-    var tod = h >= 5 && h < 8 ? "dawn" : h >= 8 && h < 17 ? "day" : h >= 17 && h < 20 ? "dusk" : "night";
-    root.setAttribute("data-tod", tod);
-    var saved = null;
-    try { saved = localStorage.getItem("theme"); } catch (e) { /* ignore */ }
-    if (saved !== "light" && saved !== "dark") {
-      var osDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
-      root.setAttribute("data-theme", osDark || h < 7 || h >= 19 ? "dark" : "light");
-    }
-    var sun = h >= 6 && h < 19.5, prog = sun ? (h - 6) / 13.5 : ((h + 24 - 19.5) % 24) / 10.5;
-    orb.className = "orb " + (sun ? "sun" : "moon");
+    var d = new Date(), st = Sun ? Sun.apply(d) : { tod: "day" };
+    var rise = st.rise, set = st.set, up = rise && set && d >= rise && d < set, prog;
+    if (rise && set) {
+      if (up) prog = (d - rise) / (set - rise);
+      else {
+        var from = d >= set ? set.getTime() : set.getTime() - 864e5, to = d >= set ? rise.getTime() + 864e5 : rise.getTime();
+        prog = (d.getTime() - from) / (to - from);
+      }
+    } else { up = st.elevation > 0; prog = 0.5; }
+    orb.className = "orb " + (up ? "sun" : "moon");
     orb.style.left = (6 + prog * 88) + "%";
     orb.style.top = (6 + (1 - Math.sin(prog * Math.PI)) * 22) + "%";
     if (clock) {
-      var label = { dawn: "early shift, lights coming up", day: "day shift", dusk: "evening shift, lights on", night: "night shift, the agents don't sleep" }[tod];
-      clock.textContent = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " your time · " + label;
+      var next = !rise || !set ? "" : d < rise ? " · sunrise " + fmt(rise) : d < set ? " · sunset " + fmt(set) : " · sunset was " + fmt(set);
+      clock.textContent = fmt(d) + " your time" + next + (st.loc && st.loc.precise ? "" : " (estimated from your time zone)");
+      locBtn.hidden = !!(st.loc && st.loc.precise) || !navigator.geolocation;
     }
     if (d.getHours() < 5) K.unlock("nightowl");
   }
+  // Opt-in exact location for a precise sunset. Rounded, kept in this browser only.
+  var locBtn = document.createElement("button");
+  locBtn.type = "button";
+  locBtn.className = "linkish";
+  locBtn.textContent = "Use my location";
+  locBtn.hidden = true;
+  if (clock) clock.parentNode.appendChild(locBtn);
+  locBtn.addEventListener("click", function () {
+    locBtn.textContent = "Locating…";
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      try { localStorage.setItem("campus-loc", JSON.stringify([+pos.coords.latitude.toFixed(1), +pos.coords.longitude.toFixed(1)])); } catch (e) { /* ignore */ }
+      K.track("sun-precise");
+      tick();
+    }, function () { locBtn.textContent = "Location unavailable"; }, { maximumAge: 864e5, timeout: 10000 });
+  });
+  document.addEventListener("campus:theme", tick);
   tick();
   setInterval(tick, 30000);
 
