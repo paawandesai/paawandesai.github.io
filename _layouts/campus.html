@@ -65,9 +65,9 @@
 
     <nav class="games" aria-label="Games">
       <span class="row-label">Play</span>
-      <button type="button" data-open="sneak">▶ Sneak a bad PR<small>Beat the factory · 30 s</small></button>
-      <button type="button" data-open="contract">▶ Break a contract<small>Try my agent · 20 s</small></button>
-      <button type="button" data-open="security">▶ Jailbreak the guard<small>Red-team an agent · 30 s</small></button>
+      <button type="button" data-open="breaker">▶ Be the Breaker<small>Catch the bug before it merges · 60 s</small></button>
+      <button type="button" data-open="blast">▶ Blast Radius<small>Find who a change breaks · 5 rounds</small></button>
+      <button type="button" data-open="guard">▶ Talk Past the Guard<small>Jailbreak an agent · 5 levels</small></button>
       <button type="button" data-open="alchemist">▶ Alchemist's Trial<small>Chemistry game</small></button>
     </nav>
 
@@ -89,7 +89,7 @@
       <ul>
         <li><b>Buildings</b> hold my projects. Click one to look inside.</li>
         <li><b>The people on the belt</b> are my AI build team. Watch a PR go from station to station, or click one to meet it.</li>
-        <li><b>▶ Play markers</b> are games: sneak a bad PR past the factory, break a contract, or jailbreak an agent.</li>
+        <li><b>▶ Play markers</b> are games: catch bugs before they merge, find who a change breaks, or talk your way past an AI guard.</li>
       </ul>
       <div class="welcome-actions">
         <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
@@ -128,6 +128,7 @@
   <script src="{{ base_path }}/assets/js/campus.js"></script>
   <script src="{{ base_path }}/assets/js/campus-sound.js"></script>
   <script src="{{ base_path }}/assets/js/campus-play.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-arcade.js"></script>
   {% include analytics.html %}
 </body>
 </html>

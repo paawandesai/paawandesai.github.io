@@ -64,7 +64,10 @@
     { id: "redteam", name: "Red teamer", desc: "Tried every attack on the guard." },
     { id: "alchemist", name: "Alchemist", desc: "Stepped into Alchemist's Trial." },
     { id: "dj", name: "DJ", desc: "Turned the sound on." },
-    { id: "homework", name: "Did the homework", desc: "Opened the CV or resume." }
+    { id: "homework", name: "Did the homework", desc: "Opened the CV or resume." },
+    { id: "sharp", name: "Sharp eye", desc: "Scored 1,500 in Be the Breaker." },
+    { id: "radius", name: "Field-level", desc: "Played a perfect round of Blast Radius." },
+    { id: "smooth", name: "Smooth talker", desc: "Beat all five levels of the guard." }
   ];
   var got = {};
   try { (JSON.parse(localStorage.getItem("campus-ach")) || []).forEach(function (id) { got[id] = true; }); } catch (e) { /* storage can be blocked */ }
@@ -120,7 +123,10 @@
   };
   document.getElementById("ach-btn").addEventListener("click", function () { K.open("achievements"); });
 
-  var BUILDINGS = { office: "office", lab: "lab", alchemist: "lab", services: "services", contract: "services", factory: "factory", sneak: "factory", archive: "archive", security: "security" };
+  K.unlock = unlock;
+  K.sound = Sound;
+
+  var BUILDINGS = { breaker: "factory", blast: "services", guard: "security", office: "office", lab: "lab", alchemist: "lab", services: "services", contract: "services", factory: "factory", sneak: "factory", archive: "archive", security: "security" };
   document.addEventListener("campus:open", function (e) {
     var b = BUILDINGS[e.detail.key];
     if (!b) return;
@@ -630,7 +636,8 @@
   var attacked = {};
   K.views.security = function () {
     return '<p class="kicker">Security · scripted, no live model</p><h2>Jailbreak the guard</h2>' +
-      "<p>The guard is a support agent that can refund orders. Try to make it misbehave.</p>" +
+      '<button type="button" class="btn primary play" data-open="guard">▶ Play Talk Your Way Past the Guard</button>' +
+      "<p>Or watch the demo: the guard is a support agent that can refund orders. Pick an attack and see how it's stopped.</p>" +
       ATTACKS.map(function (a, i) {
         return '<button type="button" class="opt' + (attacked[i] ? " caught" : "") + '" data-attack="' + i + '"><span>' + esc(a.name) + "<small>" + esc(a.kind) +
           '</small></span><span class="tag ' + (attacked[i] ? "bad" : "go") + '">' + (attacked[i] ? "BLOCKED" : "TRY") + "</span></button>";
@@ -688,9 +695,9 @@
   // ---------- Play markers on the map ----------
   var markerLayer = el("g", { "class": "layer-markers" }, svg);
   [
-    { key: "sneak", text: "Play: sneak a bad PR", at: [2.0, 1.4, 3.4] },
-    { key: "contract", text: "Play: break a contract", at: [21.6, 11.2, 0.6] },
-    { key: "security", text: "Play: jailbreak the guard", at: [23.2, 19.6, 0.4] },
+    { key: "breaker", text: "Play: Be the Breaker", at: [2.0, 1.4, 3.4] },
+    { key: "blast", text: "Play: Blast Radius", at: [21.6, 11.2, 0.6] },
+    { key: "guard", text: "Play: talk past the guard", at: [23.2, 19.6, 0.4] },
     { key: "alchemist", text: "Play: Alchemist's Trial", at: [4.6, 18.2, 0.3] }
   ].forEach(function (m, i) {
     var p = P(m.at[0], m.at[1], m.at[2]);
