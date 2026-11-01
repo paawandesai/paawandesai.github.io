@@ -636,7 +636,7 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
 :root[data-tod="day"] .sky { background: radial-gradient(ellipse at 50% 0%, rgba(255, 220, 140, 0.14), transparent 60%); }
 :root[data-tod="dusk"] .sky { background: radial-gradient(ellipse at 80% 0%, rgba(255, 120, 90, 0.22), rgba(120, 90, 200, 0.08) 50%, transparent 75%); }
 :root[data-tod="night"] .sky { background: radial-gradient(ellipse at 50% 0%, rgba(60, 80, 160, 0.18), transparent 70%); }
-:root[data-tod="dusk"]:not([data-theme="dark"]) .win:not(.off), :root[data-tod="night"]:not([data-theme="dark"]) .win:not(.off) { fill: #f2b84b; opacity: 0.85; }
+:root[data-theme-mode="light"][data-tod="dusk"] .win:not(.off), :root[data-theme-mode="light"][data-tod="night"] .win:not(.off) { fill: #f2b84b; opacity: 0.85; }
 @media (max-width: 720px) {
   .ev-grid { grid-template-columns: 1fr; }
   .clock { display: none; }
@@ -708,3 +708,8 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
   .role-pick { grid-template-columns: 1fr; }
   .hud .live { display: none; }
 }
+
+/* Sun mode: the sky deepens with the blend value set by campus-sun.js. */
+.sky::after { content: ""; position: absolute; inset: 0; background: rgb(20 30 70 / calc(var(--night, 0) * 0.22)); transition: background 2s; }
+.linkish { background: none; border: 0; padding: 0; margin-left: 8px; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; pointer-events: auto; }
+.clock { pointer-events: none; }

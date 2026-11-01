@@ -9,19 +9,7 @@
   <meta property="og:title" content="{{ site.title }}">
   <meta property="og:description" content="{{ site.description }}">
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-  <script>
-    (function () {
-      // A saved choice wins. Otherwise the campus follows the visitor's clock (dark from 7 pm to 7 am),
-      // and a system-wide dark-mode preference is always respected.
-      var t = null;
-      try { t = localStorage.getItem("theme"); } catch (e) {}
-      if (t !== "light" && t !== "dark") {
-        var h = new Date().getHours(), osDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
-        t = osDark || h < 7 || h >= 19 ? "dark" : "light";
-      }
-      document.documentElement.setAttribute("data-theme", t);
-    })();
-  </script>
+  <script src="{{ base_path }}/assets/js/campus-sun.js"></script>
   <link rel="stylesheet" href="{{ base_path }}/assets/css/campus.css">
 </head>
 <body>
@@ -35,9 +23,7 @@
     <nav class="actions" aria-label="Site">
       <button type="button" class="btn" id="fast-path">Short on time?</button>
       <button type="button" class="btn primary" id="tour-start">Watch a PR ship</button>
-      <button type="button" class="btn" id="theme-toggle" aria-label="Switch between light and dark mode" title="Light and dark follow your clock until you pick one">
-        <span class="when-light">Dark mode</span><span class="when-dark">Light mode</span>
-      </button>
+      <button type="button" class="btn" id="theme-toggle" title="Follow the sun where you are, or pick light or dark"><span id="theme-label">Theme: sun</span></button>
       <a class="btn" href="{{ base_path }}/files/Paawan_Desai_Resume.pdf" data-resume>Resume</a>
       <a class="btn" href="{{ base_path }}/about/">Plain view</a>
     </nav>
