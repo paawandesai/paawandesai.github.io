@@ -108,11 +108,13 @@
     box.querySelector('[data-act="start"]').addEventListener("click", function () { playBreaker(box); });
   }
 
-  function playBreaker(box) {
+  function playBreaker(box, opts) {
+    opts = opts || {};
     stopRunning();
     K.track("arcade-breaker-start");
-    var diff = getDiff("breaker");
+    var diff = opts.diff || getDiff("breaker");
     var C = { easy: { total: 90, lives: 5, pr: 15, min: 8, step: 0.3, penalty: 0 }, normal: { total: 60, lives: 3, pr: 9, min: 4, step: 0.35, penalty: 2 }, hard: { total: 45, lives: 2, pr: 7, min: 3, step: 0.4, penalty: 3 } }[diff];
+    if (opts.total) C = { total: opts.total, lives: C.lives, pr: C.pr, min: C.min, step: C.step, penalty: C.penalty };
     var state = { score: 0, lives: C.lives, streak: 0, caught: 0, missed: 0, total: C.total, left: C.total, prTime: C.pr, prLeft: C.pr, pr: 300, deck: [], cur: null, lock: false };
     var timer = null, last = performance.now();
 
@@ -225,6 +227,7 @@
 
     function end(reason) {
       stopRunning();
+      if (opts.onEnd) { opts.onEnd({ score: state.score, caught: state.caught, missed: state.missed, reason: reason }); return; }
       var b = best("breaker-" + diff, state.score);
       if (state.score >= 1500 && diff !== "easy") K.unlock("sharp");
       K.track("arcade-breaker-end");
@@ -290,10 +293,11 @@
     box.querySelector('[data-act="start"]').addEventListener("click", function () { playBlast(box); });
   }
 
-  function playBlast(box) {
+  function playBlast(box, opts) {
+    opts = opts || {};
     stopRunning();
     K.track("arcade-blast-start");
-    var diff = getDiff("blast"), B = BLAST[diff], ROUNDS = B.rounds;
+    var diff = opts.diff || getDiff("blast"), B = BLAST[diff], ROUNDS = opts.rounds || B.rounds;
     var total = 0, r = 0, timer = null, perfectAny = false;
 
     function round() {
@@ -362,6 +366,7 @@
 
     function end() {
       stopRunning();
+      if (opts.onEnd) { opts.onEnd({ score: total, perfect: perfectAny }); return; }
       var b = best("blast-" + diff, total);
       K.track("arcade-blast-end");
       box.innerHTML = '<div class="end"><p class="kicker">All ' + ROUNDS + ' rounds done</p><p class="big-score">' + total + "</p><p>Best on " + diff + ": <b>" + b + "</b>" +
@@ -463,10 +468,11 @@
     return c.length;
   }
 
-  function playGuard(box, level) {
+  function playGuard(box, level, opts) {
+    opts = opts || {};
     stopRunning();
     K.track("arcade-guard-level-" + (level + 1));
-    var L = LEVELS[level], st = {}, tries = 0, won = false, diff = getDiff("guard");
+    var L = LEVELS[level], st = {}, tries = 0, won = false, diff = opts.diff || getDiff("guard");
     box.innerHTML =
       '<div class="hud-row"><span>Level <b>' + (level + 1) + " / 5</b></span><span>" + esc(L.name) + '</span><span class="tag-diff">' + diff + "</span></div>" +
       '<p class="defense"><b>Defense:</b> ' + esc(L.defense) + (L.setup ? "<br><b>Intel:</b> " + esc(L.setup) : "") + "</p>" +
@@ -475,7 +481,7 @@
       '<input id="guard-input" type="text" maxlength="300" autocomplete="off" placeholder="Type a message to the guard…">' +
       '<button type="submit" class="btn primary">Send</button></form>' +
       '<div class="arcade-actions">' + (diff === "normal" ? '<button type="button" class="btn" data-act="hint">Hint</button>' : "") +
-      '<button type="button" class="btn ghost" data-act="menu">All levels</button><span class="tries" data-k="tries"></span></div>';
+      '<button type="button" class="btn ghost" data-act="menu">' + (opts.onEnd ? "Give up" : "All levels") + '</button><span class="tries" data-k="tries"></span></div>';
     var chat = box.querySelector('[data-k="chat"]');
     var input = box.querySelector("#guard-input");
     function add(cls, text) {
@@ -488,7 +494,17 @@
     var hintBtn = box.querySelector('[data-act="hint"]');
     if (hintBtn) hintBtn.addEventListener("click", function () { add("hint", "Hint: " + L.hint); });
     if (diff === "easy") add("hint", "Hint: " + L.hint);
-    box.querySelector('[data-act="menu"]').addEventListener("click", function () { K.open("guard"); });
+    function finishStory(ok) {
+      won = true;
+      var act = box.querySelector(".arcade-actions");
+      act.innerHTML = '<button type="button" class="btn primary" data-act="cont">Continue</button>';
+      act.querySelector('[data-act="cont"]').addEventListener("click", function () { opts.onEnd({ won: ok, tries: tries }); });
+      act.querySelector('[data-act="cont"]').focus();
+    }
+    box.querySelector('[data-act="menu"]').addEventListener("click", function () {
+      if (opts.onEnd) { if (!won) { won = true; opts.onEnd({ won: false, tries: tries }); } return; }
+      K.open("guard");
+    });
     box.querySelector('[data-k="form"]').addEventListener("submit", function (e) {
       e.preventDefault();
       if (won) return;
@@ -507,6 +523,7 @@
           var n = markCleared(level);
           K.track("arcade-guard-cleared-" + (level + 1));
           add("lesson", "Level cleared. " + L.lesson);
+          if (opts.onEnd) { finishStory(true); return; }
           var act = box.querySelector(".arcade-actions");
           if (n >= 5) K.unlock("smooth");
           if (level < 4) {
@@ -517,7 +534,13 @@
               '<a class="more" href="' + K.data.base + '/portfolio/redteam-engine-auditlens/">See the red-team engine</a> <button type="button" class="btn ghost" data-act="menu">All levels</button>';
           }
           act.querySelector('[data-act="menu"]').addEventListener("click", function () { K.open("guard"); });
-        } else Sound.play("blocked");
+        } else {
+          Sound.play("blocked");
+          if (opts.maxTries && tries >= opts.maxTries && opts.onEnd) {
+            add("lesson", "Out of messages. " + L.hint);
+            finishStory(false);
+          }
+        }
       }, 350);
     });
     input.focus();
@@ -526,6 +549,12 @@
 
   // ---------- Wiring ----------
   var MOUNTS = { breaker: mountBreaker, blast: mountBlast, guard: mountGuard };
+  K.arcade = {
+    SNIPPETS: SNIPPETS, LEVELS: LEVELS, playBreaker: playBreaker, playBlast: playBlast, playGuard: playGuard,
+    best: best, shuffle: shuffle, getDiff: getDiff, diffPicker: diffPicker, wireDiff: wireDiff, bestLine: bestLine,
+    stop: stopRunning, setRunning: function (r) { stopRunning(); running = r; },
+    mount: function (key, fn) { MOUNTS[key] = fn; }
+  };
   document.addEventListener("campus:open", function (e) {
     stopRunning();
     var m = MOUNTS[e.detail.key];
