@@ -1,0 +1,133 @@
+{% include base_path %}<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  <meta property="og:title" content="{{ site.title }}">
+  <meta property="og:description" content="{{ site.description }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <script>
+    (function () {
+      try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="{{ base_path }}/assets/css/campus.css">
+</head>
+<body>
+  <a class="skip" href="{{ base_path }}/about/">Skip to plain view</a>
+
+  <header class="bar">
+    <div class="who">
+      <h1>{{ site.author.name }}</h1>
+      <p>{{ site.author.bio }}</p>
+    </div>
+    <nav class="actions" aria-label="Site">
+      <button type="button" class="btn primary" id="tour-start">Watch a PR ship</button>
+      <button type="button" class="btn" id="theme-toggle" aria-label="Switch between light and dark mode">
+        <span class="when-light">Dark mode</span><span class="when-dark">Light mode</span>
+      </button>
+      <a class="btn" href="{{ base_path }}/about/">Plain view</a>
+    </nav>
+  </header>
+
+  <div class="hud">
+    <button type="button" class="pill" id="ach-btn">Achievements <span id="ach-count">0</span><span class="meter" aria-hidden="true"><i id="ach-bar"></i></span></button>
+    <button type="button" class="pill" id="sound-btn" aria-pressed="false">Sound off</button>
+    <button type="button" class="pill" id="help-btn">How this works</button>
+    <p class="live" aria-live="off"><span class="dot" aria-hidden="true"></span><b>Live</b> <span id="live-text">The build line is starting up.</span></p>
+  </div>
+
+  <main>
+    <div class="stage">
+      <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
+      <p class="hint" id="hint">Click a building to look inside.</p>
+    </div>
+
+    <aside class="panel" id="panel" aria-live="polite" hidden>
+      <button type="button" class="close" id="panel-close" aria-label="Close">×</button>
+      <div id="panel-body"></div>
+    </aside>
+
+    <section class="tour" id="tour" aria-live="polite" hidden>
+      <p class="tour-step" id="tour-count"></p>
+      <h2 id="tour-title"></h2>
+      <p id="tour-text"></p>
+      <div class="tour-nav">
+        <button type="button" class="btn" id="tour-back">Back</button>
+        <button type="button" class="btn primary" id="tour-next">Next</button>
+        <button type="button" class="btn ghost" id="tour-exit">Exit tour</button>
+      </div>
+      <p class="tour-keys">Arrow keys move through the tour, Esc exits.</p>
+    </section>
+
+    <nav class="games" aria-label="Games">
+      <span class="row-label">Play</span>
+      <button type="button" data-open="sneak">▶ Sneak a bad PR<small>Beat the factory · 30 s</small></button>
+      <button type="button" data-open="contract">▶ Break a contract<small>Try my agent · 20 s</small></button>
+      <button type="button" data-open="security">▶ Jailbreak the guard<small>Red-team an agent · 30 s</small></button>
+      <button type="button" data-open="alchemist">▶ Alchemist's Trial<small>Chemistry game</small></button>
+    </nav>
+
+    <nav class="districts" aria-label="Sections of the campus">
+      <span class="row-label">Explore</span>
+      <button type="button" data-open="office">Front Office<small>About, CV</small></button>
+      <button type="button" data-open="lab">The Lab<small>Featured work</small></button>
+      <button type="button" data-open="services">Service District<small>Gauntlet AI builds</small></button>
+      <button type="button" data-open="factory">The Factory<small>How I build</small></button>
+      <button type="button" data-open="archive">The Archive<small>Earlier work</small></button>
+      <button type="button" data-open="security">Security<small>Jailbreak the guard</small></button>
+    </nav>
+  </main>
+
+  <div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+    <div class="welcome-card">
+      <p class="kicker">Welcome</p>
+      <h2 id="welcome-title">This is my work, built as a small company campus.</h2>
+      <ul>
+        <li><b>Buildings</b> hold my projects. Click one to look inside.</li>
+        <li><b>The people on the belt</b> are my AI build team. Watch a PR go from station to station, or click one to meet it.</li>
+        <li><b>▶ Play markers</b> are games: sneak a bad PR past the factory, break a contract, or jailbreak an agent.</li>
+      </ul>
+      <div class="welcome-actions">
+        <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
+        <button type="button" class="btn" id="welcome-explore">Explore on my own</button>
+        <a class="btn ghost" href="{{ base_path }}/about/">Plain view</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="agent-card" id="agent-card" role="dialog" aria-live="polite" hidden></div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <footer class="foot">
+    <a href="{{ base_path }}/files/Paawan_Desai_Resume.pdf">Resume (PDF)</a>
+    <a href="https://github.com/{{ site.author.github }}">GitHub</a>
+    <a href="https://www.linkedin.com/in/{{ site.author.linkedin }}">LinkedIn</a>
+    <a href="mailto:{{ site.author.email }}">Email</a>
+  </footer>
+
+  {% assign featured = site.portfolio | where: "group", "featured" | sort: "order" %}
+  {% assign gauntlet = site.portfolio | where: "group", "gauntlet" | sort: "order" %}
+  {% assign earlier = site.portfolio | where: "group", "earlier" | sort: "order" %}
+  <script id="campus-data" type="application/json">
+  {
+    "base": {{ base_path | jsonify }},
+    "photo": {{ site.author.avatar | prepend: "/images/" | prepend: base_path | jsonify }},
+    "bio": {{ site.author.bio | jsonify }},
+    "github": {{ site.author.github | jsonify }},
+    "linkedin": {{ site.author.linkedin | jsonify }},
+    "alchemist_url": {{ site.alchemist_url | default: "" | jsonify }},
+    "featured": [{% for p in featured %}{"title": {{ p.title | jsonify }}, "excerpt": {{ p.excerpt | strip_html | strip | jsonify }}, "url": {{ p.url | prepend: base_path | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}],
+    "gauntlet": [{% for p in gauntlet %}{"title": {{ p.title | jsonify }}, "excerpt": {{ p.excerpt | strip_html | strip | jsonify }}, "url": {{ p.url | prepend: base_path | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}],
+    "earlier": [{% for p in earlier %}{"title": {{ p.title | jsonify }}, "excerpt": {{ p.excerpt | strip_html | strip | jsonify }}, "url": {{ p.url | prepend: base_path | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+  }
+  </script>
+  <script src="{{ base_path }}/assets/js/campus.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-sound.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-play.js"></script>
+  {% include analytics.html %}
+</body>
+</html>

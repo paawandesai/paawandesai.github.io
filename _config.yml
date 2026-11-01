@@ -16,6 +16,8 @@ url                      : https://paawankdesai.com # the custom domain in CNAME
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "paawandesai/paawandesai.github.io"
 
+alchemist_url            : "" # where Alchemist's Trial is deployed, e.g. https://realgame.pages.dev. Blank shows a GitHub link instead of the game.
+
 # Site Author - The following control what appear as part of the author content on the side bar.
 #               If a field is blank the icon and link will not appear, otherwise it will be shown.
 #               Additional customization can be done by editing /_includes/author-profile.html
@@ -146,7 +148,9 @@ social:
 
 # Analytics
 analytics:
-  provider               :  "false" # false (default), "google", "google-universal", "google-analytics-4", "custom"
+  provider               :  "goatcounter" # false, "goatcounter", "google", "google-universal", "google-analytics-4", "custom"
+  goatcounter:
+    code                 : "paawandesai" # your GoatCounter site code, e.g. "paawan" for paawan.goatcounter.com. Blank keeps analytics off.
   google:
     tracking_id          :
 

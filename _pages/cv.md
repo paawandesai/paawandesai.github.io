@@ -41,7 +41,7 @@ Education
 Selected Projects
 ======
 * **[Company Agent Layer]({{ base_path }}/portfolio/company-agent-layer/)** (2026): flags breaking changes across a company's repos and tells the affected teams, at field level, on the PR.
-* **[NACHA payment-file model]({{ base_path }}/portfolio/nacha-slm/)** (2026): a fine-tuned Qwen3-4B that scores 15/20 exact against Opus at 17/20 and GPT-5.5 at 3/20.
+* **[NACHA payment-file model]({{ base_path }}/portfolio/nacha-slm/)** (2026): a fine-tuned Qwen3-4B that writes 18 of the 20 hardest files exactly, against 17 for Opus and 3 for GPT-5.5, and 99/100 on the holdout set.
 * **[AI Agent Red Team Engine + AuditLens]({{ base_path }}/portfolio/redteam-engine-auditlens/)** (2026): 113 adversarial prompts mapped to the OWASP LLM Top 10, MITRE ATLAS and the EU AI Act.
 * **[Alchemist's Trial]({{ base_path }}/portfolio/alchemists-trial/)** (2026): a Rust and WebAssembly chemistry game for school Chromebooks.
 * **[Energy AI Hackathon 2025, First Place]({{ base_path }}/portfolio/energy_ai_hackathon_2025/)** (Jan 2025): energy-use forecasting for hydraulic fracturing, with R² up to 0.99.

@@ -1,6 +1,6 @@
 ---
 title: "Small Model That Writes Bank Payment Files"
-excerpt: "A fine-tuned 4B model that writes exact NACHA ACH files, within 2 of Opus and far ahead of other frontier models."
+excerpt: "A fine-tuned 4B model that writes exact NACHA ACH files, edging out Opus on the hardest specs and far ahead of other frontier models."
 collection: portfolio
 layout: single
 group: featured
@@ -14,14 +14,14 @@ A Qwen3-4B fine-tuned with LoRA (trained on Modal) that turns a plain-language p
 
 ### Results (exact-match files)
 
-| Model | Head-to-head (20) |
+| Model | Hardest 20 specs |
 | --- | --- |
-| Claude Opus | 17 |
-| **This 4B model, running locally** | **15** |
+| **This 4B model, running locally** | **18** |
+| Claude Opus, best prompt | 17 |
 | GPT-5.5 | 3 |
 | Claude Sonnet | 1 |
 
-The tuned model also scores 38/50 on the eval set and 85/100 on the holdout set. The untuned base model scores 0/50 on the eval set. A self-training round is in progress. It doesn't yet generalize to originator names it never saw in training, and that gap is tracked openly.
+The current model scores 45/50 on the eval set and 99/100 on the holdout set, against 0/50 for the untuned base. It now handles originator names it never saw in training (9 of 10, up from 0 of 10). Bigger files with unseen names are the open gap (11/50), and it's tracked openly. A self-training round didn't beat it, so I dropped it. Training takes about five hours on one GPU, using 6,000 code-generated files.
 
 ### How it was built
 - **Find a real gap first.** I tested candidate tasks like financial statement spreading and chest X-ray reading and dropped them because frontier models were already good enough. Exact fixed-width banking files were not.
