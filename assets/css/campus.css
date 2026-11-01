@@ -721,3 +721,45 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
 .lang-pick span { display: inline-block; padding: 4px 12px; border: 1.5px solid var(--line); border-radius: 999px; font-size: 0.85rem; }
 .lang-pick input:checked + span { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); font-weight: 700; }
 .lang-pick input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Phone first: compact header, a map you can swipe, and a dock for the two things people want ---------- */
+.dock, .swipe { display: none; }
+@media (max-width: 700px) {
+  .bar { padding: 12px 12px 0; gap: 8px; }
+  .who h1 { font-size: 1.25rem; margin: 0; }
+  .who p { font-size: 0.9rem; line-height: 1.35; margin: 2px 0 0; }
+  .who .caption { display: none; }
+  .actions, .hud {
+    display: flex; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none;
+    margin: 0 -12px; padding: 4px 12px; -webkit-overflow-scrolling: touch;
+  }
+  .hud { margin: 0; }
+  .actions::-webkit-scrollbar, .hud::-webkit-scrollbar { display: none; }
+  .actions .btn, .hud .pill { flex: 0 0 auto; white-space: nowrap; font-size: 0.85rem; padding: 7px 12px; min-height: 36px; }
+  .actions #fast-path, .actions [data-resume] { display: none; }
+  .hud { padding-top: 0; }
+
+  .stage { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; position: relative; margin-top: 4px; }
+  .stage::-webkit-scrollbar { display: none; }
+  #campus { width: 165%; max-width: none; height: auto; display: block; }
+  .swipe {
+    display: block; position: relative; z-index: 2; margin: 6px auto -30px; width: max-content; max-width: calc(100vw - 24px);
+    padding: 3px 12px; border-radius: 999px; font-size: 0.78rem; background: var(--card); border: 1px solid var(--line); color: var(--muted);
+    transition: opacity 0.4s;
+  }
+  body.swiped .swipe { opacity: 0; }
+
+  .games, .districts { gap: 6px; }
+  .games button, .districts button { min-height: 44px; padding: 6px 10px; font-size: 0.85rem; }
+  .row-label { margin-top: 6px; }
+  .foot { padding-bottom: 84px; }
+
+  .dock {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 15;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--bg) 92%, transparent);
+    border-top: 1px solid var(--line); backdrop-filter: blur(6px);
+  }
+  .dock .btn { display: flex; align-items: center; justify-content: center; min-height: 44px; margin: 0; }
+  .dock .btn:not(.primary) { background: var(--card); }
+  body.playing .dock, body.touring .dock, body:has(.panel:not([hidden])) .dock { display: none; }
+}
