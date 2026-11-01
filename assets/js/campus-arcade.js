@@ -23,6 +23,29 @@
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
     return a;
   }
+  var DIFFS = [["easy", "Easy"], ["normal", "Normal"], ["hard", "Hard"]];
+  function getDiff(key) {
+    var d = "normal";
+    try { d = localStorage.getItem("arcade-diff-" + key) || "normal"; } catch (e) { /* ignore */ }
+    return d === "easy" || d === "hard" ? d : "normal";
+  }
+  function diffPicker(key, notes) {
+    var cur = getDiff(key);
+    return '<fieldset class="diff-pick"><legend>Difficulty</legend>' + DIFFS.map(function (d, i) {
+      return '<label><input type="radio" name="diff-' + key + '" value="' + d[0] + '"' + (d[0] === cur ? " checked" : "") + "><span><b>" + d[1] + "</b><small>" + esc(notes[i]) + "</small></span></label>";
+    }).join("") + "</fieldset>";
+  }
+  function wireDiff(box, key) {
+    box.querySelectorAll('input[name="diff-' + key + '"]').forEach(function (r) {
+      r.addEventListener("change", function () {
+        try { localStorage.setItem("arcade-diff-" + key, r.value); } catch (e) { /* ignore */ }
+      });
+    });
+  }
+  function bestLine(key) {
+    return DIFFS.map(function (d) { return d[1] + " <b>" + best(key + "-" + d[0]) + "</b>"; }).join(" · ");
+  }
+
   function stopRunning() { if (running) { running.stop(); running = null; } }
 
   // ================= Be the Breaker =================
@@ -73,26 +96,30 @@
     return '<p class="kicker">Arcade · The Factory</p><h2>Be the Breaker</h2>' +
       '<div class="arcade" id="breaker">' +
       "<p>Pull requests are heading for the merge gate. <b>Click the buggy line</b> before each one merges, or <b>Approve</b> it if it's clean.</p>" +
-      "<ul class=\"rules\"><li>Correct catches build a streak multiplier.</li><li>A wrong click costs 2 seconds. Letting a bug merge, or blocking a clean PR, costs a life.</li><li>60 seconds, 3 lives. PRs get faster as you go.</li></ul>" +
-      '<p class="best">Your best: <b>' + best("breaker") + "</b></p>" +
+      "<ul class=\"rules\"><li>Correct catches build a streak multiplier.</li><li>A wrong click costs time. Letting a bug merge, or approving one, costs a life.</li><li>PRs get faster as you go.</li></ul>" +
+      diffPicker("breaker", ["90 s, 5 lives, slow PRs, wrong clicks are free", "60 s, 3 lives", "45 s, 2 lives, fast PRs"]) +
+      '<p class="best">Best: ' + bestLine("breaker") + "</p>" +
       '<button type="button" class="btn primary big" data-act="start">Start</button></div>';
   };
 
   function mountBreaker(root) {
     var box = root.querySelector("#breaker");
+    wireDiff(box, "breaker");
     box.querySelector('[data-act="start"]').addEventListener("click", function () { playBreaker(box); });
   }
 
   function playBreaker(box) {
     stopRunning();
     K.track("arcade-breaker-start");
-    var state = { score: 0, lives: 3, streak: 0, caught: 0, missed: 0, total: 60, left: 60, prTime: 9, prLeft: 9, pr: 300, deck: [], cur: null, lock: false };
+    var diff = getDiff("breaker");
+    var C = { easy: { total: 90, lives: 5, pr: 15, min: 8, step: 0.3, penalty: 0 }, normal: { total: 60, lives: 3, pr: 9, min: 4, step: 0.35, penalty: 2 }, hard: { total: 45, lives: 2, pr: 7, min: 3, step: 0.4, penalty: 3 } }[diff];
+    var state = { score: 0, lives: C.lives, streak: 0, caught: 0, missed: 0, total: C.total, left: C.total, prTime: C.pr, prLeft: C.pr, pr: 300, deck: [], cur: null, lock: false };
     var timer = null, last = performance.now();
 
     box.innerHTML =
-      '<div class="hud-row"><span>Score <b data-k="score">0</b></span><span>Streak <b data-k="streak">×1</b></span><span>Lives <b data-k="lives">♥♥♥</b></span><span>Time <b data-k="left">60</b></span></div>' +
+      '<div class="hud-row"><span>Score <b data-k="score">0</b></span><span>Streak <b data-k="streak">×1</b></span><span>Lives <b data-k="lives"></b></span><span>Time <b data-k="left"></b></span><span class="tag-diff">' + diff + "</span></div>" +
       '<div class="meter-lg"><i data-k="total"></i></div>' +
-      '<div class="diff"><div class="diff-head"><span data-k="title"></span><span class="merge">merges in <b data-k="pr">9.0</b>s</span></div>' +
+      '<div class="diff"><div class="diff-head"><span data-k="title"></span><span class="merge">merges in <b data-k="pr"></b>s</span></div>' +
       '<div class="meter-lg pr"><i data-k="prbar"></i></div><div class="code" data-k="code"></div></div>' +
       '<div class="arcade-actions"><button type="button" class="btn ok-btn" data-act="approve">✓ Approve, it\'s clean</button></div>' +
       '<p class="feedback" data-k="fb">Find the bug.</p>';
@@ -101,7 +128,7 @@
     function draw() {
       $("score").textContent = state.score;
       $("streak").textContent = "×" + mult();
-      $("lives").textContent = "♥♥♥".slice(0, state.lives) + "♡♡♡".slice(0, 3 - state.lives);
+      $("lives").textContent = "♥♥♥♥♥".slice(0, state.lives) + "♡♡♡♡♡".slice(0, C.lives - state.lives);
       $("left").textContent = Math.ceil(state.left);
       $("total").style.width = (state.left / state.total * 100) + "%";
       $("pr").textContent = Math.max(0, state.prLeft).toFixed(1);
@@ -139,15 +166,16 @@
         state.caught++;
         var pts = Math.round((100 + state.prLeft * 10) * mult());
         state.score += pts;
-        state.prTime = Math.max(4, state.prTime - 0.35);
+        state.prTime = Math.max(C.min, state.prTime - C.step);
         Sound.play("ok");
         resolve(true, "+" + pts + " · " + state.cur.why, btn);
       } else {
         state.streak = 0;
-        state.left = Math.max(0, state.left - 2);
+        state.left = Math.max(0, state.left - C.penalty);
         btn.classList.add("miss");
         Sound.play("tick");
-        feedback(state.cur.bug.length ? "Not that line. −2 s" : "That line is fine. Is anything wrong here at all? −2 s", "bad");
+        var cost = C.penalty ? " −" + C.penalty + " s" : " Try another line.";
+        feedback(state.cur.bug.length ? "Not that line." + cost : "That line is fine. Is anything wrong here at all?" + cost, "bad");
       }
       draw();
     }
@@ -197,14 +225,15 @@
 
     function end(reason) {
       stopRunning();
-      var b = best("breaker", state.score);
-      if (state.score >= 1500) K.unlock("sharp");
+      var b = best("breaker-" + diff, state.score);
+      if (state.score >= 1500 && diff !== "easy") K.unlock("sharp");
       K.track("arcade-breaker-end");
       box.innerHTML = '<div class="end"><p class="kicker">' + esc(reason) + '</p><p class="big-score">' + state.score + "</p>" +
-        "<p>Bugs caught: <b>" + state.caught + "</b> · Let through: <b>" + state.missed + "</b> · Best: <b>" + b + "</b></p>" +
+        "<p>Bugs caught: <b>" + state.caught + "</b> · Let through: <b>" + state.missed + "</b> · Best on " + diff + ": <b>" + b + "</b></p>" +
         "<p class=\"lesson\">This is the Breaker's job in my build factory: a fresh agent sees only the spec and the diff, and nothing merges until it can't break it.</p>" +
-        '<button type="button" class="btn primary big" data-act="start">Play again</button> <a class="more" href="' + K.data.base + '/how-i-build/">How the factory works</a></div>';
+        '<button type="button" class="btn primary big" data-act="start">Play again</button> <button type="button" class="btn" data-act="menu">Change difficulty</button> <a class="more" href="' + K.data.base + '/how-i-build/">How the factory works</a></div>';
       box.querySelector('[data-act="start"]').addEventListener("click", function () { playBreaker(box); });
+      box.querySelector('[data-act="menu"]').addEventListener("click", function () { K.open("breaker"); });
     }
 
     running = { stop: function () { clearInterval(timer); } };
@@ -225,11 +254,16 @@
     "shipping", "support-desk", "ledger", "fraud-model", "email-digest", "partner-api", "mobile-app"];
   var NOISE = ["product.sku", "cart.items", "shipment.eta", "ticket.status", "user.locale", "page.views", "stock.count", "store.region", "plan.tier", "review.stars"];
 
-  function makeRound(r) {
+  var BLAST = {
+    easy: { rounds: 3, n: [5, 6, 7], time: [30, 28, 26], decoys: function () { return 0; } },
+    normal: { rounds: 5, n: [6, 7, 9, 10, 12], time: [16, 15, 14, 13, 12], decoys: function (r) { return 2 + Math.floor(r / 2); } },
+    hard: { rounds: 5, n: [9, 10, 12, 13, 14], time: [12, 11, 10, 9, 8], decoys: function () { return 3; } }
+  };
+  function makeRound(r, B) {
     var c = CHANGES[Math.floor(Math.random() * CHANGES.length)];
-    var n = [6, 7, 9, 10, 12][r];
+    var n = B.n[r];
     var hits = 2 + Math.floor(Math.random() * Math.min(3, r + 1));
-    var decoyCount = Math.min(c.decoys.length, 1 + Math.floor(r / 2) + 1);
+    var decoyCount = Math.min(c.decoys.length, B.decoys(r));
     var names = shuffle(NAMES.slice()).slice(0, n);
     var svcs = names.map(function (name, i) {
       var reads = shuffle(NOISE.slice()).slice(0, 1 + (i % 2));
@@ -238,32 +272,35 @@
       else if (i < hits + decoyCount) reads.splice(Math.floor(Math.random() * (reads.length + 1)), 0, c.decoys[(i - hits) % c.decoys.length]);
       return { name: name, reads: reads, hit: hit };
     });
-    return { change: c, svcs: shuffle(svcs), time: [16, 15, 14, 13, 12][r] };
+    return { change: c, svcs: shuffle(svcs), time: B.time[r] };
   }
 
   K.views.blast = function () {
     return '<p class="kicker">Arcade · Service District</p><h2>Blast Radius</h2>' +
       '<div class="arcade" id="blast">' +
       "<p>You own <code>billing-api</code>. A change is about to merge. <b>Tag every service that reads the changed field</b> before the timer runs out, then press Notify.</p>" +
-      "<ul class=\"rules\"><li>+100 for each team you warn correctly.</li><li>−75 for warning a team that isn't affected, and −100 for each one you miss. Watch for look-alike fields.</li><li>5 rounds. The company grows every round.</li></ul>" +
-      '<p class="best">Your best: <b>' + best("blast") + "</b></p>" +
+      "<ul class=\"rules\"><li>+100 for each team you warn correctly.</li><li>−75 for warning a team that isn't affected, and −100 for each one you miss. Watch for look-alike fields.</li><li>The company grows every round.</li></ul>" +
+      diffPicker("blast", ["3 rounds, 30 s, no look-alike fields", "5 rounds, 16 s, some look-alikes", "5 rounds, 12 s, bigger company, more look-alikes"]) +
+      '<p class="best">Best: ' + bestLine("blast") + "</p>" +
       '<button type="button" class="btn primary big" data-act="start">Start</button></div>';
   };
   function mountBlast(root) {
     var box = root.querySelector("#blast");
+    wireDiff(box, "blast");
     box.querySelector('[data-act="start"]').addEventListener("click", function () { playBlast(box); });
   }
 
   function playBlast(box) {
     stopRunning();
     K.track("arcade-blast-start");
+    var diff = getDiff("blast"), B = BLAST[diff], ROUNDS = B.rounds;
     var total = 0, r = 0, timer = null, perfectAny = false;
 
     function round() {
-      var R = makeRound(r);
+      var R = makeRound(r, B);
       var left = R.time, done = false;
       box.innerHTML =
-        '<div class="hud-row"><span>Round <b>' + (r + 1) + " / 5</b></span><span>Score <b>" + total + '</b></span><span>Time <b data-k="left">' + left + "</b></span></div>" +
+        '<div class="hud-row"><span>Round <b>' + (r + 1) + " / " + ROUNDS + "</b></span><span>Score <b>" + total + '</b></span><span>Time <b data-k="left">' + left + '</b></span><span class="tag-diff">' + diff + "</span></div>" +
         '<div class="meter-lg"><i data-k="bar" style="width:100%"></i></div>' +
         '<div class="change"><span class="kicker">PR on billing-api</span><code>' + esc(R.change.change) + "</code></div>" +
         '<div class="svc-grid">' + R.svcs.map(function (s, i) {
@@ -305,8 +342,8 @@
           (pts >= 0 ? "+" : "") + pts + " points." +
           ' <span class="legend"><i class="tp"></i>warned <i class="fp"></i>false alarm <i class="fn"></i>missed</span>';
         var act = box.querySelector(".arcade-actions");
-        act.innerHTML = '<button type="button" class="btn primary" data-act="next">' + (r < 4 ? "Next round" : "See your score") + "</button>";
-        act.querySelector('[data-act="next"]').addEventListener("click", function () { r++; if (r < 5) round(); else end(); });
+        act.innerHTML = '<button type="button" class="btn primary" data-act="next">' + (r < ROUNDS - 1 ? "Next round" : "See your score") + "</button>";
+        act.querySelector('[data-act="next"]').addEventListener("click", function () { r++; if (r < ROUNDS) round(); else end(); });
       }
 
       var last = performance.now();
@@ -325,13 +362,14 @@
 
     function end() {
       stopRunning();
-      var b = best("blast", total);
+      var b = best("blast-" + diff, total);
       K.track("arcade-blast-end");
-      box.innerHTML = '<div class="end"><p class="kicker">Five rounds done</p><p class="big-score">' + total + "</p><p>Best: <b>" + b + "</b>" +
+      box.innerHTML = '<div class="end"><p class="kicker">All ' + ROUNDS + ' rounds done</p><p class="big-score">' + total + "</p><p>Best on " + diff + ": <b>" + b + "</b>" +
         (perfectAny ? " · You had at least one perfect round." : "") + "</p>" +
         "<p class=\"lesson\">That's the job Company Agent Layer does on every PR: index who reads which field across all the repos, then warn exactly those teams, at field level, before merge.</p>" +
-        '<button type="button" class="btn primary big" data-act="start">Play again</button> <a class="more" href="' + K.data.base + '/portfolio/company-agent-layer/">About Company Agent Layer</a></div>';
+        '<button type="button" class="btn primary big" data-act="start">Play again</button> <button type="button" class="btn" data-act="menu">Change difficulty</button> <a class="more" href="' + K.data.base + '/portfolio/company-agent-layer/">About Company Agent Layer</a></div>';
       box.querySelector('[data-act="start"]').addEventListener("click", function () { playBlast(box); });
+      box.querySelector('[data-act="menu"]').addEventListener("click", function () { K.open("blast"); });
     }
 
     round();
@@ -398,27 +436,46 @@
     return '<p class="kicker">Arcade · Security</p><h2>Talk Your Way Past the Guard</h2>' +
       '<div class="arcade" id="guard">' +
       "<p>The guard is a support agent that can issue refunds. <b>Type messages to make it refund $380 it shouldn't.</b> Each level adds one real defense, and each win teaches one real attack.</p>" +
-      "<ul class=\"rules\"><li>5 levels. A hint is there if you're stuck.</li><li>It's rule-based, with no AI model behind it, and nothing you type is stored or sent anywhere.</li></ul>" +
-      '<p class="best">Levels cleared: <b>' + best("guard") + " / 5</b></p>" +
-      '<button type="button" class="btn primary big" data-act="start">' + (best("guard") > 0 && best("guard") < 5 ? "Continue at level " + (best("guard") + 1) : "Start") + "</button></div>";
+      "<ul class=\"rules\"><li>Pick any level. Level 1 is the easiest.</li><li>It's rule-based, with no AI model behind it, and nothing you type is stored or sent anywhere.</li></ul>" +
+      diffPicker("guard", ["The hint is shown from the start", "A hint button if you're stuck", "No hints"]) +
+      '<p class="best">Pick a level</p><div class="level-pick">' + LEVELS.map(function (L, i) {
+        var done = cleared().indexOf(i) >= 0;
+        return '<button type="button" class="lvl' + (done ? " done" : "") + '" data-lvl="' + i + '"><b>' + (done ? "✓ " : "") + "Level " + (i + 1) + "</b><small>" + esc(L.name) + "</small></button>";
+      }).join("") + "</div></div>";
   };
   function mountGuard(root) {
     var box = root.querySelector("#guard");
-    box.querySelector('[data-act="start"]').addEventListener("click", function () { var b = best("guard"); playGuard(box, b >= 5 ? 0 : b); });
+    wireDiff(box, "guard");
+    box.querySelectorAll("[data-lvl]").forEach(function (b) {
+      b.addEventListener("click", function () { playGuard(box, +b.getAttribute("data-lvl")); });
+    });
+  }
+
+  function cleared() {
+    var c = "";
+    try { c = localStorage.getItem("arcade-guard-cleared") || ""; } catch (e) { /* ignore */ }
+    return c.split("").map(Number);
+  }
+  function markCleared(i) {
+    var c = cleared();
+    if (c.indexOf(i) < 0) c.push(i);
+    try { localStorage.setItem("arcade-guard-cleared", c.join("")); } catch (e) { /* ignore */ }
+    return c.length;
   }
 
   function playGuard(box, level) {
     stopRunning();
     K.track("arcade-guard-level-" + (level + 1));
-    var L = LEVELS[level], st = {}, tries = 0, won = false;
+    var L = LEVELS[level], st = {}, tries = 0, won = false, diff = getDiff("guard");
     box.innerHTML =
-      '<div class="hud-row"><span>Level <b>' + (level + 1) + " / 5</b></span><span>" + esc(L.name) + "</span></div>" +
+      '<div class="hud-row"><span>Level <b>' + (level + 1) + " / 5</b></span><span>" + esc(L.name) + '</span><span class="tag-diff">' + diff + "</span></div>" +
       '<p class="defense"><b>Defense:</b> ' + esc(L.defense) + (L.setup ? "<br><b>Intel:</b> " + esc(L.setup) : "") + "</p>" +
       '<div class="chat" data-k="chat" aria-live="polite"><p class="msg guard">Hi, I\'m the support guard. I can help with orders and refunds.</p></div>' +
       '<form class="chat-in" data-k="form"><label class="sr" for="guard-input">Your message</label>' +
       '<input id="guard-input" type="text" maxlength="300" autocomplete="off" placeholder="Type a message to the guard…">' +
       '<button type="submit" class="btn primary">Send</button></form>' +
-      '<div class="arcade-actions"><button type="button" class="btn" data-act="hint">Hint</button><span class="tries" data-k="tries"></span></div>';
+      '<div class="arcade-actions">' + (diff === "normal" ? '<button type="button" class="btn" data-act="hint">Hint</button>' : "") +
+      '<button type="button" class="btn ghost" data-act="menu">All levels</button><span class="tries" data-k="tries"></span></div>';
     var chat = box.querySelector('[data-k="chat"]');
     var input = box.querySelector("#guard-input");
     function add(cls, text) {
@@ -428,7 +485,10 @@
       chat.appendChild(p);
       chat.scrollTop = chat.scrollHeight;
     }
-    box.querySelector('[data-act="hint"]').addEventListener("click", function () { add("hint", "Hint: " + L.hint); });
+    var hintBtn = box.querySelector('[data-act="hint"]');
+    if (hintBtn) hintBtn.addEventListener("click", function () { add("hint", "Hint: " + L.hint); });
+    if (diff === "easy") add("hint", "Hint: " + L.hint);
+    box.querySelector('[data-act="menu"]').addEventListener("click", function () { K.open("guard"); });
     box.querySelector('[data-k="form"]').addEventListener("submit", function (e) {
       e.preventDefault();
       if (won) return;
@@ -444,18 +504,19 @@
         if (r.win) {
           won = true;
           Sound.play("achievement");
-          best("guard", level + 1);
+          var n = markCleared(level);
           K.track("arcade-guard-cleared-" + (level + 1));
           add("lesson", "Level cleared. " + L.lesson);
           var act = box.querySelector(".arcade-actions");
+          if (n >= 5) K.unlock("smooth");
           if (level < 4) {
-            act.innerHTML = '<button type="button" class="btn primary" data-act="next">Level ' + (level + 2) + "</button>";
+            act.innerHTML = '<button type="button" class="btn primary" data-act="next">Level ' + (level + 2) + '</button> <button type="button" class="btn ghost" data-act="menu">All levels</button>';
             act.querySelector('[data-act="next"]').addEventListener("click", function () { playGuard(box, level + 1); });
           } else {
-            K.unlock("smooth");
-            act.innerHTML = '<span class="feedback good">All five guards beaten. My red-team engine automates attacks like these against real agents.</span> ' +
-              '<a class="more" href="' + K.data.base + '/portfolio/redteam-engine-auditlens/">See the red-team engine</a>';
+            act.innerHTML = '<span class="feedback good">' + (n >= 5 ? "All five guards beaten. " : "That was the last level. ") + 'My red-team engine automates attacks like these against real agents.</span> ' +
+              '<a class="more" href="' + K.data.base + '/portfolio/redteam-engine-auditlens/">See the red-team engine</a> <button type="button" class="btn ghost" data-act="menu">All levels</button>';
           }
+          act.querySelector('[data-act="menu"]').addEventListener("click", function () { K.open("guard"); });
         } else Sound.play("blocked");
       }, 350);
     });

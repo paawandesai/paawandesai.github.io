@@ -547,3 +547,19 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
   .panel.arcade-panel { top: auto; left: 0; right: 0; bottom: 0; transform: none; width: auto; max-height: 92vh; border-radius: 14px 14px 0 0; }
   .svc-grid { grid-template-columns: 1fr 1fr; }
 }
+.diff-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; border: 0; padding: 0; margin: 14px 0 8px; }
+.diff-pick legend { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; padding: 0; }
+.diff-pick label { position: relative; cursor: pointer; }
+.diff-pick input { position: absolute; opacity: 0; }
+.diff-pick span { display: block; height: 100%; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; }
+.diff-pick small { display: block; color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+.diff-pick input:checked + span { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--card)); box-shadow: inset 0 0 0 1px var(--accent); }
+.diff-pick input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.level-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.lvl { text-align: left; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font: inherit; cursor: pointer; }
+.lvl small { display: block; color: var(--muted); font-size: 0.8rem; }
+.lvl:hover, .lvl:focus-visible { border-color: var(--accent); }
+.lvl.done { border-color: var(--ok); }
+.lvl.done b { color: var(--ok); }
+.tag-diff { text-transform: capitalize; padding: 0 8px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.8rem; }
+@media (max-width: 720px) { .diff-pick { grid-template-columns: 1fr; } }
