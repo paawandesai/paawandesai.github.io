@@ -328,17 +328,17 @@
 
   // ================= Recruiter fast path =================
   var ROLES = {
-    ai: { name: "AI or agent engineer", spots: ["lab", "factory", "services"], projects: ["company-agent-layer", "nacha-slm", "clinical-copilot-eval"],
+    ai: { name: "Agents and AI systems", spots: ["lab", "factory", "services"], projects: ["company-agent-layer", "nacha-slm", "clinical-copilot-eval"],
       line: "Agent systems with evals in the loop: an agent layer that reviews every PR, a small model fine-tuned and measured against frontier models, and an eval platform built to break a clinical assistant." },
-    security: { name: "Security or red team", spots: ["security", "lab"], projects: ["redteam-engine-auditlens", "clinical-copilot-eval", "post-quantum-cryptography"],
+    security: { name: "Evals, security and red-teaming", spots: ["security", "lab"], projects: ["redteam-engine-auditlens", "clinical-copilot-eval", "post-quantum-cryptography"],
       line: "Attacking AI systems on purpose: a red-team engine for agents, adversarial evals, and hardware security from my ECE days." },
-    builder: { name: "Founding or full-stack engineer", spots: ["services", "factory", "office"], projects: ["supplement-ledger", "prediction-market-aggregator", "telemetry-pipeline"],
+    builder: { name: "Shipping whole products", spots: ["services", "factory", "office"], projects: ["supplement-ledger", "prediction-market-aggregator", "telemetry-pipeline"],
       line: "End-to-end products shipped fast: money-correct ledgers, real-time data pipelines, and the build factory that keeps them from breaking." },
-    curious: { name: "Just curious", spots: ["lab", "factory", "security"], projects: ["company-agent-layer", "redteam-engine-auditlens", "nacha-slm"],
+    curious: { name: "Surprise me", spots: ["lab", "factory", "security"], projects: ["company-agent-layer", "redteam-engine-auditlens", "nacha-slm"],
       line: "Start with today's daily challenge, then wander. Every building opens." }
   };
   K.views.recruiter = function () {
-    return '<p class="kicker">Short on time?</p><h2>What are you hiring for?</h2><p>Pick one and I\'ll show you the three things worth your minute.</p>' +
+    return '<p class="kicker">Short on time?</p><h2>What do you want to see first?</h2><p>Pick a topic and I\'ll show you the three things worth your minute.</p>' +
       '<div class="role-pick">' + Object.keys(ROLES).map(function (k) { return '<button type="button" class="opt" data-role="' + k + '">' + esc(ROLES[k].name) + "</button>"; }).join("") + "</div>";
   };
   function spotlight(names) {
@@ -351,12 +351,12 @@
     K.track("recruiter-" + k);
     spotlight(R.spots);
     var items = R.projects.map(project).filter(Boolean);
-    bodyEl.innerHTML = '<p class="kicker">For: ' + esc(R.name) + "</p><h2>Start here</h2><p>" + esc(R.line) + "</p><ul>" +
+    bodyEl.innerHTML = '<p class="kicker">' + esc(R.name) + "</p><h2>Start here</h2><p>" + esc(R.line) + "</p><ul>" +
       items.map(function (p) { return '<li><a href="' + p.url + '">' + esc(p.title) + "</a><span>" + esc(p.excerpt) + "</span></li>"; }).join("") + "</ul>" +
       '<p class="hint-line">The highlighted buildings on the map hold more of the same.</p>' +
       '<div class="arcade-actions"><a class="btn primary" href="' + base + '/files/Paawan_Desai_Resume.pdf">Resume (PDF)</a><a class="btn" href="' + email() + '">Email me</a>' +
       '<a class="btn" href="https://www.linkedin.com/in/' + esc(K.data.linkedin) + '">LinkedIn</a></div>' +
-      '<p><button type="button" class="btn ghost" data-act="roles">Pick a different role</button>' + (k === "curious" ? ' <button type="button" class="btn" data-act="daily">Play the daily</button>' : "") + "</p>";
+      '<p><button type="button" class="btn ghost" data-act="roles">Pick a different topic</button>' + (k === "curious" ? ' <button type="button" class="btn" data-act="daily">Play the daily</button>' : "") + "</p>";
     bodyEl.querySelector('[data-act="roles"]').addEventListener("click", function () { K.open("recruiter"); });
     var d = bodyEl.querySelector('[data-act="daily"]');
     if (d) d.addEventListener("click", function () { K.open("daily"); });
@@ -418,7 +418,7 @@
   var CMDS = {
     help: function () {
       print(["<b>ls</b> [projects|games]  list things", "<b>open</b> &lt;name&gt;  open a building, project, resume or about", "<b>play</b> &lt;game&gt;  breaker, blast, guard, shipday, daily, evallab",
-        "<b>whoami</b>  <b>date</b>  <b>history</b>  <b>clear</b>  <b>exit</b>", "<b>theme</b> light|dark   <b>sound</b> on|off", "There are a few more. Engineers usually find them."].join("<br>"));
+        "<b>whoami</b>  <b>date</b>  <b>history</b>  <b>clear</b>  <b>exit</b>", "<b>theme</b> light|dark|auto   <b>sound</b> on|off", "There are a few more. Engineers usually find them."].join("<br>"));
     },
     ls: function (a) {
       if (a[0] === "projects") print([].concat(K.data.featured, K.data.gauntlet).map(function (p) { return esc(slug(p)); }).join("  "));
@@ -454,7 +454,8 @@
     echo: function (a) { print(esc(a.join(" "))); },
     theme: function (a) {
       var want = a[0], dark = root.getAttribute("data-theme") === "dark" || (root.getAttribute("data-theme") !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
-      if (want !== "light" && want !== "dark") { print("theme: light or dark"); return; }
+      if (want === "auto") { try { localStorage.removeItem("theme"); } catch (e) { /* ignore */ } tick(); print("Theme follows your clock again."); return; }
+      if (want !== "light" && want !== "dark") { print("theme: light, dark or auto"); return; }
       if ((want === "dark") !== dark) document.getElementById("theme-toggle").click();
       print("Theme set to " + want + ".");
     },
@@ -522,6 +523,12 @@
     var d = new Date(), h = d.getHours() + d.getMinutes() / 60;
     var tod = h >= 5 && h < 8 ? "dawn" : h >= 8 && h < 17 ? "day" : h >= 17 && h < 20 ? "dusk" : "night";
     root.setAttribute("data-tod", tod);
+    var saved = null;
+    try { saved = localStorage.getItem("theme"); } catch (e) { /* ignore */ }
+    if (saved !== "light" && saved !== "dark") {
+      var osDark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
+      root.setAttribute("data-theme", osDark || h < 7 || h >= 19 ? "dark" : "light");
+    }
     var sun = h >= 6 && h < 19.5, prog = sun ? (h - 6) / 13.5 : ((h + 24 - 19.5) % 24) / 10.5;
     orb.className = "orb " + (sun ? "sun" : "moon");
     orb.style.left = (6 + prog * 88) + "%";
@@ -534,4 +541,30 @@
   }
   tick();
   setInterval(tick, 30000);
+
+  // ================= Accessibility: games open as a real modal dialog =================
+  var panel = document.getElementById("panel");
+  function syncDialog() {
+    var modal = panel.classList.contains("arcade-panel") && !panel.hidden;
+    if (modal) {
+      panel.setAttribute("role", "dialog");
+      panel.setAttribute("aria-modal", "true");
+      var h = panel.querySelector("h2");
+      panel.setAttribute("aria-label", h ? h.textContent : "Game");
+    } else {
+      panel.removeAttribute("role");
+      panel.removeAttribute("aria-modal");
+      panel.removeAttribute("aria-label");
+    }
+  }
+  document.addEventListener("campus:open", function () { setTimeout(syncDialog, 0); });
+  document.addEventListener("campus:close", syncDialog);
+  panel.addEventListener("keydown", function (e) {
+    if (e.key !== "Tab" || !panel.classList.contains("arcade-panel")) return;
+    var f = [].filter.call(panel.querySelectorAll('button, a[href], input, [tabindex]:not([tabindex="-1"])'), function (x) { return !x.disabled && x.offsetParent !== null; });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 })();

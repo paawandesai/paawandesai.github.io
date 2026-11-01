@@ -93,13 +93,19 @@
   }
 
   // Paawan's name painted on the plaza.
-  var o = P(13.6, 23.1);
+  // Centred along the front edge and scaled so it always fits inside the plate.
+  var o = P(12, 23.35);
   var nameText = el("text", {
     "class": "ground-name",
+    "text-anchor": "middle",
     transform: "matrix(" + [C, 0.5, -C, 0.5, o[0], o[1]].map(function (n) { return n.toFixed(3); }).join(",") + ")",
     "font-size": 1.25 * U
   }, layers.ground);
   nameText.textContent = "PAAWAN DESAI";
+  try {
+    var room = 20 * U, len = nameText.getComputedTextLength();
+    if (len > room) nameText.setAttribute("font-size", (1.25 * U * room / len).toFixed(1));
+  } catch (e) { /* measuring can fail before layout; the default size still fits */ }
 
   // Things drawn back to front by depth.
   var things = [];
