@@ -89,8 +89,101 @@
     { file: "util/chunk.py", bug: [], lines: ["def chunk(items, size):", "    return [items[i:i + size] for i in range(0, len(items), size)]"] },
     { file: "money/validate.js", bug: [], lines: ["function isValidCents(value) {", "  return Number.isSafeInteger(value) && value >= 0;", "}"] },
     { file: "math/div.py", bug: [], lines: ["def safe_div(a, b):", "    if b == 0:", "        return None", "    return a / b"] },
-    { file: "users/get.js", bug: [], lines: ["async function getUser(db, tenantId, id) {", "  return db.users.findOne({ where: { tenantId, id } });", "}"] }
+    { file: "users/get.js", bug: [], lines: ["async function getUser(db, tenantId, id) {", "  return db.users.findOne({ where: { tenantId, id } });", "}"] },
+    // ----- Java -----
+    { file: "auth/Roles.java", bug: [1], why: "== compares String references, not contents. Use \"admin\".equals(...).", lines: [
+      "public boolean isAdmin(User u) {", "    return u.getRole() == \"admin\";", "}"] },
+    { file: "cart/Cleanup.java", bug: [2], why: "Removing from a list inside a for-each loop throws ConcurrentModificationException.", lines: [
+      "for (String id : ids) {", "    if (id.isBlank()) {", "        ids.remove(id);", "    }", "}"] },
+    { file: "orders/Total.java", bug: [0], why: "<= runs one past the end: ArrayIndexOutOfBoundsException.", lines: [
+      "for (int i = 0; i <= items.length; i++) {", "    total += items[i].price;", "}"] },
+    { file: "limits/Quota.java", bug: [2], why: "== on Integer objects compares references. Above 127 it's false even when the values match.", lines: [
+      "Integer limit = config.getLimit();", "Integer used = usage.count();", "if (used == limit) {", "    blockRequests();", "}"] },
+    { file: "money/Price.java", bug: [0], why: "new BigDecimal(0.1) keeps the floating-point error. Use BigDecimal.valueOf or a string.", lines: [
+      "BigDecimal price = new BigDecimal(0.1);", "BigDecimal total = price.multiply(BigDecimal.valueOf(qty));"] },
+    { file: "util/MathUtil.java", bug: [], lines: ["public static int clamp(int n, int min, int max) {", "    return Math.max(min, Math.min(n, max));", "}"] },
+    { file: "auth/Access.java", bug: [], lines: ["if (\"admin\".equals(user.getRole())) {", "    grantAccess(user);", "}"] },
+    // ----- Go -----
+    { file: "stats/count.go", bug: [0, 2], why: "Writing to a nil map panics. It needs make(map[string]int) first.", lines: [
+      "var counts map[string]int", "for _, w := range words {", "    counts[w]++", "}"] },
+    { file: "config/load.go", bug: [0], why: "The error from os.Open is thrown away, so f can be nil.", lines: [
+      "f, _ := os.Open(path)", "defer f.Close()", "data, err := io.ReadAll(f)"] },
+    { file: "files/scan.go", bug: [3], why: "defer runs when the function returns, not each loop, so every file stays open.", lines: [
+      "for _, path := range paths {", "    f, err := os.Open(path)", "    if err != nil { return err }", "    defer f.Close()", "}"] },
+    { file: "sum/parallel.go", bug: [2], why: "Goroutines write total with no lock, and nothing waits for them: a data race.", lines: [
+      "var total int", "for _, n := range nums {", "    go func(n int) { total += n }(n)", "}", "return total"] },
+    { file: "jobs/run.go", bug: [2], why: ":= declares a new err inside the block, so the outer err stays nil.", lines: [
+      "var err error", "if retry {", "    result, err := compute()", "    use(result)", "}", "return err"] },
+    { file: "util/max.go", bug: [], lines: ["func Max(a, b int) int {", "    if a > b {", "        return a", "    }", "    return b", "}"] },
+    { file: "cache/set.go", bug: [], lines: ["mu.Lock()", "defer mu.Unlock()", "cache[key] = value"] },
+    // ----- Rust -----
+    { file: "src/config.rs", bug: [1], why: "unwrap() panics on bad input. Return a Result instead.", lines: [
+      "fn parse_port(s: &str) -> u16 {", "    s.parse().unwrap()", "}"] },
+    { file: "src/quota.rs", bug: [1], why: "If used > limit this underflows: a panic in debug, a huge number in release. Use saturating_sub.", lines: [
+      "fn remaining(limit: usize, used: usize) -> usize {", "    limit - used", "}"] },
+    { file: "src/recent.rs", bug: [1], why: "Panics when the slice has fewer than three items.", lines: [
+      "fn last_three(v: &[i32]) -> &[i32] {", "    &v[v.len() - 3..]", "}"] },
+    { file: "src/sync.rs", bug: [2], why: "A std Mutex guard held across .await blocks the thread and can deadlock other tasks.", lines: [
+      "let mut guard = state.lock().unwrap();", "guard.pending += 1;", "send_update(&client).await;"] },
+    { file: "src/charge.rs", bug: [1], why: "as i32 silently truncates large amounts. Use i32::try_from.", lines: [
+      "let total_cents: i64 = order.total_cents();", "let amount = total_cents as i32;", "charge(amount);"] },
+    { file: "src/stats.rs", bug: [], lines: ["fn mean(xs: &[f64]) -> Option<f64> {", "    if xs.is_empty() { return None; }", "    Some(xs.iter().sum::<f64>() / xs.len() as f64)", "}"] },
+    { file: "src/input.rs", bug: [], lines: ["let n = input.trim().parse::<u32>().map_err(|_| Error::BadInput)?;"] },
+    // ----- C++ -----
+    { file: "src/user.cpp", bug: [2], why: "Returns a reference to a local string that's destroyed when the function returns.", lines: [
+      "const std::string& fullName() {", "    std::string n = first + \" \" + last;", "    return n;", "}"] },
+    { file: "src/filter.cpp", bug: [1], why: "erase() invalidates it, so ++it is undefined behaviour. Use it = v.erase(it).", lines: [
+      "for (auto it = v.begin(); it != v.end(); ++it) {", "    if (*it < 0) v.erase(it);", "}"] },
+    { file: "src/reverse.cpp", bug: [0], why: "size_t is never negative, so i >= 0 is always true and i wraps around.", lines: [
+      "for (size_t i = v.size() - 1; i >= 0; --i) {", "    process(v[i]);", "}"] },
+    { file: "src/buffer.cpp", bug: [2], why: "Memory from new[] must be freed with delete[].", lines: [
+      "int* buf = new int[n];", "fill(buf, n);", "delete buf;"] },
+    { file: "src/name.cpp", bug: [1], why: "strcpy has no bound: input over 15 characters overflows the buffer.", lines: [
+      "char name[16];", "strcpy(name, userInput);"] },
+    { file: "src/remove.cpp", bug: [], lines: ["auto it = std::find(v.begin(), v.end(), target);", "if (it != v.end()) {", "    v.erase(it);", "}"] },
+    { file: "src/conn.cpp", bug: [], lines: ["auto conn = std::make_unique<Conn>(host);", "conn->open();"] },
+    // ----- C# -----
+    { file: "Orders/OrderService.cs", bug: [0], why: "async void can't be awaited, and its exceptions crash the process. Return Task.", lines: [
+      "public async void SaveAsync(Order o) {", "    await db.SaveAsync(o);", "}"] },
+    { file: "Users/Names.cs", bug: [1], why: "Blocking on .Result can deadlock under a sync context. Make the method async.", lines: [
+      "public string GetName(int id) {", "    return client.GetNameAsync(id).Result;", "}"] },
+    { file: "Cart/Cleanup.cs", bug: [1], why: "Changing a collection inside foreach throws InvalidOperationException.", lines: [
+      "foreach (var item in cart.Items) {", "    if (item.Quantity == 0) cart.Items.Remove(item);", "}"] },
+    { file: "Data/UserQuery.cs", bug: [0], why: "Building SQL from user input is an injection. Use parameters.", lines: [
+      "var cmd = new SqlCommand(\"SELECT * FROM Users WHERE Name = '\" + name + \"'\", conn);", "var reader = cmd.ExecuteReader();"] },
+    { file: "Billing/Discount.cs", bug: [1], why: "0.1 + 0.2 isn't exactly 0.3 in floating point. Use decimal for money.", lines: [
+      "double total = 0.1 + 0.2;", "if (total == 0.3) ApplyDiscount();"] },
+    { file: "Users/Validate.cs", bug: [], lines: ["if (string.IsNullOrWhiteSpace(email)) {", "    throw new ArgumentException(\"Email is required\", nameof(email));", "}"] },
+    { file: "Users/Active.cs", bug: [], lines: ["var active = users.Where(u => u.IsActive).ToList();"] },
+    // ----- Haskell -----
+    { file: "src/Orders.hs", bug: [1], why: "head crashes on an empty list. Return Maybe Order instead.", lines: [
+      "firstOrder :: [Order] -> Order", "firstOrder orders = head orders"] },
+    { file: "src/Totals.hs", bug: [1], why: "Lazy foldl builds a long chain of thunks on big lists. Use foldl'.", lines: [
+      "total :: [Int] -> Int", "total = foldl (+) 0"] },
+    { file: "src/Describe.hs", bug: [1], why: "There's no case for Nothing, so it crashes at runtime.", lines: [
+      "describe :: Maybe Int -> String", "describe (Just n) = \"got \" ++ show n"] },
+    { file: "src/Average.hs", bug: [1], why: "Divides by zero on an empty list.", lines: [
+      "average :: [Int] -> Int", "average xs = sum xs `div` length xs"] },
+    { file: "src/Parse.hs", bug: [1], why: "read throws on bad input. Use readMaybe.", lines: [
+      "parseAge :: String -> Int", "parseAge s = read s"] },
+    { file: "src/Fact.hs", bug: [1], why: "There's no base case, so it never stops.", lines: [
+      "fact :: Integer -> Integer", "fact n = n * fact (n - 1)"] },
+    { file: "src/Safe.hs", bug: [], lines: ["safeHead :: [a] -> Maybe a", "safeHead [] = Nothing", "safeHead (x:_) = Just x"] },
+    { file: "src/Sum.hs", bug: [], lines: ["import Data.List (foldl')", "", "sumStrict :: [Int] -> Int", "sumStrict = foldl' (+) 0"] }
   ];
+  var LANGS = [["any", "Any"], ["js", "JavaScript"], ["py", "Python"], ["java", "Java"], ["go", "Go"], ["rs", "Rust"], ["cpp", "C++"], ["cs", "C#"], ["hs", "Haskell"]];
+  function langOf(sn) { return sn.file.split(".").pop(); }
+  function getLang() {
+    var l = "any";
+    try { l = localStorage.getItem("arcade-lang") || "any"; } catch (e) { /* ignore */ }
+    return LANGS.some(function (x) { return x[0] === l; }) ? l : "any";
+  }
+  function langPicker() {
+    var cur = getLang();
+    return '<fieldset class="lang-pick"><legend>Language</legend>' + LANGS.map(function (l) {
+      return '<label><input type="radio" name="lang-breaker" value="' + l[0] + '"' + (l[0] === cur ? " checked" : "") + "><span>" + esc(l[1]) + "</span></label>";
+    }).join("") + "</fieldset>";
+  }
 
   K.views.breaker = function () {
     return '<p class="kicker">Arcade · The Factory</p><h2>Be the Breaker</h2>' +
@@ -98,6 +191,7 @@
       "<p>Pull requests are heading for the merge gate. <b>Click the buggy line</b> before each one merges, or <b>Approve</b> it if it's clean.</p>" +
       "<ul class=\"rules\"><li>Correct catches build a streak multiplier.</li><li>A wrong click costs time. Letting a bug merge, or approving one, costs a life.</li><li>PRs get faster as you go.</li></ul>" +
       diffPicker("breaker", ["90 s, 5 lives, slow PRs, wrong clicks are free", "60 s, 3 lives", "45 s, 2 lives, fast PRs"]) +
+      langPicker() +
       '<p class="best">Best: ' + bestLine("breaker") + "</p>" +
       '<button type="button" class="btn primary big" data-act="start">Start</button></div>';
   };
@@ -105,6 +199,9 @@
   function mountBreaker(root) {
     var box = root.querySelector("#breaker");
     wireDiff(box, "breaker");
+    box.querySelectorAll('input[name="lang-breaker"]').forEach(function (r) {
+      r.addEventListener("change", function () { try { localStorage.setItem("arcade-lang", r.value); } catch (e) { /* ignore */ } });
+    });
     box.querySelector('[data-act="start"]').addEventListener("click", function () { playBreaker(box); });
   }
 
@@ -113,13 +210,15 @@
     stopRunning();
     K.track("arcade-breaker-start");
     var diff = opts.diff || getDiff("breaker");
+    var lang = opts.lang || (opts.onEnd ? "any" : getLang());
+    var pool = SNIPPETS.filter(function (sn) { return lang === "any" || langOf(sn) === lang; });
     var C = { easy: { total: 90, lives: 5, pr: 15, min: 8, step: 0.3, penalty: 0 }, normal: { total: 60, lives: 3, pr: 9, min: 4, step: 0.35, penalty: 2 }, hard: { total: 45, lives: 2, pr: 7, min: 3, step: 0.4, penalty: 3 } }[diff];
     if (opts.total) C = { total: opts.total, lives: C.lives, pr: C.pr, min: C.min, step: C.step, penalty: C.penalty };
     var state = { score: 0, lives: C.lives, streak: 0, caught: 0, missed: 0, total: C.total, left: C.total, prTime: C.pr, prLeft: C.pr, pr: 300, deck: [], cur: null, lock: false };
     var timer = null, last = performance.now();
 
     box.innerHTML =
-      '<div class="hud-row"><span>Score <b data-k="score">0</b></span><span>Streak <b data-k="streak">×1</b></span><span>Lives <b data-k="lives"></b></span><span>Time <b data-k="left"></b></span><span class="tag-diff">' + diff + "</span></div>" +
+      '<div class="hud-row"><span>Score <b data-k="score">0</b></span><span>Streak <b data-k="streak">×1</b></span><span>Lives <b data-k="lives"></b></span><span>Time <b data-k="left"></b></span><span class="tag-diff">' + diff + "</span>" + (lang !== "any" ? '<span class="tag-diff">' + esc(LANGS.filter(function (l) { return l[0] === lang; })[0][1]) + "</span>" : "") + "</div>" +
       '<div class="meter-lg"><i data-k="total"></i></div>' +
       '<div class="diff"><div class="diff-head"><span data-k="title"></span><span class="merge">merges in <b data-k="pr"></b>s</span></div>' +
       '<div class="meter-lg pr"><i data-k="prbar"></i></div><div class="code" data-k="code"></div></div>' +
@@ -128,6 +227,7 @@
     function $(k) { return box.querySelector('[data-k="' + k + '"]'); }
 
     function draw() {
+      if (!$("score")) return; // the game already ended and the end screen replaced the board
       $("score").textContent = state.score;
       $("streak").textContent = "×" + mult();
       $("lives").textContent = "♥♥♥♥♥".slice(0, state.lives) + "♡♡♡♡♡".slice(0, C.lives - state.lives);
@@ -140,7 +240,7 @@
     function feedback(text, cls) { var f = $("fb"); f.textContent = text; f.className = "feedback " + (cls || ""); }
 
     function next() {
-      if (!state.deck.length) state.deck = shuffle(SNIPPETS.slice());
+      if (!state.deck.length) state.deck = shuffle(pool.slice());
       state.cur = state.deck.pop();
       state.pr++;
       state.prLeft = state.prTime;
