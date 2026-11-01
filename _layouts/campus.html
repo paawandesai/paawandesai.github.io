@@ -33,6 +33,11 @@
     </nav>
   </header>
 
+  <div class="hud">
+    <button type="button" class="pill" id="ach-btn">Achievements <span id="ach-count">0</span><span class="meter" aria-hidden="true"><i id="ach-bar"></i></span></button>
+    <button type="button" class="pill" id="sound-btn" aria-pressed="false">Sound off</button>
+  </div>
+
   <main>
     <div class="stage">
       <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
@@ -62,8 +67,12 @@
       <button type="button" data-open="services">Service District<small>Gauntlet AI builds</small></button>
       <button type="button" data-open="factory">The Factory<small>How I build</small></button>
       <button type="button" data-open="archive">The Archive<small>Earlier work</small></button>
+      <button type="button" data-open="security">Security<small>Jailbreak the guard</small></button>
     </nav>
   </main>
+
+  <div class="agent-card" id="agent-card" role="dialog" aria-live="polite" hidden></div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
 
   <footer class="foot">
     <a href="{{ base_path }}/files/Paawan_Desai_Resume.pdf">Resume (PDF)</a>
@@ -82,12 +91,15 @@
     "bio": {{ site.author.bio | jsonify }},
     "github": {{ site.author.github | jsonify }},
     "linkedin": {{ site.author.linkedin | jsonify }},
+    "alchemist_url": {{ site.alchemist_url | default: "" | jsonify }},
     "featured": [{% for p in featured %}{"title": {{ p.title | jsonify }}, "excerpt": {{ p.excerpt | strip_html | strip | jsonify }}, "url": {{ p.url | prepend: base_path | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}],
     "gauntlet": [{% for p in gauntlet %}{"title": {{ p.title | jsonify }}, "excerpt": {{ p.excerpt | strip_html | strip | jsonify }}, "url": {{ p.url | prepend: base_path | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}],
     "earlier": [{% for p in earlier %}{"title": {{ p.title | jsonify }}, "excerpt": {{ p.excerpt | strip_html | strip | jsonify }}, "url": {{ p.url | prepend: base_path | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
   }
   </script>
   <script src="{{ base_path }}/assets/js/campus.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-sound.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-play.js"></script>
   {% include analytics.html %}
 </body>
 </html>

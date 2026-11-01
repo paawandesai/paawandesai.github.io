@@ -225,6 +225,18 @@
     poly(g, [f2, P(19.6, 18.6, 5.4), [f2[0] + 22, f2[1] + 6]], "f-t");
   });
 
+  // Security building (Jailbreak the guard).
+  add(22.35 + 17, function () {
+    var g = hit("security", "Security: jailbreak the guard", function () { open("security"); });
+    layers.world.appendChild(g);
+    box(g, 21.1, 15.4, 2.5, 3.2, 2.6);
+    windows(g, 21.1, 15.4, 2.5, 3.2, 2.6, 0, 0.9);
+    box(g, 21.8, 16.4, 1.1, 1.1, 0.5, 2.6);
+    var a1 = P(22.35, 16.95, 3.1), a2 = P(22.35, 16.95, 4.3);
+    el("line", { x1: a1[0], y1: a1[1], x2: a2[0], y2: a2[1], "class": "wire" }, g);
+    el("circle", { cx: a2[0], cy: a2[1], r: 4, "class": "beacon" }, g);
+  });
+
   // Trees.
   [[0.6, 9.4, 1], [0.6, 11, 0.8], [1.6, 10.2, 0.9], [23.3, 12.6, 1], [23.3, 14.2, 0.8], [22.4, 13.3, 0.9],
     [10.4, 13.2, 0.8], [13.9, 13.6, 0.7], [21.8, 20.6, 0.9], [11.2, 21.2, 0.8], [0.8, 17.6, 0.8], [8.8, 12.2, 0.7]]
@@ -245,6 +257,7 @@
   label(4.5, 15.3, 4.6, "The Lab");
   label(5, 20.5, 2.9, "The Archive");
   label(18, 17.25, 5.6, "Front Office");
+  label(22.35, 17, 4.9, "Security");
   label(12.55, 4.55, 6, "Company Agent Layer", true).classList.add("show");
 
   // The pull request travelling through the tour.
@@ -292,11 +305,13 @@
     },
     lab: function () {
       return '<p class="kicker">The Lab</p><h2>Featured work</h2><p>What I\'m building now and the projects I\'m proudest of.</p>' +
+        '<button type="button" class="btn primary play" data-open="alchemist">Play Alchemist\'s Trial</button>' +
         list(data.featured) + '<a class="more" href="' + B + '/portfolio/">All projects</a>';
     },
     services: function () {
       return '<p class="kicker">Service District</p><h2>Gauntlet AI builds</h2>' +
         "<p>Built during Gauntlet AI Cohort 7 (Sep to Nov 2026), each one against a real brief and measured with its own evaluation.</p>" +
+        '<button type="button" class="btn primary play" data-open="contract">Try it: break a contract</button>' +
         list(data.gauntlet) + '<a class="more" href="' + B + '/portfolio/">All projects</a>';
     },
     factory: function () {
@@ -309,7 +324,8 @@
       return '<p class="kicker">The Factory</p><h2>How I build</h2>' +
         "<p>A team of AI agents with fixed roles, so nothing grades its own work.</p><table>" +
         rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; }).join("") +
-        '</table><a class="more" href="' + B + '/how-i-build/">The full workflow and verification ladder</a>';
+        '</table><button type="button" class="btn primary play" data-open="sneak">Play: sneak a bad PR past the factory</button>' +
+        '<a class="more" href="' + B + '/how-i-build/">The full workflow and verification ladder</a>';
     },
     archive: function () {
       return '<p class="kicker">The Archive</p><h2>Earlier work</h2><p>University, research and hackathon projects.</p>' +
@@ -324,7 +340,12 @@
     document.getElementById("hint").style.visibility = "hidden";
     document.getElementById("panel-close").focus({ preventScroll: true });
   }
-  function open(key) { track("open-" + key); show(views[key]()); }
+  function open(key) {
+    if (!views[key]) return;
+    track("open-" + key);
+    show(views[key]());
+    document.dispatchEvent(new CustomEvent("campus:open", { detail: { key: key, body: panelBody } }));
+  }
   function openProject(p, back) {
     track("project-" + p.url);
     show('<p class="kicker">' + (back === "services" ? "Service District" : back === "archive" ? "The Archive" : "The Lab") + "</p>" +
@@ -333,11 +354,12 @@
       '<button type="button" class="btn" style="margin-top:12px" data-back="' + back + '">See the rest</button>');
   }
   panelBody.addEventListener("click", function (e) {
-    var k = e.target.getAttribute && e.target.getAttribute("data-back");
-    if (k) open(k);
+    var t = e.target.closest && e.target.closest("[data-back],[data-open]");
+    if (t) open(t.getAttribute("data-back") || t.getAttribute("data-open"));
   });
   function closePanel() {
     panel.hidden = true;
+    document.dispatchEvent(new CustomEvent("campus:close"));
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
   document.getElementById("panel-close").addEventListener("click", closePanel);
@@ -469,7 +491,10 @@
 
   function endTour() {
     if (tour.hidden) return;
-    if (cur === steps.length - 1) track("tour-finish");
+    if (cur === steps.length - 1) {
+      track("tour-finish");
+      document.dispatchEvent(new CustomEvent("campus:tour-finish"));
+    }
     cancelAnimationFrame(anim);
     tour.hidden = true;
     document.body.classList.remove("touring");
@@ -497,4 +522,13 @@
     if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); go(cur + 1); }
     if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); go(cur - 1); }
   });
+
+  // Shared with campus-play.js (games, ambient life, achievements and music).
+  window.Campus = {
+    data: data, P: P, el: el, box: box, layers: layers, svg: svg, U: U,
+    stations: stations, stationX: stationX, services: services, wires: wires, wireEls: wireEls,
+    beam: function (on) { if (beam) beam.classList.toggle("on", on); },
+    views: views, open: open, show: show, close: closePanel, esc: esc, track: track,
+    reduceMotion: reduceMotion, touring: function () { return !tour.hidden; }
+  };
 })();
