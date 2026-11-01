@@ -148,7 +148,7 @@ social:
 analytics:
   provider               :  "goatcounter" # false, "goatcounter", "google", "google-universal", "google-analytics-4", "custom"
   goatcounter:
-    code                 : "" # your GoatCounter site code, e.g. "paawan" for paawan.goatcounter.com. Blank keeps analytics off.
+    code                 : "paawandesai" # your GoatCounter site code, e.g. "paawan" for paawan.goatcounter.com. Blank keeps analytics off.
   google:
     tracking_id          :
 
