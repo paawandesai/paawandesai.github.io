@@ -25,6 +25,7 @@
       <p>{{ site.author.bio }}</p>
     </div>
     <nav class="actions" aria-label="Site">
+      <button type="button" class="btn" id="fast-path">Short on time?</button>
       <button type="button" class="btn primary" id="tour-start">Watch a PR ship</button>
       <button type="button" class="btn" id="theme-toggle" aria-label="Switch between light and dark mode">
         <span class="when-light">Dark mode</span><span class="when-dark">Light mode</span>
@@ -34,6 +35,7 @@
   </header>
 
   <div class="hud">
+    <button type="button" class="pill daily" id="daily-btn">★ Daily</button>
     <button type="button" class="pill" id="ach-btn">Achievements <span id="ach-count">0</span><span class="meter" aria-hidden="true"><i id="ach-bar"></i></span></button>
     <button type="button" class="pill" id="sound-btn" aria-pressed="false">Sound off</button>
     <button type="button" class="pill" id="help-btn">How this works</button>
@@ -43,6 +45,7 @@
   <main>
     <div class="stage">
       <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
+      <p class="clock" aria-live="off"><span class="clock-dot" aria-hidden="true"></span><span id="clock-text"></span></p>
       <p class="hint" id="hint">Click a building to look inside.</p>
     </div>
 
@@ -68,6 +71,8 @@
       <button type="button" data-open="breaker">▶ Be the Breaker<small>Catch the bug before it merges · Easy to Hard</small></button>
       <button type="button" data-open="blast">▶ Blast Radius<small>Find who a change breaks · Easy to Hard</small></button>
       <button type="button" data-open="guard">▶ Talk Past the Guard<small>Jailbreak an agent · pick a level</small></button>
+      <button type="button" data-open="shipday">▶ Ship Day<small>All three in one shift · story mode</small></button>
+      <button type="button" data-open="evallab">▶ Eval Lab<small>Tune a fraud model's threshold</small></button>
       <button type="button" data-open="alchemist">▶ Alchemist's Trial<small>Chemistry game</small></button>
     </nav>
 
@@ -89,7 +94,7 @@
       <ul>
         <li><b>Buildings</b> hold my projects. Click one to look inside.</li>
         <li><b>The people on the belt</b> are my AI build team. Watch a PR go from station to station, or click one to meet it.</li>
-        <li><b>▶ Play markers</b> are games: catch bugs before they merge, find who a change breaks, or talk your way past an AI guard.</li>
+        <li><b>▶ Play markers</b> are games: catch bugs before they merge, find who a change breaks, or talk your way past an AI guard. There's a new <b>daily challenge</b> every day.</li>
       </ul>
       <div class="welcome-actions">
         <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
@@ -107,6 +112,7 @@
     <a href="https://github.com/{{ site.author.github }}">GitHub</a>
     <a href="https://www.linkedin.com/in/{{ site.author.linkedin }}">LinkedIn</a>
     <a href="mailto:{{ site.author.email }}">Email</a>
+    <a href="#" id="term-link" class="term-hint" title="Or press the backtick key">&gt;_</a>
   </footer>
 
   {% assign featured = site.portfolio | where: "group", "featured" | sort: "order" %}
@@ -129,6 +135,7 @@
   <script src="{{ base_path }}/assets/js/campus-sound.js"></script>
   <script src="{{ base_path }}/assets/js/campus-play.js"></script>
   <script src="{{ base_path }}/assets/js/campus-arcade.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-extras.js"></script>
   {% include analytics.html %}
 </body>
 </html>

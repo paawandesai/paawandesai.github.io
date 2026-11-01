@@ -67,7 +67,13 @@
     { id: "homework", name: "Did the homework", desc: "Opened the CV or resume." },
     { id: "sharp", name: "Sharp eye", desc: "Scored 1,500 in Be the Breaker." },
     { id: "radius", name: "Field-level", desc: "Played a perfect round of Blast Radius." },
-    { id: "smooth", name: "Smooth talker", desc: "Beat all five levels of the guard." }
+    { id: "smooth", name: "Smooth talker", desc: "Beat all five levels of the guard." },
+    { id: "daily", name: "Daily driver", desc: "Finished a daily challenge." },
+    { id: "shipday", name: "Full shift", desc: "Worked a whole Ship Day." },
+    { id: "calibrated", name: "Calibrated", desc: "Cleared every target in the Eval Lab." },
+    { id: "shell", name: "Shell access", desc: "Found the hidden terminal." },
+    { id: "sudo", name: "sudo", desc: "Ran the one command that matters." },
+    { id: "nightowl", name: "Night owl", desc: "Visited the campus after midnight." }
   ];
   var got = {};
   try { (JSON.parse(localStorage.getItem("campus-ach")) || []).forEach(function (id) { got[id] = true; }); } catch (e) { /* storage can be blocked */ }
@@ -126,7 +132,7 @@
   K.unlock = unlock;
   K.sound = Sound;
 
-  var BUILDINGS = { breaker: "factory", blast: "services", guard: "security", office: "office", lab: "lab", alchemist: "lab", services: "services", contract: "services", factory: "factory", sneak: "factory", archive: "archive", security: "security" };
+  var BUILDINGS = { breaker: "factory", blast: "services", guard: "security", office: "office", lab: "lab", alchemist: "lab", services: "services", contract: "services", factory: "factory", sneak: "factory", archive: "archive", security: "security", shipday: "factory", evallab: "lab", daily: "factory" };
   document.addEventListener("campus:open", function (e) {
     var b = BUILDINGS[e.detail.key];
     if (!b) return;
