@@ -30,6 +30,7 @@
     <div class="who">
       <h1>{{ site.author.name }}</h1>
       <p>{{ site.author.bio }}</p>
+      <p class="caption">This map is my work, built as a tiny company. Click any building, or play one of the games.</p>
     </div>
     <nav class="actions" aria-label="Site">
       <button type="button" class="btn" id="fast-path">Short on time?</button>
@@ -37,6 +38,7 @@
       <button type="button" class="btn" id="theme-toggle" aria-label="Switch between light and dark mode" title="Light and dark follow your clock until you pick one">
         <span class="when-light">Dark mode</span><span class="when-dark">Light mode</span>
       </button>
+      <a class="btn" href="{{ base_path }}/files/Paawan_Desai_Resume.pdf" data-resume>Resume</a>
       <a class="btn" href="{{ base_path }}/about/">Plain view</a>
     </nav>
   </header>
@@ -119,6 +121,7 @@
     <a href="https://github.com/{{ site.author.github }}">GitHub</a>
     <a href="https://www.linkedin.com/in/{{ site.author.linkedin }}">LinkedIn</a>
     <a href="mailto:{{ site.author.email }}">Email</a>
+    <a href="https://github.com/paawandesai/paawandesai.github.io">View source</a>
     <a href="#" id="term-link" class="term-hint" title="Or press the backtick key">&gt;_</a>
   </footer>
 

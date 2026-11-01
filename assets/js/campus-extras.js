@@ -327,18 +327,33 @@
   A.mount("evallab", mountEval);
 
   // ================= Recruiter fast path =================
+  // Topics, not job titles: a wide spread so nobody gets boxed into one role.
   var ROLES = {
-    ai: { name: "Agents and AI systems", spots: ["lab", "factory", "services"], projects: ["company-agent-layer", "nacha-slm", "clinical-copilot-eval"],
-      line: "Agent systems with evals in the loop: an agent layer that reviews every PR, a small model fine-tuned and measured against frontier models, and an eval platform built to break a clinical assistant." },
-    security: { name: "Evals, security and red-teaming", spots: ["security", "lab"], projects: ["redteam-engine-auditlens", "clinical-copilot-eval", "post-quantum-cryptography"],
-      line: "Attacking AI systems on purpose: a red-team engine for agents, adversarial evals, and hardware security from my ECE days." },
-    builder: { name: "Shipping whole products", spots: ["services", "factory", "office"], projects: ["supplement-ledger", "prediction-market-aggregator", "telemetry-pipeline"],
-      line: "End-to-end products shipped fast: money-correct ledgers, real-time data pipelines, and the build factory that keeps them from breaking." },
-    curious: { name: "Surprise me", spots: ["lab", "factory", "security"], projects: ["company-agent-layer", "redteam-engine-auditlens", "nacha-slm"],
-      line: "Start with today's daily challenge, then wander. Every building opens." }
+    agents: { name: "Agents and AI systems", projects: ["company-agent-layer", "call-center-agent", "churn-agent"],
+      line: "Agents that do real work with guardrails around them: one that reviews every PR across a company, one that answers live calls, one that decides who to win back." },
+    evals: { name: "Evals, security and red-teaming", projects: ["redteam-engine-auditlens", "clinical-copilot-eval", "nacha-slm"],
+      line: "Measuring and attacking AI systems on purpose: a red-team engine for agents, a platform that keeps breaking a clinical assistant, and a model scored against frontier models." },
+    models: { name: "Training and machine learning", projects: ["nacha-slm", "energy_ai_hackathon_2025", "urban-insights"],
+      line: "From fine-tuning a small model that beats much bigger ones on a narrow task, to forecasting and computer vision work." },
+    products: { name: "Shipping whole products", projects: ["supplement-ledger", "zoning-engine", "alchemists-trial"],
+      line: "End-to-end products: a money-correct ordering system, a regulatory engine that cites every claim, and a game where chemistry is the magic system." },
+    data: { name: "Data and real-time systems", projects: ["telemetry-pipeline", "prediction-market-aggregator", "interpreter-workbench"],
+      line: "Systems that stay correct while data streams in: device telemetry, live market matching, and realtime speech." },
+    finance: { name: "Fintech and markets", projects: ["prediction-market-aggregator", "solana-0dte-markets", "quantum-monte-carlo"],
+      line: "Markets and money: cross-venue order routing, on-chain daily markets, and an option pricer you can replay bit for bit." },
+    hardware: { name: "Hardware and engineering", projects: ["post-quantum-cryptography", "deployable-structures", "energy_ai_hackathon_2025"],
+      line: "The ECE side: a post-quantum signature accelerator in Verilog, seismic structures, and energy modeling." },
+    curious: { name: "Surprise me", projects: [],
+      line: "Three picks at random. Then try today's daily challenge, or just wander. Every building opens." }
   };
+  var GROUP_SPOT = { featured: "lab", gauntlet: "", earlier: "archive" };
+  function groupOf(p) {
+    if ((K.data.featured || []).indexOf(p) >= 0) return "featured";
+    if ((K.data.gauntlet || []).indexOf(p) >= 0) return "gauntlet";
+    return "earlier";
+  }
   K.views.recruiter = function () {
-    return '<p class="kicker">Short on time?</p><h2>What do you want to see first?</h2><p>Pick a topic and I\'ll show you the three things worth your minute.</p>' +
+    return '<p class="kicker">Short on time?</p><h2>What do you want to see first?</h2><p>Pick any topic and I\'ll show you three things worth your minute. Most of my work crosses several.</p>' +
       '<div class="role-pick">' + Object.keys(ROLES).map(function (k) { return '<button type="button" class="opt" data-role="' + k + '">' + esc(ROLES[k].name) + "</button>"; }).join("") + "</div>";
   };
   function spotlight(names) {
@@ -349,8 +364,13 @@
     var R = ROLES[k];
     store("campus-role", k);
     K.track("recruiter-" + k);
-    spotlight(R.spots);
     var items = R.projects.map(project).filter(Boolean);
+    if (!items.length) items = A.shuffle([].concat(K.data.featured || [], K.data.gauntlet || [], K.data.earlier || [])).slice(0, 3);
+    spotlight(items.map(function (p) { return GROUP_SPOT[groupOf(p)]; }));
+    // Also light the project's own building or crate when it has one on the map.
+    items.forEach(function (p) {
+      document.querySelectorAll("#campus .hit").forEach(function (g) { if (g.getAttribute("aria-label") === p.title) g.classList.add("spot"); });
+    });
     bodyEl.innerHTML = '<p class="kicker">' + esc(R.name) + "</p><h2>Start here</h2><p>" + esc(R.line) + "</p><ul>" +
       items.map(function (p) { return '<li><a href="' + p.url + '">' + esc(p.title) + "</a><span>" + esc(p.excerpt) + "</span></li>"; }).join("") + "</ul>" +
       '<p class="hint-line">The highlighted buildings on the map hold more of the same.</p>' +

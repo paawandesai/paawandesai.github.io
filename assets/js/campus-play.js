@@ -89,7 +89,9 @@
   var achBar = document.getElementById("ach-bar");
   function renderHud() {
     var n = Object.keys(got).length;
-    achCount.textContent = n + " / " + ACH.length;
+    // Hidden until the first unlock, so a first-time visitor doesn't see "0 / 20".
+    achCount.textContent = n ? n + " / " + ACH.length : "";
+    achBar.parentNode.style.display = n ? "" : "none";
     achBar.style.width = Math.round((n / ACH.length) * 100) + "%";
   }
   renderHud();
