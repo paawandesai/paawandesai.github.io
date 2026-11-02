@@ -14,7 +14,7 @@ author_profile: true
 {% endfor %}
 
 <h2>Gauntlet AI builds</h2>
-<p>Built during Gauntlet AI Cohort 7 (Sep to Nov 2026), each one against a real brief and measured with its own evaluation.</p>
+<p>I built these during Gauntlet AI's Cohort 7 (Sep to Nov 2026). Each one started from a real company's brief and had to prove itself with its own evals.</p>
 {% assign gauntlet = site.portfolio | where: "group", "gauntlet" | sort: "order" %}
 {% for post in gauntlet %}
   {% include archive-single.html %}
