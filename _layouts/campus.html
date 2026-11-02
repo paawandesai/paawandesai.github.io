@@ -16,7 +16,7 @@
     <div class="who">
       <h1>{{ site.author.name }}</h1>
       <p>{{ site.author.bio }}</p>
-      <p class="caption">This map is my work, built as a tiny company. Click any building, or play one of the games.</p>
+      <p class="caption">I turned my portfolio into a little town. Click around, or play a game if you've got a minute.</p>
     </div>
     <nav class="actions" aria-label="Site">
       <button type="button" class="btn" id="fast-path">Short on time?</button>
@@ -40,7 +40,7 @@
     <div class="stage">
       <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
       <p class="clock" aria-live="off"><span class="clock-dot" aria-hidden="true"></span><span id="clock-text"></span></p>
-      <p class="hint" id="hint"><span class="key-tag game">▶ Play tags</span> are games · <span class="key-tag work">White tags</span> open my work</p>
+      <p class="hint" id="hint"><span class="key-tag game">▶ Orange tags</span> are games, <span class="key-tag work">white tags</span> are my work</p>
     </div>
 
     <div class="panel" id="panel" aria-live="polite" hidden>
@@ -62,37 +62,37 @@
 
     <nav class="games" aria-label="Games">
       <span class="row-label">Play</span>
-      <button type="button" data-open="breaker">Be the Breaker<small>Catch the bug</small></button>
+      <button type="button" data-open="breaker">Be the Breaker<small>Spot the bug</small></button>
       <button type="button" data-open="blast">Blast Radius<small>Who does it break?</small></button>
-      <button type="button" data-open="guard">Talk Past the Guard<small>Jailbreak an agent</small></button>
-      <button type="button" data-open="shipday">Ship Day<small>Story mode</small></button>
-      <button type="button" data-open="evallab">Eval Lab<small>Tune a model</small></button>
-      <button type="button" data-open="alchemist">Alchemist's Trial<small>Chemistry</small></button>
+      <button type="button" data-open="guard">Talk Past the Guard<small>Trick a support bot</small></button>
+      <button type="button" data-open="shipday">Ship Day<small>All of them in a row</small></button>
+      <button type="button" data-open="evallab">Eval Lab<small>Pick a threshold</small></button>
+      <button type="button" data-open="alchemist">Alchemist's Trial<small>A chemistry game</small></button>
     </nav>
 
     <nav class="districts" aria-label="Sections of the campus">
       <span class="row-label">Explore</span>
-      <button type="button" data-open="office">Front Office<small>About, CV</small></button>
-      <button type="button" data-open="lab">The Lab<small>Featured work</small></button>
-      <button type="button" data-open="services">Service District<small>Gauntlet AI builds</small></button>
-      <button type="button" data-open="factory">The Factory<small>How I build</small></button>
-      <button type="button" data-open="archive">The Archive<small>Earlier work</small></button>
-      <button type="button" data-open="security">Security<small>Jailbreak the guard</small></button>
+      <button type="button" data-open="office">Front Office<small>About me and my CV</small></button>
+      <button type="button" data-open="lab">The Lab<small>What I'm proudest of</small></button>
+      <button type="button" data-open="services">Service District<small>My Gauntlet projects</small></button>
+      <button type="button" data-open="factory">The Factory<small>How I work with agents</small></button>
+      <button type="button" data-open="archive">The Archive<small>School and hackathons</small></button>
+      <button type="button" data-open="security">Security<small>Get past the guard</small></button>
     </nav>
   </main>
 
   <div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
     <div class="welcome-card">
-      <p class="kicker">Welcome</p>
-      <h2 id="welcome-title">This is my work, built as a small company campus.</h2>
+      <p class="kicker">Hey, I'm Paawan</p>
+      <h2 id="welcome-title">Welcome to my little town.</h2>
       <ul>
-        <li><b>Buildings</b> hold my projects. Click one to look inside.</li>
-        <li><b>The people on the belt</b> are my AI build team. Watch a PR go from station to station, or click one to meet it.</li>
-        <li><b>▶ Play markers</b> are games: catch bugs before they merge, find who a change breaks, or talk your way past an AI guard. There's a new <b>daily challenge</b> every day.</li>
+        <li>Each <b>building</b> is a part of my work. Click one to look inside.</li>
+        <li>The <b>little people</b> walking around are the AI agents I build with. Click one to see what it does, or watch a PR make its way down the line.</li>
+        <li>The orange <b>▶ tags</b> are games. You can catch bugs before they merge, figure out what a change will break, or try to sweet-talk an AI guard into a refund. There's a new <b>daily challenge</b> too.</li>
       </ul>
       <div class="welcome-actions">
         <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
-        <button type="button" class="btn" id="welcome-explore">Explore on my own</button>
+        <button type="button" class="btn" id="welcome-explore">I'll look around</button>
         <a class="btn ghost" href="{{ base_path }}/about/">Plain view</a>
       </div>
     </div>

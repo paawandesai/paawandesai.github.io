@@ -169,7 +169,7 @@
   var RANKS = [[0, "Intern"], [900, "Engineer"], [1700, "Senior engineer"], [2500, "Staff engineer"], [3300, "Principal engineer"]];
   K.views.shipday = function () {
     return '<p class="kicker">Arcade · Story mode</p><h2>Ship Day</h2><div class="arcade" id="shipday">' +
-      "<p>One shift, three jobs, one score. <b>Morning:</b> catch bugs before they merge. <b>Afternoon:</b> warn the teams a change will break. <b>Evening:</b> keep an attacker from talking the support agent into a refund.</p>" +
+      "<p>A whole shift in one go. In the <b>morning</b> you catch bugs before they merge, in the <b>afternoon</b> you warn the teams a change is about to break, and in the <b>evening</b> you stop someone from sweet-talking the support bot into a refund.</p>" +
       A.diffPicker("shipday", ["Gentle clocks, the easy guard", "Real deadlines, a mid-level guard", "Tight clocks, the hardest guard"]) +
       '<p class="best">Best: ' + A.bestLine("shipday") + "</p>" +
       '<button type="button" class="btn primary big" data-act="start">Clock in</button></div>';
@@ -330,21 +330,21 @@
   // Topics, not job titles: a wide spread so nobody gets boxed into one role.
   var ROLES = {
     agents: { name: "Agents and AI systems", projects: ["company-agent-layer", "call-center-agent", "churn-agent"],
-      line: "Agents that do real work with guardrails around them: one that reviews every PR across a company, one that answers live calls, one that decides who to win back." },
+      line: "Agents that do real jobs, with guardrails so they can't go rogue. The biggest one is Company Agent Layer, which reads pull requests across a whole company." },
     evals: { name: "Evals, security and red-teaming", projects: ["redteam-engine-auditlens", "clinical-copilot-eval", "nacha-slm"],
-      line: "Measuring and attacking AI systems on purpose: a red-team engine for agents, a platform that keeps breaking a clinical assistant, and a model scored against frontier models." },
+      line: "I spend a lot of time trying to break AI systems on purpose. Here's the red-team engine, a platform that keeps attacking a clinical assistant, and a small model I put up against the big ones." },
     models: { name: "Training and machine learning", projects: ["nacha-slm", "energy_ai_hackathon_2025", "urban-insights"],
-      line: "From fine-tuning a small model that beats much bigger ones on a narrow task, to forecasting and computer vision work." },
+      line: "Training and modeling work, from a small model that beats much bigger ones at one narrow job, to older forecasting and vision projects." },
     products: { name: "Shipping whole products", projects: ["supplement-ledger", "zoning-engine", "alchemists-trial"],
-      line: "End-to-end products: a money-correct ordering system, a regulatory engine that cites every claim, and a game where chemistry is the magic system." },
+      line: "Whole products, start to finish. An ordering system where every cent adds up, a zoning tool that cites its sources, and a game where chemistry is the magic." },
     data: { name: "Data and real-time systems", projects: ["telemetry-pipeline", "prediction-market-aggregator", "interpreter-workbench"],
-      line: "Systems that stay correct while data streams in: device telemetry, live market matching, and realtime speech." },
+      line: "Systems that have to stay right while data keeps pouring in, like device telemetry, live market matching and realtime speech." },
     finance: { name: "Fintech and markets", projects: ["prediction-market-aggregator", "solana-0dte-markets", "quantum-monte-carlo"],
-      line: "Markets and money: cross-venue order routing, on-chain daily markets, and an option pricer you can replay bit for bit." },
+      line: "Money and markets. Routing orders across prediction markets, daily markets on Solana, and an option pricer you can replay down to the bit." },
     hardware: { name: "Hardware and engineering", projects: ["post-quantum-cryptography", "deployable-structures", "energy_ai_hackathon_2025"],
-      line: "The ECE side: a post-quantum signature accelerator in Verilog, seismic structures, and energy modeling." },
+      line: "The ECE side of me. A post-quantum crypto accelerator in Verilog, some earthquake-resistant structures, and energy modeling." },
     curious: { name: "Surprise me", projects: [],
-      line: "Three picks at random. Then try today's daily challenge, or just wander. Every building opens." }
+      line: "Here are three at random. After that, try today's daily challenge or just wander around. Every building opens." }
   };
   var GROUP_SPOT = { featured: "lab", gauntlet: "", earlier: "archive" };
   function groupOf(p) {
@@ -353,7 +353,7 @@
     return "earlier";
   }
   K.views.recruiter = function () {
-    return '<p class="kicker">Short on time?</p><h2>What do you want to see first?</h2><p>Pick any topic and I\'ll show you three things worth your minute. Most of my work crosses several.</p>' +
+    return '<p class="kicker">Short on time?</p><h2>What do you want to see first?</h2><p>Pick whatever you\'re curious about and I\'ll show you a few things. Most of my projects touch more than one of these anyway.</p>' +
       '<div class="role-pick">' + Object.keys(ROLES).map(function (k) { return '<button type="button" class="opt" data-role="' + k + '">' + esc(ROLES[k].name) + "</button>"; }).join("") + "</div>";
   };
   function spotlight(names) {
