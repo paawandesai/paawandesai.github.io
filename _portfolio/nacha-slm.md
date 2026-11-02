@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: featured
 order: 3
+flow_caption: "How the model was trained and checked"
+flow:
+  - { t: "Code-generated specs", s: "6,000 examples" }
+  - { t: "Exact validator", s: "keeps only valid files", hot: true }
+  - { t: "LoRA fine-tune", s: "Qwen3-4B on one GPU" }
+  - { t: "Validator + judge", s: "exact match, spec adherence", hot: true }
+  - { t: "Runs locally", s: "18 of 20 hardest specs" }
 ---
 
 [Model on Hugging Face](https://huggingface.co/paawandesai/qwen3-4b-nacha-writer)

@@ -5,6 +5,12 @@ collection: portfolio
 layout: single
 group: earlier
 order: 1
+flow_caption: "The modeling pipeline"
+flow:
+  - { t: "Well data", s: "grid, diesel, CNG" }
+  - { t: "Feature engineering", s: "CatBoost encoding, ranking" }
+  - { t: "XGBoost + Random Forest", s: "R\u00b2 up to 0.99", hot: true }
+  - { t: "Uncertainty", s: "100 realizations per well", hot: true }
 ---
 
 [View on GitHub](https://github.com/paawandesai/energy-ai-hackathon-2025/tree/main)  

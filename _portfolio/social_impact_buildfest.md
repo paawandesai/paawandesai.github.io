@@ -5,6 +5,12 @@ collection: portfolio
 layout: single
 group: earlier
 order: 3
+flow_caption: "From text to touch"
+flow:
+  - { t: "Advocacy text", s: "one sentence at a time" }
+  - { t: "Sentiment", s: "lexicons + transformer", hot: true }
+  - { t: "Text-to-speech", s: "read aloud" }
+  - { t: "Haptics", s: "DataFeel commands", hot: true }
 ---
 
 [View on GitHub](https://github.com/txibuildfest25/buildfest_website/tree/main)  

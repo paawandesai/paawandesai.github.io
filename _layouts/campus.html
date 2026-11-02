@@ -3,12 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ site.title }}</title>
-  <meta name="description" content="{{ site.description }}">
-  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-  <meta property="og:title" content="{{ site.title }}">
-  <meta property="og:description" content="{{ site.description }}">
-  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  {% include seo.html %}
+  <meta name="theme-color" content="#ebe5d5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#10172b" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="{{ base_path }}/images/favicon.ico">
   <script src="{{ base_path }}/assets/js/campus-sun.js"></script>
   <link rel="stylesheet" href="{{ base_path }}/assets/css/campus.css">
 </head>
@@ -38,6 +36,7 @@
   </div>
 
   <main>
+    <p class="swipe" aria-hidden="true">Swipe the map to look around</p>
     <div class="stage">
       <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
       <p class="clock" aria-live="off"><span class="clock-dot" aria-hidden="true"></span><span id="clock-text"></span></p>
@@ -101,6 +100,11 @@
 
   <div class="agent-card" id="agent-card" role="dialog" aria-live="polite" hidden></div>
   <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <nav class="dock" aria-label="Quick links">
+    <button type="button" class="btn" data-click="fast-path">Short on time?</button>
+    <a class="btn primary" href="{{ base_path }}/files/Paawan_Desai_Resume.pdf" data-resume>Resume</a>
+  </nav>
 
   <footer class="foot">
     <a href="{{ base_path }}/files/Paawan_Desai_Resume.pdf">Resume (PDF)</a>

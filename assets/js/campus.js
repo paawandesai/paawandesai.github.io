@@ -286,6 +286,15 @@
   // Fit the drawing to its content.
   var bb = svg.getBBox();
   svg.setAttribute("viewBox", [bb.x - 12, bb.y - 12, bb.width + 24, bb.height + 24].map(Math.round).join(" "));
+  // On phones the map is drawn wider than the screen and scrolls sideways; start in the middle.
+  var stageEl = svg.parentNode;
+  function centerStage() { if (stageEl.scrollWidth > stageEl.clientWidth) stageEl.scrollLeft = (stageEl.scrollWidth - stageEl.clientWidth) / 2; }
+  centerStage();
+  window.addEventListener("load", centerStage);
+  stageEl.addEventListener("scroll", function () { document.body.classList.add("swiped"); }, { once: true, passive: true });
+  document.querySelectorAll("[data-click]").forEach(function (b) {
+    b.addEventListener("click", function () { var t = document.getElementById(b.getAttribute("data-click")); if (t) t.click(); });
+  });
 
   // Panel.
   var panel = document.getElementById("panel");

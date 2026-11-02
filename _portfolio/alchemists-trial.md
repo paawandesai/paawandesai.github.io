@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: featured
 order: 4
+flow_caption: "One turn of the game"
+flow:
+  - { t: "Gather matter", s: "pick up elements" }
+  - { t: "Write an equation", s: "tiles or full notation" }
+  - { t: "Balance check", s: "must be real chemistry", hot: true }
+  - { t: "Rust/WASM simulation", s: "decides what happens", hot: true }
+  - { t: "World reacts", s: "douse fire, split water" }
 ---
 
 [View on GitHub](https://github.com/paawandesai/realgame)

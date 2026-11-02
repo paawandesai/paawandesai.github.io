@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: featured
 order: 1
+flow_caption: "How a breaking change gets caught"
+flow:
+  - { t: "Repos", s: "APIs, events, DB columns" }
+  - { t: "Indexer", s: "finds every contract" }
+  - { t: "Dependency graph", s: "who uses what, by field" }
+  - { t: "Pull request", s: "diffed against the graph", hot: true }
+  - { t: "PR comment", s: "names the affected teams", hot: true }
 ---
 
 **Status:** in active development (Oct 2026). Indexer v0.2.0 published.

@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 7
+flow_caption: "From parcel to cited answer"
+flow:
+  - { t: "LA parcel", s: "" }
+  - { t: "PostGIS", s: "zones and overlays" }
+  - { t: "Rule retrieval", s: "pgvector over code text" }
+  - { t: "Constraints", s: "home, ADU, guest house", hot: true }
+  - { t: "Cited answer", s: "every claim to its source", hot: true }
 ---
 
 ### What it does

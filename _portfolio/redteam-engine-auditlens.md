@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: featured
 order: 2
+flow_caption: "From attack to audit"
+flow:
+  - { t: "113 attacks", s: "injection, tool misuse, multi-turn" }
+  - { t: "Target agent", s: "LangGraph, four models" }
+  - { t: "Grade actions", s: "tools called, arguments", hot: true }
+  - { t: "AuditLens", s: "maps to EU AI Act articles" }
+  - { t: "Report", s: "cited, scored, JSON and PDF" }
 ---
 
 [Red team engine on GitHub](https://github.com/paawandesai/redteam-engine) · [AuditLens on GitHub](https://github.com/paawandesai/auditlens)

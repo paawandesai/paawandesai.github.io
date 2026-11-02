@@ -1,0 +1,10 @@
+{% if page.flow %}
+<figure class="project-flow" aria-labelledby="flow-cap">
+  <figcaption id="flow-cap">{{ page.flow_caption | default: "How it works" }}</figcaption>
+  <ol class="flow">
+    {% for step in page.flow %}
+    <li class="flow-step{% if step.hot %} hot{% endif %}"><b>{{ step.t }}</b>{% if step.s != "" %}<span>{{ step.s }}</span>{% endif %}</li>
+    {% endfor %}
+  </ol>
+</figure>
+{% endif %}

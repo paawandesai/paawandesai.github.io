@@ -26,6 +26,7 @@ layout: default
     <div class="page__inner-wrap">
       {% unless page.header.overlay_color or page.header.overlay_image %}
         <header>
+          {% if page.collection == "portfolio" %}<a class="page-back" href="{{ base_path }}/portfolio/">← All projects</a>{% endif %}
           {% if page.title %}<h1 class="page__title" itemprop="headline">{{ page.title | markdownify | remove: "<p>" | remove: "</p>" }}</h1>{% endif %}
           {% if page.read_time %}
             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> {% include read-time.html %}</p>
@@ -45,7 +46,13 @@ layout: default
       {% endunless %}
 
       <section class="page__content" itemprop="text">
+        {% if page.flow %}
+          {% comment %}The diagram goes after the first section ("What it does"), so readers get the idea in words first.{% endcomment %}
+          {% assign parts = content | split: "<h3" %}
+          {% if parts.size > 2 %}{{ parts[0] }}<h3{{ parts[1] }}{% include project-flow.html %}{% for part in parts offset: 2 %}<h3{{ part }}{% endfor %}{% else %}{% include project-flow.html %}{{ content }}{% endif %}
+        {% else %}
         {{ content }}
+        {% endif %}
 
         {% if page.citation and page.paperurl and page.slidesurl %}
           <p style="font-size: smaller">Recommended citation: {{ page.citation }}<br /><a href="{{ page.paperurl }}">Download Paper</a> | <a href="{{ page.slidesurl }}">Download Slides</a></p>

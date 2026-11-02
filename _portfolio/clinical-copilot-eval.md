@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 2
+flow_caption: "The continuous red-team loop"
+flow:
+  - { t: "Attack + benign twin", s: "each attack has a control" }
+  - { t: "Clinical agent", s: "FastAPI in OpenEMR" }
+  - { t: "Deterministic oracles", s: "canary, tool audit, logs", hot: true }
+  - { t: "LLM judge", s: "only where truly semantic" }
+  - { t: "Regression suite", s: "confirmed exploits frozen", hot: true }
 ---
 
 ### What it does

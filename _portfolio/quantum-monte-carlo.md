@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 5
+flow_caption: "One pricing job"
+flow:
+  - { t: "Quantum entropy", s: "one seed block per job", hot: true }
+  - { t: "Derive shard seeds", s: "independent per worker" }
+  - { t: "SQS + Lambda", s: "fan out simulations" }
+  - { t: "Aggregate", s: "price + 95% interval" }
+  - { t: "Replay", s: "bit-for-bit from the seed", hot: true }
 ---
 
 ### What it does

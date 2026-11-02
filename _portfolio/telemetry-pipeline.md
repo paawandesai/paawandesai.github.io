@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 6
+flow_caption: "From gateway to live state"
+flow:
+  - { t: "Site gateways", s: "equipment readings" }
+  - { t: "Redpanda broker", s: "Kafka-compatible" }
+  - { t: "Consumer", s: "order-independent updates", hot: true }
+  - { t: "Postgres", s: "current state per device", hot: true }
+  - { t: "Live web app", s: "claim new devices" }
 ---
 
 ### What it does

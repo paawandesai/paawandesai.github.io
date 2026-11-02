@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 1
+flow_caption: "What happens to every message"
+flow:
+  - { t: "Caller message", s: "" }
+  - { t: "Safety rules + classifier", s: "two independent checks", hot: true }
+  - { t: "Verify caller", s: "before account details" }
+  - { t: "Answer or book", s: "knowledge base, scheduler" }
+  - { t: "Human handoff", s: "life-safety and edge cases", hot: true }
 ---
 
 ### What it does

@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 9
+flow_caption: "Where every cent goes"
+flow:
+  - { t: "Provider builds order", s: "from catalog prices" }
+  - { t: "Patient pays", s: "pay link, faked payments" }
+  - { t: "One transaction", s: "server recomputes the split", hot: true }
+  - { t: "Ledger entries", s: "COGS, payout, 75 bps fee", hot: true }
+  - { t: "Refunds", s: "reversing entries, never edits" }
 ---
 
 ### What it does

@@ -4,7 +4,7 @@
   <div class="masthead__inner-wrap">
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
-        <button><div class="navicon"></div></button>
+        <button type="button" aria-label="More pages"><div class="navicon"></div></button>
         <ul class="visible-links">
           <li class="masthead__menu-item masthead__menu-item--lg"><a href="{{ base_path }}/">{{ site.title }}</a></li>
           {% for link in site.data.navigation.main %}
@@ -19,5 +19,23 @@
         <ul class="hidden-links hidden"></ul>
       </nav>
     </div>
+    <div class="site-tools">
+      <button type="button" class="pill-btn" id="theme-toggle" title="Follow the sun where you are, or pick light or dark"><span id="theme-label">Theme: sun</span></button>
+      <a class="pill-btn primary resume-btn" href="{{ base_path }}/files/Paawan_Desai_Resume.pdf" data-resume>Resume</a>
+    </div>
   </div>
 </div>
+<script>
+  (function () {
+    var b = document.getElementById("theme-toggle"), l = document.getElementById("theme-label");
+    if (!b || !window.CampusSun) return;
+    var NAMES = { auto: "sun", light: "light", dark: "dark" }, NEXT = { auto: "light", light: "dark", dark: "auto" };
+    function render() {
+      var m = CampusSun.state().mode || "auto";
+      l.textContent = "Theme: " + NAMES[m];
+      b.setAttribute("aria-label", "Theme: " + NAMES[m] + ". Change to " + NAMES[NEXT[m]]);
+    }
+    b.addEventListener("click", function () { CampusSun.setMode(NEXT[CampusSun.state().mode || "auto"]); render(); });
+    render();
+  })();
+</script>
