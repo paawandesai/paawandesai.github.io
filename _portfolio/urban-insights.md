@@ -5,6 +5,12 @@ collection: portfolio
 layout: single
 group: earlier
 order: 4
+flow_caption: "The analysis"
+flow:
+  - { t: "Street imagery + maps", s: "OpenCV, OSMnx" }
+  - { t: "Network analysis", s: "NetworkX" }
+  - { t: "Site selection", s: "resource optimization", hot: true }
+  - { t: "Planner insights", s: "maps and rankings" }
 ---
 [View on Github](https://github.com/paawandesai/urban_insights_initiative)
 

@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 10
+flow_caption: "The nightly loop"
+flow:
+  - { t: "Subscribers", s: "synthetic data" }
+  - { t: "Risk model", s: "calibrated score + reasons" }
+  - { t: "Proposal", s: "one action from a fixed menu" }
+  - { t: "Policy layer", s: "deterministic, decides what may send", hot: true }
+  - { t: "Review console", s: "people approve or reject" }
 ---
 
 ### What it does

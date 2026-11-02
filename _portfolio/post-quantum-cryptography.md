@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: earlier
 order: 2
+flow_caption: "The accelerator"
+flow:
+  - { t: "C driver", s: "software side" }
+  - { t: "Random bit generator", s: "" }
+  - { t: "NTT unit", s: "polynomial multiplication", hot: true }
+  - { t: "ML-DSA core", s: "signature operations", hot: true }
+  - { t: "ModelSim", s: "verified in simulation" }
 ---
 
 ### Overview

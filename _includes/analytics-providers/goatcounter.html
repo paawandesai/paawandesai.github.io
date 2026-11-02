@@ -1,3 +1,28 @@
 {% if site.analytics.goatcounter.code and site.analytics.goatcounter.code != "" %}
 <script data-goatcounter="https://{{ site.analytics.goatcounter.code }}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+  /* Extra events, all cookie-free and anonymous.
+     - Clicks on the resume, GitHub, LinkedIn, email and other outside links (a PDF or another site is otherwise invisible).
+     - Script errors, as file and line only. The error message is never sent, so nothing a visitor typed can leak.
+     Campaign tags need no code: GoatCounter reads ?ref= and utm_source= from the URL on its own. */
+  (function () {
+    function send(path, title) {
+      if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: path, title: title, event: true });
+    }
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a) return;
+      var href = a.getAttribute("href");
+      if (a.hasAttribute("data-resume") || /\.pdf($|\?)/.test(href)) return send("click/resume", "Resume");
+      if (/^mailto:/.test(href)) return send("click/email", "Email");
+      if (a.host && a.host !== location.host) send("click/out/" + a.host.replace(/^www\./, ""), a.host);
+    }, true);
+    var errors = 0;
+    window.addEventListener("error", function (e) {
+      if (errors++ >= 3 || !e.filename) return;
+      var file = e.filename.split("?")[0].split("/").pop() || "inline";
+      send("error/" + file + ":" + (e.lineno || 0), "Script error");
+    });
+  })();
+</script>
 {% endif %}

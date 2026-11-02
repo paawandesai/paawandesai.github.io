@@ -5,6 +5,13 @@ collection: portfolio
 layout: single
 group: gauntlet
 order: 4
+flow_caption: "A market's day"
+flow:
+  - { t: "Morning", s: "new markets created" }
+  - { t: "On-chain order book", s: "Anchor program", hot: true }
+  - { t: "Quant service", s: "fair value, market making" }
+  - { t: "4:00 PM close", s: "oracle settles", hot: true }
+  - { t: "Redeem", s: "winners get $1.00" }
 ---
 
 ### What it does
