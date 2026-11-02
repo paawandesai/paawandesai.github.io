@@ -630,8 +630,8 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
 #campus { position: relative; z-index: 1; }
 .orb { position: absolute; width: 34px; height: 34px; border-radius: 50%; transform: translate(-50%, 0); transition: left 2s, top 2s; }
 .orb.sun { background: radial-gradient(circle, #ffd27a 40%, rgba(255, 210, 122, 0) 72%); width: 56px; height: 56px; }
-.orb.moon { background: #e8edff; box-shadow: 0 0 18px rgba(200, 215, 255, 0.6); }
-.orb.moon::after { content: ""; position: absolute; inset: -2px -6px 4px 8px; border-radius: 50%; background: var(--bg); }
+/* A true crescent: only the lit edge is painted (an inset shadow), so no dark disc sits on top of the sky. */
+.orb.moon { background: transparent; box-shadow: inset 9px -3px 0 0 #e8edff; filter: drop-shadow(0 0 7px rgba(200, 215, 255, 0.7)); transform: translate(-50%, 0) rotate(-12deg); }
 :root[data-tod="dawn"] .sky { background: radial-gradient(ellipse at 20% 0%, rgba(255, 170, 120, 0.22), transparent 60%); }
 :root[data-tod="day"] .sky { background: radial-gradient(ellipse at 50% 0%, rgba(255, 220, 140, 0.14), transparent 60%); }
 :root[data-tod="dusk"] .sky { background: radial-gradient(ellipse at 80% 0%, rgba(255, 120, 90, 0.22), rgba(120, 90, 200, 0.08) 50%, transparent 75%); }
