@@ -5,6 +5,7 @@
 {% if page.title %}
   {% assign seo_title = page.title | append: " " | append: site.title_separator | append: " " | append: site.title | markdownify | strip_html | strip_newlines | escape_once %}
 {% endif %}
+{% if page.url == "/" %}{% assign share_title = site.title | append: " · AI engineer: agents, evals and security" %}{% else %}{% assign share_title = page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once %}{% endif %}
 {% assign canonical_url = page.url | replace: "index.html", "" | prepend: seo_url %}
 {% assign seo_description = page.description | default: page.excerpt | default: site.description | markdownify | strip_html | strip_newlines | strip | escape_once | truncate: 200 %}
 {% assign seo_image = page.og_image | default: page.header.image | default: site.og_image %}
@@ -18,18 +19,18 @@
 <meta property="og:locale" content="{{ site.locale | default: "en_US" | replace: "-", "_" }}">
 <meta property="og:site_name" content="{{ site.title }}">
 <meta property="og:type" content="{% if page.collection == "portfolio" %}article{% else %}website{% endif %}">
-<meta property="og:title" content="{{ page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once }}">
+<meta property="og:title" content="{{ share_title }}">
 <meta property="og:description" content="{{ seo_description }}">
 <meta property="og:url" content="{{ canonical_url }}">
 {% if seo_image %}
 <meta property="og:image" content="{{ seo_image }}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
 <meta property="og:image:alt" content="{{ site.og_image_alt | escape_once }}">
 {% endif %}
 
 <meta name="twitter:card" content="{% if seo_image %}summary_large_image{% else %}summary{% endif %}">
-<meta name="twitter:title" content="{{ page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once }}">
+<meta name="twitter:title" content="{{ share_title }}">
 <meta name="twitter:description" content="{{ seo_description }}">
 {% if seo_image %}<meta name="twitter:image" content="{{ seo_image }}">{% endif %}
 
