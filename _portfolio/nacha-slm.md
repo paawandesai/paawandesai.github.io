@@ -28,7 +28,7 @@ A Qwen3-4B fine-tuned with LoRA (trained on Modal) that turns a plain-language p
 | GPT-5.5 | 3 |
 | Claude Sonnet | 1 |
 
-The current model scores 45/50 on the eval set and 99/100 on the holdout set, against 0/50 for the untuned base. It now handles originator names it never saw in training (9 of 10, up from 0 of 10). Bigger files with unseen names are the open gap (11/50), and it's tracked openly. A self-training round didn't beat it, so I dropped it. Training takes about five hours on one GPU, using 6,000 code-generated files.
+The current model scores 45/50 on the eval set and 99/100 on the holdout set, against 0/50 for the untuned base. It now handles originator names it never saw in training (9 of 10, up from 0 of 10). The remaining gap is larger files with unseen names (11 of 50), which is the focus of current work. A self-training round didn't beat it, so I dropped it. Training takes about five hours on one GPU, using 6,000 code-generated files.
 
 ### How it was built
 - **Find a real gap first.** I tested candidate tasks like financial statement spreading and chest X-ray reading and dropped them because frontier models were already good enough. Exact fixed-width banking files were not.

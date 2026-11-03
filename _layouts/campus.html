@@ -16,7 +16,7 @@
     <div class="who">
       <h1>{{ site.author.name }}</h1>
       <p>{{ site.author.bio }}</p>
-      <p class="caption">I turned my portfolio into a little town. Click around, or play a game if you've got a minute.</p>
+      <p class="caption">My portfolio, laid out as a small campus. Click a building to see the work, or try one of the games.</p>
     </div>
     <nav class="actions" aria-label="Site">
       <button type="button" class="btn" id="fast-path">Short on time?</button>
@@ -64,8 +64,8 @@
       <span class="row-label">Play</span>
       <button type="button" data-open="breaker">Be the Breaker<small>Spot the bug</small></button>
       <button type="button" data-open="blast">Blast Radius<small>Who does it break?</small></button>
-      <button type="button" data-open="guard">Talk Past the Guard<small>Trick a support bot</small></button>
-      <button type="button" data-open="shipday">Ship Day<small>All of them in a row</small></button>
+      <button type="button" data-open="guard">Talk Past the Guard<small>Jailbreak a support agent</small></button>
+      <button type="button" data-open="shipday">Ship Day<small>All three games in a row</small></button>
       <button type="button" data-open="evallab">Eval Lab<small>Pick a threshold</small></button>
       <button type="button" data-open="alchemist">Alchemist's Trial<small>A chemistry game</small></button>
     </nav>
@@ -73,26 +73,26 @@
     <nav class="districts" aria-label="Sections of the campus">
       <span class="row-label">Explore</span>
       <button type="button" data-open="office">Front Office<small>About me and my CV</small></button>
-      <button type="button" data-open="lab">The Lab<small>What I'm proudest of</small></button>
+      <button type="button" data-open="lab">The Lab<small>Featured projects</small></button>
       <button type="button" data-open="services">Service District<small>My Gauntlet projects</small></button>
       <button type="button" data-open="factory">The Factory<small>How I work with agents</small></button>
-      <button type="button" data-open="archive">The Archive<small>School and hackathons</small></button>
+      <button type="button" data-open="archive">The Archive<small>University and hackathons</small></button>
       <button type="button" data-open="security">Security<small>Get past the guard</small></button>
     </nav>
   </main>
 
   <div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
     <div class="welcome-card">
-      <p class="kicker">Hey, I'm Paawan</p>
-      <h2 id="welcome-title">Welcome to my little town.</h2>
+      <p class="kicker">Welcome</p>
+      <h2 id="welcome-title">My work, laid out as a small campus.</h2>
       <ul>
         <li>Each <b>building</b> is a part of my work. Click one to look inside.</li>
-        <li>The <b>little people</b> walking around are the AI agents I build with. Click one to see what it does, or watch a PR make its way down the line.</li>
-        <li>The orange <b>▶ tags</b> are games. You can catch bugs before they merge, figure out what a change will break, or try to sweet-talk an AI guard into a refund. There's a new <b>daily challenge</b> too.</li>
+        <li>The <b>figures on the line</b> are the AI agents I build with. Click one to see its role, or watch a pull request move through the stations.</li>
+        <li>The orange <b>▶ tags</b> are games. Catch bugs before they merge, find which services a change will break, or try to talk an AI guard into an unauthorized refund. A new <b>daily challenge</b> appears each day.</li>
       </ul>
       <div class="welcome-actions">
         <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
-        <button type="button" class="btn" id="welcome-explore">I'll look around</button>
+        <button type="button" class="btn" id="welcome-explore">Explore on my own</button>
         <a class="btn ghost" href="{{ base_path }}/about/">Plain view</a>
       </div>
     </div>

@@ -1,6 +1,6 @@
 ---
 title: "Energy A.I. Hackathon 2025 – Predictive Energy Modeling"
-excerpt: "An award-winning machine learning project to forecast energy consumption during hydraulic fracturing operations."
+excerpt: "First place out of 25 teams: a model that predicts energy use during hydraulic fracturing, broken out by grid power, diesel and CNG."
 collection: portfolio
 layout: single
 group: earlier
@@ -13,23 +13,16 @@ flow:
   - { t: "Uncertainty", s: "100 realizations per well", hot: true }
 ---
 
-[View on GitHub](https://github.com/paawandesai/energy-ai-hackathon-2025/tree/main)  
-Check out the presentation [here!](https://github.com/paawandesai/energy-ai-hackathon-2025/blob/main/datacomrades_final.pptx)  
+[View on GitHub](https://github.com/paawandesai/energy-ai-hackathon-2025/tree/main) · [Presentation](https://github.com/paawandesai/energy-ai-hackathon-2025/blob/main/datacomrades_final.pptx)
 
 ### Overview
-As part of the Energy A.I. Hackathon 2025, our team developed a machine learning pipeline to predict energy consumption (**Grid, Diesel, and CNG**) for hydraulic fracturing operations. The project integrated robust uncertainty modeling, advanced feature engineering, and domain-specific insights, earning **1st Place** out of 25 teams.  
+For the Energy A.I. Hackathon 2025, my team built a model that predicts energy use during hydraulic fracturing operations, broken out by grid power, diesel and CNG. We placed first out of 25 teams, judged on accuracy, code quality and presentation.
 
-### Key Features
-- **High Prediction Accuracy:** Achieved **R²** scores of 0.9918 (Grid), 0.9766 (Diesel), and 0.9692 (CNG) using **XGBoost** and **Random Forest** models.  
-- **Uncertainty Modeling:** Quantified prediction uncertainty with 100 realizations per well.  
-- **Feature Engineering:** Leveraged **CatBoost encoding**, feature ranking, and temporal modeling to enhance predictions.  
-- **Custom Libraries:** Integrated **ozbayrak_goodness** for model evaluation and **UTuning** for hyperparameter optimization.
+### Approach
+- XGBoost and Random Forest models reached R² of 0.99 for grid, 0.98 for diesel and 0.97 for CNG.
+- We ran 100 realizations per well to measure the uncertainty of each prediction.
+- Inputs were prepared with CatBoost encoding, feature ranking and time-based features.
+- Models were evaluated with ozbayrak_goodness and tuned with UTuning.
 
-### Tools Used
-- **Programming Languages:** Python  
-- **Libraries/Frameworks:** scikit-learn, XGBoost, Pandas, NumPy, CatBoost  
-- **Custom Libraries:** ozbayrak_goodness, UTuning  
-
-### Achievements
-- **First Place Winners:** Secured top position among 25 teams in accuracy (MAPE), code quality, and presentation.  
-
+### Tools
+Python, scikit-learn, XGBoost, CatBoost, pandas, NumPy

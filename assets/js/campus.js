@@ -311,15 +311,15 @@
       return '<p class="kicker">Front Office</p><img class="photo" src="' + esc(data.photo) + '" alt="Paawan Desai">' +
         "<h2>Paawan Desai</h2><p>" + esc(data.bio) + "</p>" +
         "<ul>" +
-        '<li><a href="' + B + '/about/">About me</a><span>Who I am and what I\'m up to.</span></li>' +
-        '<li><a href="' + B + '/cv/">CV</a><span>The long version.</span></li>' +
+        '<li><a href="' + B + '/about/">About me</a><span>Background and current work.</span></li>' +
+        '<li><a href="' + B + '/cv/">CV</a><span>Full experience and education.</span></li>' +
         '<li><a href="' + B + '/files/Paawan_Desai_Resume.pdf">Resume (PDF)</a><span>The one-page version.</span></li>' +
-        '<li><a href="https://github.com/' + esc(data.github) + '">GitHub</a><span>Most of my code lives here.</span></li>' +
-        '<li><a href="https://www.linkedin.com/in/' + esc(data.linkedin) + '">LinkedIn</a><span>Come say hi.</span></li>' +
+        '<li><a href="https://github.com/' + esc(data.github) + '">GitHub</a><span>Code for my public projects.</span></li>' +
+        '<li><a href="https://www.linkedin.com/in/' + esc(data.linkedin) + '">LinkedIn</a><span>Get in touch.</span></li>' +
         "</ul>";
     },
     lab: function () {
-      return '<p class="kicker">The Lab</p><h2>Featured work</h2><p>What I\'m working on now, plus the stuff I\'m proudest of.</p>' +
+      return '<p class="kicker">The Lab</p><h2>Featured work</h2><p>Current work and the projects I\'m proudest of.</p>' +
         '<button type="button" class="btn primary play" data-open="alchemist">Play Alchemist\'s Trial</button>' +
         list(data.featured) + '<a class="more" href="' + B + '/portfolio/">All projects</a>';
     },
@@ -338,14 +338,14 @@
         ["Scorer", "Replays the scenario catalog. Never changes expected answers."],
         ["Buyer panel", "Three personas score the product. Never see the code."]];
       return '<p class="kicker">The Factory</p><h2>How I build</h2>' +
-        "<p>This is how I build now. It\'s a small team of AI agents, each with one job and one thing it\'s never allowed to do, so nothing ends up grading its own homework.</p><table>" +
+        "<p>I build with a small team of AI agents. Each has one job and one thing it is never allowed to do, so no agent grades its own work.</p><table>" +
         rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; }).join("") +
         '</table><button type="button" class="btn primary play" data-open="breaker">▶ Play Be the Breaker</button>' +
         '<button type="button" class="btn play" data-open="sneak">Watch the demo: sneak a bad PR past the factory</button>' +
         '<a class="more" href="' + B + '/how-i-build/">The full workflow and verification ladder</a>';
     },
     archive: function () {
-      return '<p class="kicker">The Archive</p><h2>Earlier work</h2><p>Stuff from college, research and hackathons.</p>' +
+      return '<p class="kicker">The Archive</p><h2>Earlier work</h2><p>Projects from university, research and hackathons.</p>' +
         list(data.earlier) + '<a class="more" href="' + B + '/portfolio/">All projects</a>';
     }
   };
@@ -411,21 +411,21 @@
     { title: "Planner", at: [stationAt[0]], station: 0,
       text: "The Planner picks the item and writes a one-page spec, including the tests it has to pass. It doesn't write any code." },
     { title: "Spec critic", at: [stationAt[1]], station: 1,
-      text: "The critic pushes back on the spec. Is this actually the right thing to build, and is there a smaller version? It can't sign off on its own ideas." },
+      text: "The critic pushes back on the spec. Is this actually the right thing to build, and is there a smaller version? It can't approve its own suggestions." },
     { title: "Builder", at: [stationAt[2]], station: 2,
       text: "The Builder writes the tests first, then the code, in its own copy of the repo. It's not allowed to touch the acceptance tests to make them pass." },
     { title: "Breaker", at: [stationAt[3]], station: 3,
-      text: "This is a fresh agent that only sees the spec and the diff. Its whole job is to break things, and it never gets to see how the Builder was thinking." },
+      text: "This is a fresh agent that only sees the spec and the diff. Its only job is to find what breaks, and it never sees the Builder's reasoning." },
     { title: "Scorer", at: [stationAt[4]], station: 4,
-      text: "The Scorer replays a big catalog of scenarios against the new build. It can't change what the right answers are." },
+      text: "The Scorer replays a catalog of scenarios against the new build. It can't change what the right answers are." },
     { title: "Company Agent Layer checks the contracts", at: [[12.5, belt]], bad: true, beam: true,
-      text: "Before anything merges, Company Agent Layer (the thing I'm building) checks who depends on what across all the repos. In this made-up example the change renames a field two other services read, so it leaves a comment on the PR saying which teams and fields would break." },
+      text: "Before anything merges, Company Agent Layer (the product I'm building) checks who depends on what across all the repos. In this made-up example the change renames a field two other services read, so it leaves a comment on the PR saying which teams and fields would break." },
     { title: "Back to the line", at: [stationAt[2]], bad: true, station: 2,
-      text: "So it goes back down the line. The Builder fixes it, and the Breaker and Scorer take another pass." },
+      text: "The change goes back through the line. The Builder fixes it, and the Breaker and Scorer run again." },
     { title: "Contracts hold", at: [stationAt[3], stationAt[4], [12.5, belt]], good: true, beam: true,
       text: "This time nothing breaks, and both services stay green." },
     { title: "Shipped", at: [[12.5, 15.2], [7.8, 15.2]], good: true, shipped: true,
-      text: "It ships and lands in the Lab with the rest of my featured work. Pretty much everything on this site went through some version of this. Click any building to look inside." }
+      text: "It ships and lands in the Lab with the rest of my featured work. Most of the projects on this site went through a version of this process. Click any building to look inside." }
   ];
 
   var tour = document.getElementById("tour");

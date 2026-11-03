@@ -1,6 +1,6 @@
 ---
 title: "Adaptable/Deployable Structures for Seismic Mitigation"
-excerpt: "Innovative designs to improve seismic resistance of structural systems through advanced simulations and real-world validation."
+excerpt: "Research on deployable braced frames that perform better in earthquakes, simulated in MATLAB and tested with LabVIEW."
 collection: portfolio
 layout: single
 group: earlier
@@ -14,11 +14,11 @@ flow:
 ---
 
 ### Overview
-This research, conducted at the [Human Centered Robotics Laboratory](https://sites.utexas.edu/hcrl/) at UT Austin, focused on creating deployable structural prototypes to enhance seismic resilience. The project transformed a truss-frame system into a vertical-link eccentrically braced frame, optimizing performance under seismic loads.
+Research at UT Austin's [Human Centered Robotics Laboratory](https://sites.utexas.edu/hcrl/) on deployable structures that improve resistance to earthquakes. The project converted a truss frame into a vertical-link eccentrically braced frame and optimized it for seismic loads.
 
-### Key Contributions
-- Simulated structural dynamics under combined seismic and gravitational forces using MATLAB.
-- Validated real-world applicability of deployment mechanisms via LabVIEW.
+### My contributions
+- Simulated the frame's behavior under combined seismic and gravity loads in MATLAB.
+- Tested the deployment mechanism with LabVIEW to confirm it works outside simulation.
 
-### Tools Used
-- **Software:** MATLAB, LabVIEW, SolidWorks
+### Tools
+MATLAB, LabVIEW, SolidWorks
