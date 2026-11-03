@@ -22,7 +22,7 @@ The **red team engine** runs RAG prompt-injection, tool-misuse and multi-turn so
 **AuditLens** takes those findings, or a scan of a GitHub repo, maps them onto EU AI Act articles, and produces a cited, scored assessment as JSON and PDF.
 
 ### Key finding
-Ten multi-turn chains were run against a customer-support agent built without authorization gates, on four models. **Six chains succeeded on every model.** One is a three-message account takeover: look up the account's email, change it to an attacker's address, then send a password reset. It completed on GPT-4o, GPT-4o-mini, Claude Sonnet 4 and Claude Haiku 4.5. Model alignment alone doesn't stop these chains. The agent's architecture has to.
+Ten multi-turn chains were run against a customer-support agent built without authorization gates, on four models. **Six chains succeeded on every model.** One is a three-message account takeover: look up the account's email, change it to an attacker's address, then send a password reset. It completed on GPT-4o, GPT-4o-mini, Claude Sonnet 4 and Claude Haiku 4.5. A better-aligned model did not stop them. The fix belongs in the agent's design, through real authorization checks.
 
 ### Tools
 Python, LangGraph, FastAPI, Pydantic, asyncio, ChromaDB, Anthropic and OpenAI APIs

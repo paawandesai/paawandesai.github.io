@@ -15,13 +15,12 @@ flow:
 ---
 
 ### Overview
-My UT Austin senior design project (Sep 2024 to May 2025). I led the development of a Verilog-based hardware accelerator for the **Module-Lattice-Based Digital Signature Algorithm (ML-DSA)**. The accelerator speeds up the core operations of a signature scheme built to stay secure against quantum computers.
+My senior design project at UT Austin (Sep 2024 to May 2025). I led development of a Verilog hardware accelerator for ML-DSA, a digital signature scheme designed to remain secure against quantum computers. The accelerator speeds up the scheme's most expensive operations.
 
-### Key Features
-- **Subsystem Design:** Engineered critical components like a random bit generator and NTT for polynomial multiplication.  
-- **Hardware-Software Integration:** Designed a C-based driver to ensure seamless interaction between systems.  
-- **Scalability:** Optimized architecture for efficient large-scale cryptographic applications.  
+### My contributions
+- Designed core components, including the random bit generator and the NTT unit for polynomial multiplication.
+- Wrote a C driver so software can communicate with the hardware.
+- Kept the architecture efficient enough to scale to larger cryptographic workloads.
 
-### Tools Used
-- **Hardware Languages:** Verilog  
-- **Software Tools:** ModelSim, C, Python
+### Tools
+Verilog, ModelSim, C, Python

@@ -1,6 +1,6 @@
 ---
 title: "Social Impact BuildFest – EveryLibrary Advocacy Project"
-excerpt: "A Python-powered accessibility tool integrating sentiment analysis and text-to-speech to enhance advocacy through immersive haptic feedback."
+excerpt: "A desktop app that reads advocacy text aloud and turns its emotional intensity into haptic feedback."
 collection: portfolio
 layout: single
 group: earlier
@@ -13,26 +13,16 @@ flow:
   - { t: "Haptics", s: "DataFeel commands", hot: true }
 ---
 
-[View on GitHub](https://github.com/txibuildfest25/buildfest_website/tree/main)  
+[View on GitHub](https://github.com/txibuildfest25/buildfest_website/tree/main)
 
 ### Overview
-As part of the **Social Impact BuildFest**, I developed a Python GUI that enhances digital advocacy using **sentiment analysis and text-to-speech** to drive haptic feedback on **DataFeel devices**. The tool analyzes text **sentence-by-sentence**, classifying emotional intensity using **rule-based (NLTK, MWEs) and transformer-based (Hugging Face) models**.  
+At the Social Impact BuildFest, I built a desktop app to support EveryLibrary's advocacy work. It reads text one sentence at a time, estimates the emotional intensity of each sentence, reads it aloud, and converts that intensity into vibration on DataFeel haptic devices. The goal was to give people with visual impairments or learning disabilities another way to experience the writing.
 
-This project focuses on **accessibility** by incorporating **dyslexia-friendly fonts, UI contrast adjustments, and customizable text settings**, ensuring a more inclusive advocacy experience.
+### How it works
+- Sentiment comes from NLTK word lists and phrase rules, combined with a Hugging Face transformer model.
+- Text-to-speech reads each sentence while the device plays the matching pattern.
+- Whole folders of text can be processed at once, with a timeline chart of how the emotion changes.
+- The interface supports dyslexia-friendly fonts (OpenDyslexic and Atkinson Hyperlegible), adjustable contrast and font size.
 
-### Key Features
-- **Sentiment Analysis Engine:** Combines **rule-based NLP (NLTK lexicons, MWEs)** and **transformer-based models (Hugging Face)** to classify emotional intensity.  
-- **Haptic Feedback Integration:** Converts emotion-based text classification into **DataFeel haptic commands**.  
-- **Accessibility Enhancements:** Supports **dyslexia-friendly fonts (OpenDyslexic, Atkinson Hyperlegible), adjustable contrast, and font size options**.  
-- **Automation & Visualization:** Enables **batch processing** of text files and provides **emotion timeline visualization** using **matplotlib**.  
-
-### Tools Used
-- **Programming Languages:** Python  
-- **Libraries/Frameworks:** PyQt6, NLTK, Hugging Face, Matplotlib, Pyttsx3  
-- **Hardware Integration:** DataFeel SDK  
-
-### Impact
-- Improved **digital advocacy accessibility**, enabling a **multi-sensory experience** for individuals with visual impairments or learning disabilities.  
-- Created a **user-friendly, customizable interface** to enhance text-based emotional engagement.  
-
----
+### Tools
+Python, PyQt6, NLTK, Hugging Face, Matplotlib, pyttsx3, DataFeel SDK
