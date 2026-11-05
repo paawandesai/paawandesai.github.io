@@ -478,7 +478,7 @@
     var key = e.detail.key;
     body.classList.toggle("playing", key === "sneak" || key === "contract" || key === "security");
     panel.classList.toggle("left", key === "contract" || key === "security");
-    panel.classList.toggle("wide", key === "alchemist" && !!K.data.alchemist_url);
+    panel.classList.remove("wide");
     if (GAMES[key]) mounts[key](e.detail.body);
   });
   document.addEventListener("campus:close", function () {
@@ -690,10 +690,11 @@
     var url = K.data.alchemist_url;
     var gh = "https://github.com/paawandesai/realgame";
     if (url) {
+      // The game opens in its own tab: it can't run inside another page's frame.
       return '<p class="kicker">The Lab · playable</p><h2>Alchemist\'s Trial</h2>' +
-        "<p>Real chemistry is the magic system: write a balanced equation and the simulation decides what happens.</p>" +
-        '<div class="game-frame"><iframe src="' + esc(url) + '" title="Alchemist\'s Trial" loading="lazy" allow="fullscreen"></iframe></div>' +
-        '<a class="more" href="' + esc(url) + '" target="_blank" rel="noopener">Open full screen</a> · <a class="more" href="' + gh + '">Source</a>';
+        "<p>Real chemistry is the magic system. Write a balanced equation, and a Rust simulation compiled to WebAssembly decides what happens.</p>" +
+        '<p><a class="btn primary play" href="' + esc(url) + '" target="_blank" rel="noopener" data-alchemist>Play Alchemist\'s Trial ↗</a></p>' +
+        '<p class="muted">Opens in a new tab.</p><a class="more" href="' + gh + '">Source on GitHub</a>';
     }
     return '<p class="kicker">The Lab · playable</p><h2>Alchemist\'s Trial</h2>' +
       "<p>A browser game where real chemistry is the magic system: write a balanced equation, and a Rust simulation compiled to WebAssembly decides what happens.</p>" +
