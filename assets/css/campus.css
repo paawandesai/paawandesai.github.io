@@ -763,3 +763,4 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
   .dock .btn:not(.primary) { background: var(--card); }
   body.playing .dock, body.touring .dock, body:has(.panel:not([hidden])) .dock { display: none; }
 }
+.panel .muted { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }

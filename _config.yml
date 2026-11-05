@@ -16,7 +16,7 @@ url                      : https://paawankdesai.com # the custom domain in CNAME
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "paawandesai/paawandesai.github.io"
 
-alchemist_url            : "https://realgame.pages.dev" # where Alchemist's Trial is deployed, e.g. https://realgame.pages.dev. Blank shows a GitHub link instead of the game.
+alchemist_url            : "https://realgame.pages.dev/bench-free" # where Alchemist's Trial is deployed, e.g. https://realgame.pages.dev. Blank shows a GitHub link instead of the game.
 
 # Site Author - The following control what appear as part of the author content on the side bar.
 #               If a field is blank the icon and link will not appear, otherwise it will be shown.
