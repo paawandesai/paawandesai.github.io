@@ -19,8 +19,10 @@
   }
 
   // Moves an SVG group along grid waypoints.
+  var movers = [];
   function mover(g, z) {
     var self = { pos: [0, 0], anim: 0 };
+    movers.push(self);
     self.place = function (p) {
       var s = P(p[0], p[1], z);
       g.setAttribute("transform", "translate(" + s[0].toFixed(1) + "," + s[1].toFixed(1) + ")");
@@ -48,6 +50,12 @@
     self.stop = function () { cancelAnimationFrame(self.anim); };
     return self;
   }
+  // Turning the campus: put everything that moves back on its spot, and drop speech bubbles drawn for the old angle.
+  if (K.onTurn) K.onTurn(function () {
+    movers.forEach(function (m) { m.place(m.pos); });
+    var bl = document.querySelector(".layer-bubbles");
+    if (bl) Array.prototype.forEach.call(bl.querySelectorAll(".bubble-say.on"), function (b) { b.classList.remove("on"); });
+  });
 
   var ICON_CHECK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var ICON_LOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5" fill="currentColor"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
@@ -206,6 +214,7 @@
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") card.hidden = true; });
 
+  var agentTimer = 0, hoverShown = null;
   crew.forEach(function (w) {
     var r = ROLES[w.role];
     var g = el("g", { "class": "agent", tabindex: "0", role: "button", "aria-label": w.role + " agent: " + r.does }, agentLayer);
@@ -221,7 +230,17 @@
     w.bubbleRect = el("rect", { rx: 7 }, w.bubble);
     w.bubbleTail = el("polygon", {}, w.bubble);
     w.bubbleText = el("text", { "text-anchor": "middle" }, w.bubble);
-    g.addEventListener("click", function (e) { e.stopPropagation(); showAgent(w); });
+    g.addEventListener("click", function (e) { e.stopPropagation(); hoverShown = null; showAgent(w); });
+    // With a mouse, resting on an agent shows its card; moving away hides it again.
+    g.addEventListener("pointerenter", function (e) {
+      if (e.pointerType !== "mouse" || !K.canHover) return;
+      clearTimeout(agentTimer);
+      agentTimer = setTimeout(function () { if (card.hidden || hoverShown) { showAgent(w); hoverShown = w; } }, 200);
+    });
+    g.addEventListener("pointerleave", function () {
+      clearTimeout(agentTimer);
+      if (hoverShown === w) { card.hidden = true; hoverShown = null; }
+    });
     g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showAgent(w); } });
   });
 
@@ -709,8 +728,8 @@
     { key: "guard", text: "Play: talk past the guard", at: [23.2, 19.6, 0.4] },
     { key: "alchemist", text: "Play: Alchemist's Trial", at: [4.6, 18.2, 0.3] }
   ].forEach(function (m, i) {
-    var p = P(m.at[0], m.at[1], m.at[2]);
-    var g = el("g", { "class": "marker", tabindex: "0", role: "button", "aria-label": m.text, transform: "translate(" + p[0].toFixed(1) + "," + p[1].toFixed(1) + ")" }, markerLayer);
+    var g = el("g", { "class": "marker", tabindex: "0", role: "button", "aria-label": m.text }, markerLayer);
+    K.live(function () { var p = P(m.at[0], m.at[1], m.at[2]); g.setAttribute("transform", "translate(" + p[0].toFixed(1) + "," + p[1].toFixed(1) + ")"); });
     var inner = el("g", { "class": "marker-in", style: "animation-delay:" + (i * 0.35) + "s" }, g);
     var t = el("text", { x: 14, y: 1, "dominant-baseline": "middle" }, inner);
     t.textContent = m.text;
@@ -718,25 +737,11 @@
     var r = el("rect", { x: -10, y: b.y - 7, width: b.width + 34, height: b.height + 14, rx: (b.height + 14) / 2 }, inner);
     inner.insertBefore(r, t);
     el("polygon", { points: "-1,-6 9,0 -1,6", "class": "marker-play" }, inner);
-    g.addEventListener("click", function () { K.open(m.key); });
+    g.addEventListener("click", function () { K.hoverCancel(); K.open(m.key); });
+    K.hoverable(g, function () { K.open(m.key); });
     g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); K.open(m.key); } });
   });
   var bb = svg.getBBox();
   svg.setAttribute("viewBox", [bb.x - 12, bb.y - 12, bb.width + 24, bb.height + 24].map(Math.round).join(" "));
 
-  // ---------- Welcome card ----------
-  var welcome = document.getElementById("welcome");
-  function closeWelcome() {
-    welcome.hidden = true;
-    try { localStorage.setItem("campus-welcomed", "1"); } catch (e) { /* ignore */ }
-  }
-  function openWelcome() { welcome.hidden = false; document.getElementById("welcome-tour").focus(); }
-  document.getElementById("welcome-tour").addEventListener("click", function () { closeWelcome(); document.getElementById("tour-start").click(); });
-  document.getElementById("welcome-explore").addEventListener("click", closeWelcome);
-  welcome.addEventListener("click", function (e) { if (e.target === welcome) closeWelcome(); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !welcome.hidden) closeWelcome(); });
-  document.getElementById("help-btn").addEventListener("click", openWelcome);
-  var seen = false;
-  try { seen = localStorage.getItem("campus-welcomed") === "1"; } catch (e) { seen = true; }
-  if (!seen) openWelcome();
 })();

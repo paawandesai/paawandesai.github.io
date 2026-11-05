@@ -16,13 +16,13 @@
     <div class="who">
       <h1>{{ site.author.name }}</h1>
       <p>{{ site.author.bio }}</p>
-      <p class="caption">My portfolio, laid out as a small campus. Click a building to see the work, or try one of the games.</p>
+      <p class="caption">My portfolio, laid out as a small campus. Hover over or tap a building to see the work, or try one of the games.</p>
     </div>
     <nav class="actions" aria-label="Site">
       <button type="button" class="btn" id="fast-path">Short on time?</button>
       <button type="button" class="btn primary" id="tour-start">Watch a PR ship</button>
       <button type="button" class="btn" id="theme-toggle" title="Follow the sun where you are, or pick light or dark"><span id="theme-label">Theme: sun</span></button>
-      <a class="btn" href="{{ base_path }}/files/Paawan_Desai_Resume.pdf" data-resume>Resume</a>
+      <a class="btn" href="{{ base_path }}/files/Paawan_Desai_Resume.pdf" target="_blank" rel="noopener" data-resume>Resume</a>
       <a class="btn" href="{{ base_path }}/about/">Plain view</a>
     </nav>
   </header>
@@ -40,6 +40,11 @@
     <div class="stage">
       <svg id="campus" role="group" aria-label="A map of Paawan's work, drawn as a small company campus. Each building opens a section." viewBox="-640 -190 1280 900" preserveAspectRatio="xMidYMid meet"></svg>
       <p class="clock" aria-live="off"><span class="clock-dot" aria-hidden="true"></span><span id="clock-text"></span></p>
+      <div class="turn" role="group" aria-label="Turn the campus">
+        <button type="button" class="pill" id="turn-left" aria-label="Turn the campus left" title="Turn left ( [ )">↺</button>
+        <button type="button" class="pill" id="turn-center" title="Snap back to the front view" disabled>Center</button>
+        <button type="button" class="pill" id="turn-right" aria-label="Turn the campus right" title="Turn right ( ] )">↻</button>
+      </div>
       <p class="hint" id="hint"><span class="key-tag game">▶ Orange tags</span> are games, <span class="key-tag work">white tags</span> are my work</p>
     </div>
 
@@ -81,23 +86,6 @@
     </nav>
   </main>
 
-  <div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
-    <div class="welcome-card">
-      <p class="kicker">Welcome</p>
-      <h2 id="welcome-title">My work, laid out as a small campus.</h2>
-      <ul>
-        <li>Each <b>building</b> is a part of my work. Click one to look inside.</li>
-        <li>The <b>figures on the line</b> are the AI agents I build with. Click one to see its role, or watch a pull request move through the stations.</li>
-        <li>The orange <b>▶ tags</b> are games. Catch bugs before they merge, find which services a change will break, or try to talk an AI guard into an unauthorized refund. A new <b>daily challenge</b> appears each day.</li>
-      </ul>
-      <div class="welcome-actions">
-        <button type="button" class="btn primary" id="welcome-tour">Watch a PR ship (1 min)</button>
-        <button type="button" class="btn" id="welcome-explore">Explore on my own</button>
-        <a class="btn ghost" href="{{ base_path }}/about/">Plain view</a>
-      </div>
-    </div>
-  </div>
-
   <div class="agent-card" id="agent-card" role="dialog" aria-live="polite" hidden></div>
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
@@ -136,6 +124,7 @@
   <script src="{{ base_path }}/assets/js/campus-play.js"></script>
   <script src="{{ base_path }}/assets/js/campus-arcade.js"></script>
   <script src="{{ base_path }}/assets/js/campus-extras.js"></script>
+  <script src="{{ base_path }}/assets/js/campus-guide.js"></script>
   {% include analytics.html %}
 </body>
 </html>

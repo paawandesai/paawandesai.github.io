@@ -9,8 +9,22 @@
   var C = Math.cos(Math.PI / 6);
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Grid (x, y, height z) to screen.
-  function P(x, y, z) { return [(x - y) * C * U, (x + y) * 0.5 * U - (z || 0) * U]; }
+  // Grid (x, y, height z) to screen. ROT turns the whole campus around its centre (see "Turning the campus").
+  var ROT = 0, RC = 12;
+  function P(x, y, z) {
+    var gx = x, gy = y;
+    if (ROT) {
+      var c = Math.cos(ROT), s = Math.sin(ROT), dx = x - RC, dy = y - RC;
+      gx = RC + dx * c - dy * s; gy = RC + dx * s + dy * c;
+    }
+    var r = [(gx - gy) * C * U, (gx + gy) * 0.5 * U - (z || 0) * U];
+    r.g = [x, y, z || 0];
+    return r;
+  }
+  function Pg(q) { return P(q[0], q[1], q[2]); }
+  // Everything drawn from grid points registers a redraw, so turning the campus redraws it in place.
+  var redraws = [];
+  function live(fn) { redraws.push(fn); fn(); }
   function pts(list) { return list.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" "); }
   function el(tag, attrs, parent) {
     var e = document.createElementNS(NS, tag);
@@ -18,7 +32,21 @@
     if (parent) parent.appendChild(e);
     return e;
   }
-  function poly(g, list, cls) { return el("polygon", { points: pts(list), "class": cls }, g); }
+  function poly(g, list, cls) {
+    var e = el("polygon", { "class": cls }, g);
+    var grid = list.map(function (p) { return p.g; });
+    live(function () { e.setAttribute("points", pts(grid.map(Pg))); });
+    return e;
+  }
+  function seg(g, a, b, cls) {
+    var e = el("line", { "class": cls }, g);
+    live(function () {
+      var p = Pg(a), q = Pg(b);
+      e.setAttribute("x1", p[0].toFixed(1)); e.setAttribute("y1", p[1].toFixed(1));
+      e.setAttribute("x2", q[0].toFixed(1)); e.setAttribute("y2", q[1].toFixed(1));
+    });
+    return e;
+  }
 
   function track(name) {
     if (window.goatcounter && window.goatcounter.count) {
@@ -54,9 +82,12 @@
 
   function tree(g, x, y, s) {
     s = s || 1;
-    var base = P(x, y, 0), top = P(x, y, 1.6 * s);
     var r = 0.42 * s * U;
-    el("polygon", { points: pts([[base[0] - r, base[1] - 0.3 * U], top, [base[0] + r, base[1] - 0.3 * U]]), "class": "tree" }, g);
+    var e = el("polygon", { "class": "tree" }, g);
+    live(function () {
+      var base = P(x, y, 0), top = P(x, y, 1.6 * s);
+      e.setAttribute("points", pts([[base[0] - r, base[1] - 0.3 * U], top, [base[0] + r, base[1] - 0.3 * U]]));
+    });
   }
 
   var layers = {};
@@ -64,8 +95,8 @@
 
   function label(x, y, z, text, small) {
     var g = el("g", { "class": "label" + (small ? " small" : "") }, layers.labels);
-    var p = P(x, y, z);
-    var t = el("text", { x: p[0], y: p[1], "text-anchor": "middle", "dominant-baseline": "middle" }, g);
+    live(function () { var p = P(x, y, z); g.setAttribute("transform", "translate(" + p[0].toFixed(1) + "," + p[1].toFixed(1) + ")"); });
+    var t = el("text", { x: 0, y: 0, "text-anchor": "middle", "dominant-baseline": "middle" }, g);
     t.textContent = text;
     var b = t.getBBox();
     el("rect", { x: b.x - 8, y: b.y - 4, width: b.width + 16, height: b.height + 8, rx: 6 }, g).parentNode.insertBefore(g.lastChild, t);
@@ -78,9 +109,8 @@
   poly(layers.ground, [P(N, 0, -0.6), P(N, N, -0.6), P(N, N, 0), P(N, 0, 0)], "plate-side");
   poly(layers.ground, [P(0, 0), P(N, 0), P(N, N), P(0, N)], "plate-top");
   for (var gi = 1; gi < N; gi++) {
-    var a = P(gi, 0), b = P(gi, N), c = P(0, gi), d = P(N, gi);
-    el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], "class": "grid" }, layers.ground);
-    el("line", { x1: c[0], y1: c[1], x2: d[0], y2: d[1], "class": "grid" }, layers.ground);
+    seg(layers.ground, [gi, 0, 0], [gi, N, 0], "grid");
+    seg(layers.ground, [0, gi, 0], [N, gi, 0], "grid");
   }
   flat(layers.ground, 12, 6, 11.6, 1, "road");
   flat(layers.ground, 12, 7, 1, 16.6, "road");
@@ -88,19 +118,18 @@
   flat(layers.ground, 13, 17, 2.5, 1, "road");
   flat(layers.ground, 0.4, 6, 11.6, 1, "belt");
   for (var bt = 0.9; bt < 12; bt += 0.7) {
-    var b1 = P(bt, 6), b2 = P(bt, 7);
-    el("line", { x1: b1[0], y1: b1[1], x2: b2[0], y2: b2[1], "class": "belt-tick" }, layers.ground);
+    seg(layers.ground, [bt, 6, 0], [bt, 7, 0], "belt-tick");
   }
 
   // Paawan's name painted on the plaza.
   // Centred along the front edge and scaled so it always fits inside the plate.
-  var o = P(12, 23.35);
-  var nameText = el("text", {
-    "class": "ground-name",
-    "text-anchor": "middle",
-    transform: "matrix(" + [C, 0.5, -C, 0.5, o[0], o[1]].map(function (n) { return n.toFixed(3); }).join(",") + ")",
-    "font-size": 1.25 * U
-  }, layers.ground);
+  var nameText = el("text", { "class": "ground-name", "text-anchor": "middle", "font-size": 1.25 * U }, layers.ground);
+  live(function () {
+    // The text's x axis runs along the grid's x axis and its y axis along the grid's y axis, both scaled to one grid unit.
+    var o = P(12, 23.35), ex = P(13, 23.35), ey = P(12, 24.35);
+    var m = [(ex[0] - o[0]) / U, (ex[1] - o[1]) / U, (ey[0] - o[0]) / U, (ey[1] - o[1]) / U, o[0], o[1]];
+    nameText.setAttribute("transform", "matrix(" + m.map(function (n) { return n.toFixed(3); }).join(",") + ")");
+  });
   nameText.textContent = "PAAWAN DESAI";
   try {
     var room = 20 * U, len = nameText.getComputedTextLength();
@@ -111,9 +140,35 @@
   var things = [];
   function add(depth, fn) { things.push({ depth: depth, fn: fn }); }
 
+  // Hovering a building with a mouse opens its panel after a short pause; a click or tap opens it straight away.
+  var canHoverDevice = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var hoverTimer = 0, hoverOpening = false, panelMode = "pinned", hoverBlock = [];
+  function hoverAllowed() {
+    if (!canHoverDevice || turning.drag || Date.now() < turning.quiet || !document.getElementById("tour").hidden) return false;
+    if (document.body.classList.contains("playing")) return false;
+    for (var i = 0; i < hoverBlock.length; i++) if (hoverBlock[i]()) return false;
+    return panel.hidden || panelMode === "hover";
+  }
+  function hoverOpen(fn) {
+    clearTimeout(hoverTimer);
+    if (!hoverAllowed()) return;
+    hoverTimer = setTimeout(function () {
+      if (!hoverAllowed()) return;
+      hoverOpening = true;
+      try { fn(); } finally { hoverOpening = false; }
+    }, 220);
+  }
+  function hoverCancel() { clearTimeout(hoverTimer); }
+  function hoverable(g, fn) {
+    g.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hoverOpen(fn); });
+    g.addEventListener("pointerleave", hoverCancel);
+  }
+  var turning = { drag: false, quiet: 0 };
+
   function hit(name, aria, onOpen) {
     var g = el("g", { "class": "hit", tabindex: "0", role: "button", "aria-label": aria }, null);
-    g.addEventListener("click", onOpen);
+    g.addEventListener("click", function () { hoverCancel(); onOpen(); });
+    hoverable(g, onOpen);
     g.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(); }
     });
@@ -153,8 +208,7 @@
     box(g, 12.15, 4.15, 0.8, 0.8, 4.6);
     windows(g, 12.15, 4.15, 0.8, 0.8, 4.6, 0, 1);
     box(g, 12.0, 4.0, 1.1, 1.1, 0.35, 4.6);
-    var top = P(12.55, 4.55, 4.95);
-    beam = el("polygon", { "class": "tower-beam", points: pts([top, P(12, 6, 0), P(23.6, 6, 0), P(23.6, 7, 0), P(12, 7, 0)]) }, layers.fx);
+    beam = poly(layers.fx, [P(12.55, 4.55, 4.95), P(12, 6, 0), P(23.6, 6, 0), P(23.6, 7, 0), P(12, 7, 0)], "tower-beam");
   });
 
   // Service District: one building per Gauntlet build.
@@ -226,9 +280,12 @@
     box(g, 15.5, 15, 5, 4.5, 4.2);
     windows(g, 15.5, 15, 5, 4.5, 4.2, 0, 0.8);
     box(g, 16.4, 15.8, 1.2, 1.2, 0.5, 4.2);
-    var f1 = P(19.6, 18.6, 4.2), f2 = P(19.6, 18.6, 6);
-    el("line", { x1: f1[0], y1: f1[1], x2: f2[0], y2: f2[1], "class": "wire" }, g);
-    poly(g, [f2, P(19.6, 18.6, 5.4), [f2[0] + 22, f2[1] + 6]], "f-t");
+    seg(g, [19.6, 18.6, 4.2], [19.6, 18.6, 6], "wire");
+    var flag = el("polygon", { "class": "f-t" }, g);
+    live(function () {
+      var f2 = P(19.6, 18.6, 6), f3 = P(19.6, 18.6, 5.4);
+      flag.setAttribute("points", pts([f2, f3, [f2[0] + 22, f2[1] + 6]]));
+    });
   });
 
   // Security building (Jailbreak the guard).
@@ -238,9 +295,9 @@
     box(g, 21.1, 15.4, 2.5, 3.2, 2.6);
     windows(g, 21.1, 15.4, 2.5, 3.2, 2.6, 0, 0.9);
     box(g, 21.8, 16.4, 1.1, 1.1, 0.5, 2.6);
-    var a1 = P(22.35, 16.95, 3.1), a2 = P(22.35, 16.95, 4.3);
-    el("line", { x1: a1[0], y1: a1[1], x2: a2[0], y2: a2[1], "class": "wire" }, g);
-    el("circle", { cx: a2[0], cy: a2[1], r: 4, "class": "beacon" }, g);
+    seg(g, [22.35, 16.95, 3.1], [22.35, 16.95, 4.3], "wire");
+    var bc = el("circle", { r: 4, "class": "beacon" }, g);
+    live(function () { var a2 = P(22.35, 16.95, 4.3); bc.setAttribute("cx", a2[0].toFixed(1)); bc.setAttribute("cy", a2[1].toFixed(1)); });
   });
 
   // Trees.
@@ -254,8 +311,7 @@
   var wires = [[0, 5], [1, 2], [2, 7], [3, 8], [4, 9], [6, 7], [1, 6], [3, 4]];
   var wireEls = wires.map(function (w) {
     var m = services[w[0]], n = services[w[1]];
-    var p1 = P(m.cx, m.cy, m.h), p2 = P(n.cx, n.cy, n.h);
-    return el("line", { x1: p1[0], y1: p1[1], x2: p2[0], y2: p2[1], "class": "wire" }, layers.fx);
+    return seg(layers.fx, [m.cx, m.cy, m.h], [n.cx, n.cy, n.h], "wire");
   });
 
   label(6, 2.3, 4.4, "The Factory · how I build");
@@ -351,12 +407,21 @@
   };
   var lastFocus;
   function show(html) {
-    if (panel.hidden) lastFocus = document.activeElement;
+    var byHover = hoverOpening;
+    if (panel.hidden && !byHover) lastFocus = document.activeElement;
     panelBody.innerHTML = html;
+    panel.classList.remove("reader");
     panel.hidden = false;
+    panel.scrollTop = 0;
+    panelMode = byHover ? "hover" : "pinned";
+    panel.classList.toggle("peek", byHover);
     document.getElementById("hint").style.visibility = "hidden";
-    document.getElementById("panel-close").focus({ preventScroll: true });
+    // A hover preview doesn't take focus away from where the visitor is.
+    if (!byHover) document.getElementById("panel-close").focus({ preventScroll: true });
   }
+  // Once the visitor clicks, types or scrolls inside the panel, hovering the map no longer replaces it.
+  function pin() { panelMode = "pinned"; panel.classList.remove("peek"); }
+  ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (ev) { panel.addEventListener(ev, pin, { passive: true }); });
   function open(key) {
     if (!views[key]) return;
     track("open-" + key);
@@ -376,12 +441,85 @@
   });
   function closePanel() {
     panel.hidden = true;
+    panel.classList.remove("reader", "peek");
+    readerStack = [];
     document.dispatchEvent(new CustomEvent("campus:close"));
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
   document.getElementById("panel-close").addEventListener("click", closePanel);
   document.querySelectorAll("[data-open]").forEach(function (btn) {
     btn.addEventListener("click", function () { lastFocus = btn; open(btn.getAttribute("data-open")); });
+  });
+
+  // ---------- Reading pages without leaving the campus ----------
+  // Links to this site's own pages open inside the panel, so games, the map and the tour stay as they were.
+  // Other sites and files (GitHub, LinkedIn, the resume PDF) open in a new tab.
+  var readerStack = [];
+  function bareHost(h) { return h.replace(/^www\./, ""); }
+  var siteHost = "";
+  try { siteHost = bareHost(new URL(data.base || location.href, location.href).host); } catch (e) { /* ignore */ }
+  // This site's own page for a link, on the origin the visitor is using (so it can be fetched), or null.
+  function localPage(a) {
+    if (!a.href || a.target || a.hasAttribute("download")) return null;
+    var u;
+    try { u = new URL(a.href, location.href); } catch (e) { return null; }
+    var h = bareHost(u.host);
+    if (h !== bareHost(location.host) && h !== siteHost) return null;
+    if (/\.(pdf|png|jpe?g|gif|svg|zip|xml|txt)$/i.test(u.pathname)) return null;
+    if (u.pathname === location.pathname) return null;
+    return location.origin + u.pathname + u.search;
+  }
+  function readPage(url) {
+    track("read-" + new URL(url, location.href).pathname);
+    // Keep the panel's current contents (with any game still running) to come back to.
+    if (!panel.hidden) readerStack.push({ nodes: Array.prototype.slice.call(panelBody.childNodes), cls: panel.className, top: panel.scrollTop });
+    if (panel.hidden) lastFocus = document.activeElement;
+    panel.hidden = false;
+    pin();
+    panel.classList.add("reader");
+    panelBody.innerHTML = '<p class="kicker">Loading…</p>';
+    fetch(url, { credentials: "same-origin" }).then(function (r) {
+      if (!r.ok) throw new Error("status " + r.status);
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, "text/html");
+      var main = doc.querySelector("#main .page") || doc.querySelector("#main .archive") || doc.querySelector("#main");
+      if (!main) throw new Error("no content");
+      main.querySelectorAll("script, style, noscript, .page-back, .page__share, .page__related, .pagination, .page__meta, .page__date, meta").forEach(function (n) { n.remove(); });
+      var bar = '<div class="reader-bar">' +
+        (readerStack.length ? '<button type="button" class="btn" data-reader-back>← Back</button>' : "") +
+        '<a class="btn ghost" href="' + esc(url) + '" target="_blank" rel="noopener">Open as a full page ↗</a></div>';
+      panelBody.innerHTML = bar + '<div class="reader-body">' + main.innerHTML + "</div>";
+      panel.scrollTop = 0;
+      var h = panelBody.querySelector("h1, h2");
+      if (h) { h.setAttribute("tabindex", "-1"); h.focus({ preventScroll: true }); }
+    }).catch(function () {
+      // If the page can't be shown here, open it in a new tab instead.
+      readerBack();
+      window.open(url, "_blank", "noopener");
+    });
+  }
+  function readerBack() {
+    var last = readerStack.pop();
+    if (!last) { closePanel(); return; }
+    panelBody.textContent = "";
+    last.nodes.forEach(function (n) { panelBody.appendChild(n); });
+    panel.className = last.cls;
+    panel.scrollTop = last.top;
+  }
+  panelBody.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest("[data-reader-back]")) { readerBack(); }
+  });
+  document.addEventListener("click", function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest("a[href]");
+    if (!a || a.closest(".bar") || a.classList.contains("skip")) return;
+    var href = a.getAttribute("href");
+    if (!href || href.charAt(0) === "#" || /^(mailto|tel|javascript):/i.test(href)) return;
+    var inside = a.closest("#panel, #agent-card, .toasts");
+    var page = localPage(a);
+    if (inside && page) { e.preventDefault(); readPage(page); return; }
+    if (!page && !a.target) { a.target = "_blank"; a.rel = "noopener"; }
   });
 
   // Theme: follows the sun by default (see campus-sun.js), or a fixed light or dark.
@@ -500,6 +638,7 @@
 
   function startTour() {
     track("tour-start");
+    turnTo(0, true);
     panel.hidden = true;
     tour.hidden = false;
     document.body.classList.add("touring");
@@ -544,12 +683,102 @@
     if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); go(cur - 1); }
   });
 
+  // ---------- Turning the campus ----------
+  // Drag the map sideways (or use the turn buttons) to look around the buildings; Center snaps it back.
+  // The turn is capped short of 45 degrees, where the hidden sides of the buildings would come into view.
+  var MAX_TURN = 40 * Math.PI / 180, STEP_TURN = 20 * Math.PI / 180;
+  var turnAnim = 0, turnListeners = [];
+  var centerBtn = document.getElementById("turn-center");
+  function setTurn(a) {
+    ROT = Math.max(-MAX_TURN, Math.min(MAX_TURN, a));
+    redraws.forEach(function (fn) { fn(); });
+    turnListeners.forEach(function (fn) { fn(ROT); });
+    var off = Math.abs(ROT) > 0.001;
+    document.body.classList.toggle("turned", off);
+    if (centerBtn) centerBtn.disabled = !off;
+  }
+  function turnLocked() { return !tour.hidden || document.body.classList.contains("playing"); }
+  function turnTo(target, quick) {
+    cancelAnimationFrame(turnAnim);
+    target = Math.max(-MAX_TURN, Math.min(MAX_TURN, target));
+    if (reduceMotion || Math.abs(target - ROT) < 0.001) { setTurn(target); return; }
+    var from = ROT, start = null, dur = quick ? 260 : 520;
+    var snap = target === 0;
+    function frame(ts) {
+      if (start === null) start = ts;
+      var k = Math.min(1, (ts - start) / dur);
+      // Ease out, with a small overshoot when snapping back to the centre.
+      var e = snap ? 1 + 2.2 * Math.pow(k - 1, 3) + 1.2 * Math.pow(k - 1, 2) : 1 - Math.pow(1 - k, 3);
+      setTurn(from + (target - from) * e);
+      if (k < 1) turnAnim = requestAnimationFrame(frame); else setTurn(target);
+    }
+    turnAnim = requestAnimationFrame(frame);
+  }
+  [["turn-left", -1], ["turn-right", 1]].forEach(function (b) {
+    var btn = document.getElementById(b[0]);
+    if (btn) btn.addEventListener("click", function () {
+      if (turnLocked()) return;
+      track("turn");
+      turnTo(Math.round((ROT + b[1] * STEP_TURN) / STEP_TURN) * STEP_TURN);
+    });
+  });
+  if (centerBtn) centerBtn.addEventListener("click", function () { turnTo(0); });
+  svg.addEventListener("dblclick", function () { if (ROT) turnTo(0); });
+  document.addEventListener("keydown", function (e) {
+    if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
+    if (!tour.hidden || turnLocked()) return;
+    if (e.key === "[" ) turnTo(ROT - STEP_TURN);
+    if (e.key === "]") turnTo(ROT + STEP_TURN);
+  });
+  // Dragging with a mouse or pen. On touch screens a swipe scrolls the map instead.
+  (function () {
+    var down = null, suppress = false;
+    svg.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "touch" || e.button !== 0 || turnLocked()) return;
+      down = { x: e.clientX, rot: ROT, id: e.pointerId };
+    });
+    svg.addEventListener("pointermove", function (e) {
+      if (!down || e.pointerId !== down.id) return;
+      var dx = e.clientX - down.x;
+      if (!turning.drag && Math.abs(dx) < 6) return;
+      if (!turning.drag) {
+        turning.drag = true;
+        hoverCancel();
+        cancelAnimationFrame(turnAnim);
+        document.body.classList.add("dragging");
+        try { svg.setPointerCapture(down.id); } catch (err) { /* ignore */ }
+      }
+      setTurn(down.rot + dx * 0.006);
+    });
+    function up() {
+      if (!down) return;
+      if (turning.drag) { suppress = true; track("turn-drag"); setTimeout(function () { suppress = false; }, 0); }
+      if (turning.drag) turning.quiet = Date.now() + 600;
+      turning.drag = false;
+      down = null;
+      document.body.classList.remove("dragging");
+    }
+    svg.addEventListener("pointerup", up);
+    svg.addEventListener("pointercancel", up);
+    svg.addEventListener("lostpointercapture", up);
+    // A drag shouldn't count as a click on whatever building it ended over.
+    svg.addEventListener("click", function (e) { if (suppress) { e.stopPropagation(); e.preventDefault(); suppress = false; } }, true);
+  })();
+  // Games draw on the map, so the campus faces front while one is running.
+  new MutationObserver(function () {
+    if (document.body.classList.contains("playing") && ROT) turnTo(0, true);
+  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  setTurn(0);
+
   // Shared with campus-play.js (games, ambient life, achievements and music).
   window.Campus = {
     data: data, P: P, el: el, box: box, layers: layers, svg: svg, U: U,
     stations: stations, stationX: stationX, services: services, wires: wires, wireEls: wireEls,
     beam: function (on) { if (beam) beam.classList.toggle("on", on); },
     views: views, open: open, show: show, close: closePanel, esc: esc, track: track,
-    reduceMotion: reduceMotion, touring: function () { return !tour.hidden; }
+    reduceMotion: reduceMotion, touring: function () { return !tour.hidden; },
+    live: live, onTurn: function (fn) { turnListeners.push(fn); }, turnTo: turnTo,
+    hoverable: hoverable, hoverCancel: hoverCancel, blockHover: function (fn) { hoverBlock.push(fn); },
+    canHover: canHoverDevice, readPage: readPage
   };
 })();
