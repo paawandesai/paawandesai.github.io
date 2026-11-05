@@ -14,7 +14,7 @@ flow:
   - { t: "World reacts", s: "douse fire, split water" }
 ---
 
-[View on GitHub](https://github.com/paawandesai/realgame)
+[Play it](https://realgame.pages.dev) · [View on GitHub](https://github.com/paawandesai/realgame)
 
 ### What it does
 A chemistry spell sandbox, and the first playable slice of a larger game where real skills are the magic system. You gather matter, write real chemical equations, and the simulation decides what happens: water douses fire, electricity splits water into hydrogen and oxygen, and a balanced `2H2 + O2 -> 2H2O` makes a sharp pop that lights a torch.
