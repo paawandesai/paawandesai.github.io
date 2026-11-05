@@ -764,3 +764,81 @@ body.playing:has(.panel.arcade-panel:not([hidden]))::after {
   body.playing .dock, body.touring .dock, body:has(.panel:not([hidden])) .dock { display: none; }
 }
 .panel .muted { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+/* ---------- Turning the campus ---------- */
+.turn { position: absolute; left: 28px; bottom: 8px; z-index: 3; display: flex; gap: 6px; margin: 0; }
+.turn .pill { min-height: 32px; padding: 4px 12px; font-size: 0.85rem; }
+.turn .pill:disabled { opacity: 0.55; cursor: default; border-color: var(--line); }
+body.turned .turn #turn-center { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+body.touring .turn, body.playing .turn { visibility: hidden; }
+@media (hover: hover) and (pointer: fine) {
+  #campus { cursor: grab; }
+  #campus .hit, #campus .marker, #campus .agent { cursor: pointer; }
+  body.dragging, body.dragging #campus, body.dragging #campus * { cursor: grabbing !important; user-select: none; }
+}
+@media (max-width: 700px) {
+  .turn { position: sticky; left: 12px; bottom: auto; width: max-content; margin: 6px 0 0; }
+  .turn .pill { min-height: 40px; padding: 6px 14px; }
+}
+
+/* A panel opened by hovering is a preview: a lighter edge until the visitor clicks into it. */
+.panel.peek { border-style: dashed; }
+
+/* ---------- Pages read inside the panel ---------- */
+.panel.reader { width: min(760px, calc(100vw - 32px)); }
+.reader-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 36px 12px 0; }
+.reader-bar .btn { margin: 0; }
+.reader-body { line-height: 1.6; }
+.reader-body h1, .reader-body .page__title { font-size: 1.45rem; margin: 4px 0 10px; color: var(--ink); line-height: 1.25; }
+.reader-body h1:focus { outline: none; }
+.reader-body h2 { font-size: 1.15rem; margin: 1.4em 0 0.4em; border-bottom: 1px solid var(--grid); padding-bottom: 0.25em; }
+.reader-body h3 { font-size: 1rem; margin: 1.2em 0 0.3em; color: var(--ink); }
+.reader-body ul, .reader-body ol { list-style: disc; padding-left: 1.3em; margin: 0.5em 0; }
+.reader-body ol { list-style: decimal; }
+.reader-body li { padding: 2px 0; border-top: 0; }
+.reader-body li a { font-weight: inherit; text-decoration: underline; }
+.reader-body img { max-width: 100%; height: auto; border-radius: 8px; }
+.reader-body pre { overflow: auto; padding: 10px 12px; background: var(--grid); border-radius: 8px; font-size: 0.82rem; }
+.reader-body table { display: block; overflow-x: auto; }
+.reader-body blockquote { margin: 0.8em 0; padding: 0.2em 0 0.2em 12px; border-left: 3px solid var(--accent); color: var(--muted); }
+.reader-body .archive__item { padding: 10px 0; border-top: 1px solid var(--grid); }
+.reader-body .archive__item-title { font-size: 1rem; margin: 0 0 2px; border: 0; }
+.reader-body .archive__item-excerpt { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.reader-body .sidebar, .reader-body .page__footer { display: none; }
+.reader-body .project-flow { margin: 1.2em 0 1.4em; padding: 14px 14px 16px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; }
+.reader-body .project-flow figcaption { margin: 0 0 10px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.reader-body .flow { list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; }
+.reader-body .flow-step { position: relative; flex: 1 1 0; min-width: 0; padding: 8px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); display: flex; flex-direction: column; gap: 3px; text-align: center; justify-content: center; }
+.reader-body .flow-step b { color: var(--ink); font-size: 0.8rem; line-height: 1.25; }
+.reader-body .flow-step span { color: var(--muted); font-size: 0.72rem; line-height: 1.3; }
+.reader-body .flow-step.hot { border-color: var(--accent); }
+.reader-body .flow-step + .flow-step::before { content: "→"; position: absolute; left: -15px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.8rem; }
+@media (max-width: 760px) {
+  .reader-body .flow { flex-direction: column; gap: 14px; }
+  .reader-body .flow-step + .flow-step::before { content: "↓"; left: 50%; top: -13px; transform: translateX(-50%); }
+}
+@media (max-width: 700px) { .panel.reader { max-height: 85vh; } }
+
+/* ---------- Guide ---------- */
+.guide[hidden] { display: none; }
+.guide { position: fixed; inset: 0; z-index: 40; pointer-events: none; }
+.guide-spot {
+  position: fixed; border-radius: 12px; pointer-events: none;
+  box-shadow: 0 0 0 3px var(--accent), 0 0 0 9999px rgba(10, 15, 30, 0.45);
+  transition: left 0.3s, top 0.3s, width 0.3s, height 0.3s;
+}
+.guide-spot.soft { box-shadow: 0 0 0 3px var(--accent), 0 0 0 9999px rgba(10, 15, 30, 0.2); }
+.guide-card {
+  position: fixed; pointer-events: auto; width: min(360px, calc(100vw - 24px)); box-sizing: border-box;
+  background: var(--card); color: var(--ink); border: 1.5px solid var(--line); border-radius: 14px; padding: 16px 18px 14px; box-shadow: var(--shadow);
+  transition: left 0.3s, top 0.3s;
+}
+.guide-count { margin: 0; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.guide-card h2 { margin: 2px 0 6px; font-size: 1.15rem; }
+.guide-card p { margin: 0 0 12px; line-height: 1.45; }
+.guide-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.guide-nav .btn { margin: 0; }
+.guide-more { margin: 10px 0 0 !important; font-size: 0.82rem; color: var(--muted); }
+.linkish { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+
+body.guiding .dock { z-index: 39; }
