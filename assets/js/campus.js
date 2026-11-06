@@ -441,6 +441,7 @@
     lab: function () {
       return '<p class="kicker">The Lab</p><h2>Featured work</h2><p>Current work and the projects I\'m proudest of.</p>' +
         '<button type="button" class="btn primary play" data-open="alchemist">Play Alchemist\'s Trial</button>' +
+        '<button type="button" class="btn play" data-open="evallab">▶ Play Eval Lab: pick a threshold</button>' +
         list(data.featured) + '<a class="more" href="' + B + '/portfolio/">All projects</a>';
     },
     services: function () {
