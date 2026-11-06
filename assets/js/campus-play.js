@@ -226,6 +226,7 @@
     w.g = g;
     w.m = mover(g, 0);
     w.m.place(w.at);
+    if (K.moving) K.moving(g, function () { return w.m.pos; });
     w.bubble = el("g", { "class": "bubble-say" }, bubbleLayer);
     w.bubbleRect = el("rect", { rx: 7 }, w.bubble);
     w.bubbleTail = el("polygon", {}, w.bubble);
@@ -276,6 +277,7 @@
   var prText = el("text", { x: 0, y: -2, "text-anchor": "middle", "dominant-baseline": "middle" }, pr);
   prText.textContent = "PR";
   var prM = mover(pr, 0.6);
+  if (K.moving) K.moving(pr, function () { return prM.pos; });
   var tower = { role: "Company Agent Layer", m: { pos: [12.55, 4.9] } };
   (function () {
     tower.bubble = el("g", { "class": "bubble-say" }, bubbleLayer);
