@@ -842,3 +842,10 @@ body.touring .turn, body.playing .turn { visibility: hidden; }
 .linkish { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
 
 body.guiding .dock { z-index: 39; }
+
+/* Three games in the Play row: each takes two of the six columns, so the rows still line up. */
+.games button { grid-column: span 2; }
+@media (max-width: 700px) {
+  .games { grid-template-columns: 1fr; }
+  .games button { grid-column: auto; }
+}

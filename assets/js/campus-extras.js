@@ -1,4 +1,4 @@
-/* Campus extras: daily challenge, recruiter fast path, Ship Day, Eval Lab, a hidden terminal, and a campus that follows the visitor's clock. Everything here is made up; nothing reads real data. */
+/* Campus extras: daily challenge, recruiter fast path, Eval Lab, a hidden terminal, and a campus that follows the visitor's clock. Everything here is made up; nothing reads real data. */
 (function () {
   "use strict";
 
@@ -165,64 +165,6 @@
     pr();
   }
 
-  // ================= Ship Day =================
-  var RANKS = [[0, "Intern"], [900, "Engineer"], [1700, "Senior engineer"], [2500, "Staff engineer"], [3300, "Principal engineer"]];
-  K.views.shipday = function () {
-    return '<p class="kicker">Arcade · Story mode</p><h2>Ship Day</h2><div class="arcade" id="shipday">' +
-      "<p>One full shift across all three games. In the <b>morning</b> you catch bugs before they merge, in the <b>afternoon</b> you warn the teams a change is about to break, and in the <b>evening</b> you stop an attacker from talking the support agent into a refund.</p>" +
-      A.diffPicker("shipday", ["Gentle clocks, the easy guard", "Real deadlines, a mid-level guard", "Tight clocks, the hardest guard"]) +
-      '<p class="best">Best: ' + A.bestLine("shipday") + "</p>" +
-      '<button type="button" class="btn primary big" data-act="start">Clock in</button></div>';
-  };
-  function mountShipday(root) {
-    var box = root.querySelector("#shipday");
-    A.wireDiff(box, "shipday");
-    box.querySelector('[data-act="start"]').addEventListener("click", function () { playShipday(box); });
-  }
-  function interlude(box, time, title, text, button, go) {
-    box.innerHTML = '<div class="end interlude"><p class="kicker">' + esc(time) + '</p><h3>' + esc(title) + "</h3><p>" + text + "</p>" +
-      '<button type="button" class="btn primary big" data-act="go">' + esc(button) + "</button></div>";
-    var b = box.querySelector('[data-act="go"]');
-    b.addEventListener("click", go);
-    b.focus();
-  }
-  function playShipday(box) {
-    var diff = A.getDiff("shipday");
-    var guardLevel = { easy: 0, normal: 2, hard: 4 }[diff];
-    var parts = { bugs: 0, blast: 0, guard: 0 };
-    K.track("shipday-start");
-    interlude(box, "9:00 am", "Morning: the merge queue", "Forty seconds of pull requests. Catch the bugs, approve the clean ones.", "Start the morning", function () {
-      A.playBreaker(box, { diff: diff, total: 40, onEnd: function (r) {
-        parts.bugs = r.score;
-        interlude(box, "1:30 pm", "Afternoon: a breaking change", "Morning score: <b>" + r.score + "</b>. Now billing-api is renaming fields. Warn exactly the teams who read them, three times.", "Start the afternoon", function () {
-          A.playBlast(box, { diff: diff, rounds: 3, onEnd: function (b) {
-            parts.blast = Math.max(0, b.score);
-            interlude(box, "5:45 pm", "Evening: someone's at the support desk", "Afternoon score: <b>" + parts.blast + "</b>. Last job: you're the attacker now. Talk the guard into the refund in six messages to prove the hole exists before a real attacker finds it.", "Start the evening", function () {
-              A.playGuard(box, guardLevel, { diff: diff, maxTries: 6, onEnd: function (g) {
-                parts.guard = g.won ? 400 + (6 - g.tries) * 60 : 0;
-                finish();
-              } });
-            });
-          } });
-        });
-      } });
-    });
-    function finish() {
-      var total = parts.bugs + parts.blast + parts.guard;
-      var rank = RANKS.filter(function (r) { return total >= r[0]; }).pop()[1];
-      var b = A.best("shipday-" + diff, total);
-      K.unlock("shipday");
-      K.track("shipday-done");
-      var text = "Ship Day on paawankdesai.com (" + diff + ")\n🐛 " + parts.bugs + "  💥 " + parts.blast + "  🛡 " + parts.guard + "\n" + total + " points · " + rank;
-      box.innerHTML = '<div class="end"><p class="kicker">Shift over · ' + esc(diff) + '</p><p class="big-score">' + total + '</p><p class="rank">' + esc(rank) + "</p>" +
-        "<p>Bugs <b>" + parts.bugs + "</b> · Blast radius <b>" + parts.blast + "</b> · Guard <b>" + parts.guard + "</b> · Best: <b>" + b + "</b></p>" +
-        '<p class="lesson">That\'s a normal day for the agents on this campus: review, impact analysis and red-teaming, all before merge.</p></div>' +
-        shareBlock(text) + '<p><button type="button" class="btn" data-act="again">Another shift</button></p>';
-      wireShare(box, text);
-      box.querySelector('[data-act="again"]').addEventListener("click", function () { K.open("shipday"); });
-    }
-  }
-
   // ================= Eval Lab =================
   var EVAL = { easy: [75, 25, 11], normal: [68, 32, 14], hard: [62, 38, 16] };
   function evalData(diff) {
@@ -323,7 +265,6 @@
   }
 
   A.mount("daily", mountDaily);
-  A.mount("shipday", mountShipday);
   A.mount("evallab", mountEval);
 
   // ================= Recruiter fast path =================
@@ -433,16 +374,16 @@
   function closeTerm() { term.hidden = true; }
   term.querySelector(".term-bar button").addEventListener("click", closeTerm);
   var slug = function (p) { return p.url.replace(/\/$/, "").split("/").pop(); };
-  var GAMES = { breaker: "breaker", blast: "blast", guard: "guard", shipday: "shipday", daily: "daily", evallab: "evallab", eval: "evallab" };
+  var GAMES = { breaker: "breaker", blast: "blast", guard: "guard", daily: "daily", evallab: "evallab", eval: "evallab", alchemist: "alchemist" };
   var PLACES = { office: "office", lab: "lab", services: "services", factory: "factory", archive: "archive", security: "security", achievements: "achievements" };
   var CMDS = {
     help: function () {
-      print(["<b>ls</b> [projects|games]  list things", "<b>open</b> &lt;name&gt;  open a building, project, resume or about", "<b>play</b> &lt;game&gt;  breaker, blast, guard, shipday, daily, evallab",
+      print(["<b>ls</b> [projects|games]  list things", "<b>open</b> &lt;name&gt;  open a building, project, resume or about", "<b>play</b> &lt;game&gt;  guard, blast, alchemist, breaker, evallab, daily",
         "<b>whoami</b>  <b>date</b>  <b>history</b>  <b>clear</b>  <b>exit</b>", "<b>theme</b> sun|light|dark   <b>sound</b> on|off", "There are a few more. Engineers usually find them."].join("<br>"));
     },
     ls: function (a) {
       if (a[0] === "projects") print([].concat(K.data.featured, K.data.gauntlet).map(function (p) { return esc(slug(p)); }).join("  "));
-      else if (a[0] === "games") print("breaker  blast  guard  shipday  daily  evallab");
+      else if (a[0] === "games") print("guard  blast  alchemist  breaker  evallab  daily");
       else print('about/  projects/  games/  resume.pdf  <span class="dim">secrets.txt</span>');
     },
     cat: function (a) {
@@ -455,15 +396,15 @@
     open: function (a) {
       var n = (a[0] || "").toLowerCase();
       if (n === "resume" || n === "resume.pdf") { print("Opening the resume…"); window.open(base + "/files/Paawan_Desai_Resume.pdf", "_blank"); return; }
-      if (n === "about") { location.href = base + "/about/"; return; }
+      if (n === "about") { closeTerm(); K.readPage(location.origin + "/about/"); return; }
       if (PLACES[n]) { closeTerm(); K.open(PLACES[n]); return; }
       var p = [].concat(K.data.featured, K.data.gauntlet, K.data.earlier).filter(function (x) { return slug(x) === n; })[0];
-      if (p) { location.href = p.url; return; }
+      if (p) { closeTerm(); K.readPage(location.origin + new URL(p.url, location.href).pathname); return; }
       print("open: nothing called " + esc(n) + ". Try <b>ls projects</b> or a building: office, lab, services, factory, archive, security.");
     },
     play: function (a) {
       var g = GAMES[(a[0] || "").toLowerCase()];
-      if (!g) { print("play: pick one of breaker, blast, guard, shipday, daily, evallab."); return; }
+      if (!g) { print("play: pick one of guard, blast, alchemist, breaker, evallab, daily."); return; }
       closeTerm(); K.open(g);
     },
     whoami: function () { print("visitor. The person who built this is Paawan. <b>open about</b> to meet him."); },
