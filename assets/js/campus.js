@@ -35,7 +35,24 @@
   function poly(g, list, cls) {
     var e = el("polygon", { "class": cls }, g);
     var grid = list.map(function (p) { return p.g; });
+    e._grid = grid;
     live(function () { e.setAttribute("points", pts(grid.map(Pg))); });
+    return e;
+  }
+  // A vertical face with outward normal n = [nx, ny] on the grid. It is drawn only while it faces the viewer,
+  // and wall faces take the left or right shade from which way they point on screen.
+  function face(g, list, n, cls) {
+    var e = el("polygon", {}, g);
+    var grid = list.map(function (p) { return p.g; });
+    e._grid = grid;
+    live(function () {
+      var c = Math.cos(ROT), s = Math.sin(ROT);
+      var nx = n[0] * c - n[1] * s, ny = n[0] * s + n[1] * c;
+      if (nx + ny <= 0.0001) { e.setAttribute("display", "none"); return; }
+      e.removeAttribute("display");
+      e.setAttribute("class", cls || (nx - ny < 0 ? "f-l" : "f-r"));
+      e.setAttribute("points", pts(grid.map(Pg)));
+    });
     return e;
   }
   function seg(g, a, b, cls) {
@@ -58,22 +75,26 @@
   function box(g, x, y, w, d, h, z0) {
     z0 = z0 || 0;
     var t = z0 + h;
-    poly(g, [P(x, y + d, z0), P(x + w, y + d, z0), P(x + w, y + d, t), P(x, y + d, t)], "f-l");
-    poly(g, [P(x + w, y, z0), P(x + w, y + d, z0), P(x + w, y + d, t), P(x + w, y, t)], "f-r");
+    face(g, [P(x, y + d, z0), P(x + w, y + d, z0), P(x + w, y + d, t), P(x, y + d, t)], [0, 1]);
+    face(g, [P(x + w, y, z0), P(x + w, y + d, z0), P(x + w, y + d, t), P(x + w, y, t)], [1, 0]);
+    face(g, [P(x, y, z0), P(x + w, y, z0), P(x + w, y, t), P(x, y, t)], [0, -1]);
+    face(g, [P(x, y, z0), P(x, y + d, z0), P(x, y + d, t), P(x, y, t)], [-1, 0]);
     poly(g, [P(x, y, t), P(x + w, y, t), P(x + w, y + d, t), P(x, y + d, t)], "f-t");
   }
 
-  // Rows of windows on the two visible faces.
+  // Rows of windows on all four sides, so the back of each building looks finished when the campus turns.
   function windows(g, x, y, w, d, h, z0, step) {
     z0 = z0 || 0;
     step = step || 1;
     var ww = 0.38, wh = 0.42;
     for (var z = z0 + 0.45; z + wh < z0 + h - 0.2; z += 0.9) {
       for (var i = x + 0.35; i + ww < x + w - 0.15; i += step) {
-        poly(g, [P(i, y + d, z), P(i + ww, y + d, z), P(i + ww, y + d, z + wh), P(i, y + d, z + wh)], "win");
+        face(g, [P(i, y + d, z), P(i + ww, y + d, z), P(i + ww, y + d, z + wh), P(i, y + d, z + wh)], [0, 1], "win");
+        face(g, [P(i, y, z), P(i + ww, y, z), P(i + ww, y, z + wh), P(i, y, z + wh)], [0, -1], "win");
       }
       for (var j = y + 0.35; j + ww < y + d - 0.15; j += step) {
-        poly(g, [P(x + w, j, z), P(x + w, j + ww, z), P(x + w, j + ww, z + wh), P(x + w, j, z + wh)], "win");
+        face(g, [P(x + w, j, z), P(x + w, j + ww, z), P(x + w, j + ww, z + wh), P(x + w, j, z + wh)], [1, 0], "win");
+        face(g, [P(x, j, z), P(x, j + ww, z), P(x, j + ww, z + wh), P(x, j, z + wh)], [-1, 0], "win");
       }
     }
   }
@@ -84,6 +105,7 @@
     s = s || 1;
     var r = 0.42 * s * U;
     var e = el("polygon", { "class": "tree" }, g);
+    e._at = [x, y];
     live(function () {
       var base = P(x, y, 0), top = P(x, y, 1.6 * s);
       e.setAttribute("points", pts([[base[0] - r, base[1] - 0.3 * U], top, [base[0] + r, base[1] - 0.3 * U]]));
@@ -105,8 +127,10 @@
 
   // Ground plate, grid and roads.
   var N = 24;
-  poly(layers.ground, [P(0, N, -0.6), P(N, N, -0.6), P(N, N, 0), P(0, N, 0)], "plate-side");
-  poly(layers.ground, [P(N, 0, -0.6), P(N, N, -0.6), P(N, N, 0), P(N, 0, 0)], "plate-side");
+  face(layers.ground, [P(0, N, -0.6), P(N, N, -0.6), P(N, N, 0), P(0, N, 0)], [0, 1], "plate-side");
+  face(layers.ground, [P(N, 0, -0.6), P(N, N, -0.6), P(N, N, 0), P(N, 0, 0)], [1, 0], "plate-side");
+  face(layers.ground, [P(0, 0, -0.6), P(N, 0, -0.6), P(N, 0, 0), P(0, 0, 0)], [0, -1], "plate-side");
+  face(layers.ground, [P(0, 0, -0.6), P(0, N, -0.6), P(0, N, 0), P(0, 0, 0)], [-1, 0], "plate-side");
   poly(layers.ground, [P(0, 0), P(N, 0), P(N, N), P(0, N)], "plate-top");
   for (var gi = 1; gi < N; gi++) {
     seg(layers.ground, [gi, 0, 0], [gi, N, 0], "grid");
@@ -256,7 +280,7 @@
     var g = hit("archive", "The Archive: earlier work", function () { open("archive"); });
     layers.world.appendChild(g);
     box(g, 2, 19, 6, 3, 1.8);
-    poly(g, [P(2.6, 22, 0), P(4.2, 22, 0), P(4.2, 22, 1.3), P(2.6, 22, 1.3)], "win");
+    face(g, [P(2.6, 22, 0), P(4.2, 22, 0), P(4.2, 22, 1.3), P(2.6, 22, 1.3)], [0, 1], "win");
   });
   data.earlier.forEach(function (p, i) {
     var x = 8.6 + (i % 3) * 1.05, y = 19.3 + Math.floor(i / 3) * 1.3;
@@ -305,7 +329,47 @@
     [10.4, 13.2, 0.8], [13.9, 13.6, 0.7], [21.8, 20.6, 0.9], [11.2, 21.2, 0.8], [0.8, 17.6, 0.8], [8.8, 12.2, 0.7]]
     .forEach(function (t) { add(t[0] + t[1], function () { tree(layers.world, t[0], t[1], t[2]); }); });
 
-  things.sort(function (m, n) { return m.depth - n.depth; }).forEach(function (t) { t.fn(); });
+  things.sort(function (m, n) { return m.depth - n.depth; }).forEach(function (t) {
+    var before = layers.world.childNodes.length;
+    t.fn();
+    for (var k = before; k < layers.world.childNodes.length; k++) layers.world.childNodes[k]._d0 = t.depth;
+  });
+
+  // Drawing order when the campus turns. Each building is sorted by how near its centre is to the viewer,
+  // keeping the hand-tuned order from the front view as a bias so the front view is unchanged.
+  function nearness(x, y) {
+    var c = Math.cos(ROT), s = Math.sin(ROT), dx = x - RC, dy = y - RC;
+    return 2 * RC + dx * c - dy * s + dx * s + dy * c;
+  }
+  var depthItems = Array.prototype.map.call(layers.world.childNodes, function (n) {
+    var pts0 = [];
+    (n._grid ? [n] : Array.prototype.slice.call(n.querySelectorAll("polygon"))).forEach(function (p) { if (p._grid) pts0 = pts0.concat(p._grid); });
+    if (n.classList.contains("tree")) pts0 = [];
+    var xs = pts0.map(function (q) { return q[0]; }), ys = pts0.map(function (q) { return q[1]; });
+    var cx = xs.length ? (Math.min.apply(0, xs) + Math.max.apply(0, xs)) / 2 : 0;
+    var cy = ys.length ? (Math.min.apply(0, ys) + Math.max.apply(0, ys)) / 2 : 0;
+    return { n: n, cx: cx, cy: cy, bias: (n._d0 || 0) - (cx + cy) };
+  });
+  // Trees are a single polygon whose grid point is the trunk.
+  depthItems.forEach(function (it) {
+    if (it.n.classList.contains("tree")) { it.cx = it.n._at[0]; it.cy = it.n._at[1]; it.bias = 0; }
+  });
+  var movingItems = [];
+  function sortWorld() {
+    var turned = Math.abs(ROT) > 0.25;
+    var list = depthItems.map(function (it) { return { n: it.n, d: nearness(it.cx, it.cy) + it.bias }; });
+    movingItems.forEach(function (m) {
+      // Close to the front view, figures and the PR stay on top as before; once turned they sort with the buildings.
+      if (!turned) { if (m.n.parentNode !== m.home) m.home.appendChild(m.n); return; }
+      var p = m.pos();
+      list.push({ n: m.n, d: nearness(p[0], p[1]) + 0.3 });
+    });
+    list.sort(function (a, b) { return a.d - b.d; });
+    var kids = layers.world.childNodes, same = kids.length === list.length;
+    for (var i = 0; same && i < list.length; i++) if (kids[i] !== list[i].n) same = false;
+    if (!same) list.forEach(function (it) { layers.world.appendChild(it.n); });
+  }
+  setInterval(function () { if (Math.abs(ROT) > 0.25 && movingItems.length) sortWorld(); }, 250);
 
   // Contract wires between services, drawn over the rooftops.
   var wires = [[0, 5], [1, 2], [2, 7], [3, 8], [4, 9], [6, 7], [1, 6], [3, 4]];
@@ -685,13 +749,15 @@
 
   // ---------- Turning the campus ----------
   // Drag the map sideways (or use the turn buttons) to look around the buildings; Center snaps it back.
-  // The turn is capped short of 45 degrees, where the hidden sides of the buildings would come into view.
-  var MAX_TURN = 40 * Math.PI / 180, STEP_TURN = 20 * Math.PI / 180;
+  // It turns all the way round: each building shows whichever sides face the viewer and is redrawn in depth order.
+  var TAU = Math.PI * 2, STEP_TURN = 45 * Math.PI / 180;
+  function norm(a) { a = a % TAU; if (a > Math.PI) a -= TAU; if (a <= -Math.PI) a += TAU; return a; }
   var turnAnim = 0, turnListeners = [];
   var centerBtn = document.getElementById("turn-center");
   function setTurn(a) {
-    ROT = Math.max(-MAX_TURN, Math.min(MAX_TURN, a));
+    ROT = norm(a);
     redraws.forEach(function (fn) { fn(); });
+    sortWorld();
     turnListeners.forEach(function (fn) { fn(ROT); });
     var off = Math.abs(ROT) > 0.001;
     document.body.classList.toggle("turned", off);
@@ -700,10 +766,12 @@
   function turnLocked() { return !tour.hidden || document.body.classList.contains("playing"); }
   function turnTo(target, quick) {
     cancelAnimationFrame(turnAnim);
-    target = Math.max(-MAX_TURN, Math.min(MAX_TURN, target));
+    // Go the short way round.
+    var from0 = norm(ROT);
+    target = from0 + norm(target - from0);
     if (reduceMotion || Math.abs(target - ROT) < 0.001) { setTurn(target); return; }
-    var from = ROT, start = null, dur = quick ? 260 : 520;
-    var snap = target === 0;
+    var from = from0, start = null, dur = quick ? 260 : 560;
+    var snap = Math.abs(norm(target)) < 0.001;
     function frame(ts) {
       if (start === null) start = ts;
       var k = Math.min(1, (ts - start) / dur);
@@ -714,7 +782,8 @@
     }
     turnAnim = requestAnimationFrame(frame);
   }
-  [["turn-left", -1], ["turn-right", 1]].forEach(function (b) {
+  // A positive angle moves the near corner of the campus to the left, so "right" is a negative turn.
+  [["turn-left", 1], ["turn-right", -1]].forEach(function (b) {
     var btn = document.getElementById(b[0]);
     if (btn) btn.addEventListener("click", function () {
       if (turnLocked()) return;
@@ -727,8 +796,8 @@
   document.addEventListener("keydown", function (e) {
     if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
     if (!tour.hidden || turnLocked()) return;
-    if (e.key === "[" ) turnTo(ROT - STEP_TURN);
-    if (e.key === "]") turnTo(ROT + STEP_TURN);
+    if (e.key === "[") turnTo(ROT + STEP_TURN);
+    if (e.key === "]") turnTo(ROT - STEP_TURN);
   });
   // Dragging with a mouse or pen. On touch screens a swipe scrolls the map instead.
   (function () {
@@ -748,7 +817,8 @@
         document.body.classList.add("dragging");
         try { svg.setPointerCapture(down.id); } catch (err) { /* ignore */ }
       }
-      setTurn(down.rot + dx * 0.006);
+      // The campus follows the mouse: drag right and the near side moves right.
+      setTurn(down.rot - dx * 0.008);
     });
     function up() {
       if (!down) return;
@@ -777,7 +847,7 @@
     beam: function (on) { if (beam) beam.classList.toggle("on", on); },
     views: views, open: open, show: show, close: closePanel, esc: esc, track: track,
     reduceMotion: reduceMotion, touring: function () { return !tour.hidden; },
-    live: live, onTurn: function (fn) { turnListeners.push(fn); }, turnTo: turnTo,
+    live: live, moving: function (n, pos) { movingItems.push({ n: n, home: n.parentNode, pos: pos }); }, onTurn: function (fn) { turnListeners.push(fn); }, turnTo: turnTo,
     hoverable: hoverable, hoverCancel: hoverCancel, blockHover: function (fn) { hoverBlock.push(fn); },
     canHover: canHoverDevice, readPage: readPage
   };

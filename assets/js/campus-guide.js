@@ -24,7 +24,7 @@
       text: "Every part of the campus is also here as a button." },
     { target: ".turn", title: "Look around",
       text: (phone ? "Swipe the map to pan, and use these buttons" : "Drag the map sideways, or use these buttons,") +
-        " to turn the campus and see behind the buildings. Center puts it back." },
+        " to turn the campus all the way round. Center snaps it back to the front." },
     { target: phone ? ".dock" : ".actions", title: "Short on time?",
       text: "\"Short on time?\" gives you the highlights in one panel. \"Watch a PR ship\" walks one change through the AI agents I build with. My resume is always one click away." }
   ];
