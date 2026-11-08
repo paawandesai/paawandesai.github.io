@@ -1,6 +1,6 @@
 ---
 title: "Offline Flood-Rescue Triage"
-excerpt: "A small model I trained reads messy rescue requests on a laptop with no internet, and readable rules, not the model, decide who gets help first."
+excerpt: "2nd place at a Gauntlet AI hackathon. A small model I trained reads messy rescue requests on a laptop with no internet, and readable rules, not the model, decide who gets help first."
 collection: portfolio
 layout: single
 group: featured
@@ -14,7 +14,7 @@ flow:
   - { t: "Cloud dashboard", s: "syncs when a link returns" }
 ---
 
-**Built in two days** at Gauntlet AI's VERSUS hackathon (Nov 2026), with two teammates. [Source on GitHub](https://github.com/Gauntlet-Hackathon/gauntletvshackathon) · [Model training repo](https://github.com/Gauntlet-Hackathon/fastresponderSLM)
+**2nd place** at Gauntlet AI's VERSUS hackathon (Nov 2026), against the rest of my cohort and Gauntlet alumni. Built in two days with two teammates. [Source on GitHub](https://github.com/Gauntlet-Hackathon/gauntletvshackathon) · [Model training repo](https://github.com/Gauntlet-Hackathon/fastresponderSLM)
 
 ### What it does
 In a flood, rescue requests arrive as messy posts and texts, often in more than one language, and the people sorting them usually don't have a reliable connection. This runs on a field laptop. A small multilingual model reads each request (English, Spanish or Vietnamese) and pulls out typed fields such as location, number of people, vulnerable people, hazards and needs, each with a calibrated confidence. A deterministic rules engine then decides the priority from those fields alone, merges duplicates, and when something important is missing it says exactly what to text back. Every decision shows the fields, the rule that fired and the versions used.
