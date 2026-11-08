@@ -4,7 +4,7 @@ excerpt: "A browser game where real chemistry is the magic system: write a balan
 collection: portfolio
 layout: single
 group: featured
-order: 4
+order: 5
 flow_caption: "One turn of the game"
 flow:
   - { t: "Gather matter", s: "pick up elements" }

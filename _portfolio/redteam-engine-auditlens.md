@@ -4,7 +4,7 @@ excerpt: "Attacks AI agents with multi-turn social engineering and RAG injection
 collection: portfolio
 layout: single
 group: featured
-order: 2
+order: 3
 flow_caption: "From attack to audit"
 flow:
   - { t: "113 attacks", s: "injection, tool misuse, multi-turn" }

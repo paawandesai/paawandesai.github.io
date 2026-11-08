@@ -4,7 +4,7 @@ excerpt: "A fine-tuned 4B model that writes exact NACHA ACH files, edging out Op
 collection: portfolio
 layout: single
 group: featured
-order: 3
+order: 4
 flow_caption: "How the model was trained and checked"
 flow:
   - { t: "Code-generated specs", s: "6,000 examples" }
