@@ -827,6 +827,12 @@ body.touring .turn, body.playing .turn { visibility: hidden; }
   box-shadow: 0 0 0 3px var(--accent), 0 0 0 9999px rgba(10, 15, 30, 0.45);
   transition: left 0.3s, top 0.3s, width 0.3s, height 0.3s;
 }
+.guide-spot::after {
+  content: ""; position: absolute; inset: -3px; border-radius: inherit; border: 2px solid var(--accent);
+  animation: guide-pulse 1.8s ease-out infinite;
+}
+@keyframes guide-pulse { from { opacity: 0.8; transform: scale(1); } to { opacity: 0; transform: scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .guide-spot::after { animation: none; opacity: 0; } }
 .guide-spot.soft { box-shadow: 0 0 0 3px var(--accent), 0 0 0 9999px rgba(10, 15, 30, 0.2); }
 .guide-card {
   position: fixed; pointer-events: auto; width: min(360px, calc(100vw - 24px)); box-sizing: border-box;
@@ -838,6 +844,7 @@ body.touring .turn, body.playing .turn { visibility: hidden; }
 .guide-card p { margin: 0 0 12px; line-height: 1.45; }
 .guide-nav { display: flex; flex-wrap: wrap; gap: 8px; }
 .guide-nav .btn { margin: 0; }
+.guide-nav .btn[hidden] { display: none; }
 .guide-more { margin: 10px 0 0 !important; font-size: 0.82rem; color: var(--muted); }
 .linkish { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
 

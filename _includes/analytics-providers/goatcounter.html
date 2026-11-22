@@ -1,4 +1,12 @@
 {% if site.analytics.goatcounter.code and site.analytics.goatcounter.code != "" %}
+{% if page.url == "/404.html" %}
+<script>
+  /* GitHub Pages serves this page for every missing URL, and GoatCounter would file all of them under /404.html.
+     Count the address that was asked for instead, as /404/<path>, so the export shows which links are broken.
+     The query string is left out because it can carry things a visitor typed. */
+  window.goatcounter = { path: function () { return "/404" + location.pathname; }, title: "Not found" };
+</script>
+{% endif %}
 <script data-goatcounter="https://{{ site.analytics.goatcounter.code }}.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <script>
   /* Extra events, all cookie-free and anonymous.
