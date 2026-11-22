@@ -330,12 +330,7 @@ whitelist:
 #  - <base_path>/tags/my-awesome-tag/index.html ~> path: /tags/
 #  - <base_path/categories/my-awesome-category/index.html ~> path: /categories/
 #  - <base_path/my-awesome-category/index.html ~> path: /
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+# Tag and category archive pages were removed (they listed a single post), so no tag links are rendered.
 # https://github.com/jekyll/jekyll-archives
 # jekyll-archives:
 #   enabled:
