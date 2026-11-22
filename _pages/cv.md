@@ -16,6 +16,7 @@ Experience
 * **Gauntlet AI**, Cohort 7 (Sep 2026 – Nov 2026)
   * Shipped fifteen production-style AI systems against real briefs in ten weeks, each with its own evaluation. See the [portfolio]({{ base_path }}/portfolio/).
   * Built [Company Agent Layer]({{ base_path }}/portfolio/company-agent-layer/) and trained a [4B model that writes exact bank payment files]({{ base_path }}/portfolio/nacha-slm/).
+  * Capstone: led a four-person team building Preclaimer, an AI pre-check of FEMA disaster claims against written policy.
 * **Handshake AI**, Electrical and Software Engineer (Contract) (June 2026 – Present)
   * Developed and evaluated domain-specific engineering prompts to train LLMs on electronic design automation.
   * Built simulation environments and workflows for circuit design software (LTspice, ngspice, KiCad, Qucs) to generate AI training data.
